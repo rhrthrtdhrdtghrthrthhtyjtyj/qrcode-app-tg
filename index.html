@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16110F">
+<title>Проявочная</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{
+  --ink:#16110F; --tray:#221A16; --edge:#3A2A22;
+  --paper:#EDE6D8; --muted:#9A8878;
+  --safelight:#FFB020; --oxblood:#8C2A16;
+  --ui:ui-monospace,Menlo,"Courier New",monospace;
+  --bar:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
+body{background:var(--ink);color:var(--paper);font-family:var(--ui);font-size:15px;
+  display:flex;flex-direction:column;height:var(--app-h,100dvh)}
+
+.top{flex:0 0 auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 0;
+  border-bottom:1px solid var(--edge)}
+.head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.mark{font-size:16px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0}
+.mark span{color:var(--safelight)}
+.headside{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.tgl{display:flex;align-items:center;justify-content:center;width:34px;height:34px;
+  border:1px solid var(--edge);border-radius:3px;background:#191211;color:#2AABEE;
+  transition:color .15s,border-color .15s,background .15s}
+.tgl:hover{background:#20211f;border-color:#2AABEE}
+.tgl:focus-visible{outline:2px solid var(--safelight);outline-offset:2px}
+.lang{display:flex;border:1px solid var(--edge);border-radius:3px;overflow:hidden;flex:0 0 auto}
+.lang button{background:#191211;color:var(--muted);border:0;font-family:var(--ui);
+  font-size:11px;letter-spacing:.1em;padding:8px 11px;min-height:34px;cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--safelight);color:#1A1109;font-weight:700}
+.status{font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:.04em;line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.status.bad{color:#FF7A5C}
+.status.good{color:var(--safelight)}
+
+.tabs{display:flex;gap:22px;margin-top:10px}
+.tabs button{background:none;border:0;padding:10px 0;cursor:pointer;
+  font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);border-bottom:2px solid transparent}
+.tabs button[aria-selected=true]{color:var(--paper);border-bottom-color:var(--safelight)}
+
+.tools{display:flex;gap:6px;padding:0 0 10px;flex-wrap:wrap}
+.tools[hidden]{display:none}
+.tbtn{flex:1 1 auto;min-height:42px;padding:0 10px;border:1px solid var(--edge);
+  background:#191211;color:var(--muted);border-radius:3px;cursor:pointer;
+  font-family:var(--ui);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.tbtn[aria-pressed=true]{background:var(--safelight);border-color:var(--safelight);
+  color:#1A1109;font-weight:700}
+.tbtn.auto{background:var(--oxblood);border-color:var(--oxblood);color:var(--paper);
+  flex:1.4 1 auto;font-weight:700}
+.tbtn.auto:disabled{opacity:.5}
+
+.stage{flex:1 1 auto;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;padding:12px;
+  display:flex;align-items:flex-start;justify-content:center}
+.board{border-radius:3px;padding:8px;max-width:100%;background-color:#3A2A22;
+  background-image:
+    linear-gradient(45deg,#2A1F1A 25%,transparent 25%,transparent 75%,#2A1F1A 75%),
+    linear-gradient(45deg,#2A1F1A 25%,transparent 25%,transparent 75%,#2A1F1A 75%);
+  background-size:18px 18px;background-position:0 0,9px 9px}
+.board.flat{background:var(--paper);background-image:none}
+.board.flat.dark{background:#0C0908}
+canvas{display:block;max-width:100%;height:auto;border-radius:2px}
+
+.bar{flex:0 0 auto;background:var(--tray);border-top:1px solid var(--edge);
+  padding:10px 12px calc(10px + var(--bar));display:flex;gap:8px}
+.bar>*{flex:1;min-height:54px;border-radius:3px;border:1px solid var(--edge);
+  background:#191211;color:var(--paper);font-family:var(--ui);font-size:11px;
+  letter-spacing:.05em;text-transform:uppercase;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;text-align:center;padding:4px}
+.bar .hot{background:var(--oxblood);border-color:var(--oxblood)}
+.bar .amber{background:var(--safelight);border-color:var(--safelight);color:#1A1109;font-weight:700}
+.bar>*:active{transform:scale(.97)}
+.bar>*:disabled{opacity:.4}
+.bar>*[hidden]{display:none}
+@media (max-width:430px){ .bar>*{font-size:9px;letter-spacing:.02em;padding:3px} }
+button:focus-visible,select:focus-visible,input:focus-visible,label:focus-visible{
+  outline:2px solid var(--safelight);outline-offset:2px}
+
+.pickers{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+.scrim{position:fixed;inset:0;background:rgba(10,7,6,.6);opacity:0;pointer-events:none;
+  transition:opacity .2s;z-index:8}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--tray);
+  border-top:1px solid var(--edge);border-radius:14px 14px 0 0;
+  padding:8px 18px calc(22px + var(--bar));transform:translateY(102%);
+  transition:transform .25s cubic-bezier(.2,.8,.3,1);max-height:80vh;overflow:auto}
+.sheet.on{transform:translateY(0)}
+.grip{width:42px;height:4px;border-radius:2px;background:#4E3A2E;margin:6px auto 12px}
+.mini{position:sticky;top:0;z-index:2;background:var(--tray);
+  padding:0 0 12px;margin-bottom:6px;border-bottom:1px solid var(--edge);
+  display:flex;justify-content:center}
+.mini[hidden]{display:none}
+.mini .frame{background:var(--paper);border-radius:3px;padding:5px;line-height:0}
+.mini .frame.dark{background:#0C0908}
+.mini .frame.check{background-color:#3A2A22;background-image:
+  linear-gradient(45deg,#2A1F1A 25%,transparent 25%,transparent 75%,#2A1F1A 75%),
+  linear-gradient(45deg,#2A1F1A 25%,transparent 25%,transparent 75%,#2A1F1A 75%);
+  background-size:12px 12px;background-position:0 0,6px 6px}
+.row-lbl{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.row-lbl b{color:var(--safelight);font-weight:700;letter-spacing:0}
+.fld{margin-bottom:22px}
+.fld[hidden],.chip[hidden]{display:none}
+input[type=range]{width:100%;height:34px;accent-color:var(--safelight);background:transparent}
+select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(--paper);
+  border:1px solid var(--edge);border-radius:3px;padding:0 12px;font-family:var(--ui);font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{flex:1 1 30%;min-height:46px;border:1px solid var(--edge);background:#191211;color:var(--muted);
+  border-radius:3px;font-family:var(--ui);font-size:11px;letter-spacing:.05em;
+  text-transform:uppercase;cursor:pointer;padding:4px;
+  display:flex;align-items:center;justify-content:center;text-align:center}
+.chip[aria-pressed=true]{background:var(--safelight);border-color:var(--safelight);
+  color:#1A1109;font-weight:700}
+.tip{margin:0 0 18px;padding:10px 12px;border-left:2px solid var(--safelight);
+  background:rgba(255,176,32,.08);font-size:12px;line-height:1.6}
+.tip[hidden]{display:none}
+
+.ask{position:fixed;left:0;right:0;bottom:calc(84px + var(--bar));z-index:7;
+  display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 16px}
+.ask[hidden]{display:none}
+.ask-q{margin:0;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--paper);
+  background:var(--tray);border:1px solid var(--edge);border-radius:3px;padding:8px 14px}
+.ask-btns{display:flex;gap:10px;width:100%;max-width:420px}
+.ask-btns button{flex:1;min-height:56px;border-radius:3px;font-family:var(--ui);
+  font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-weight:700}
+#askPerson{background:var(--safelight);border:1px solid var(--safelight);color:#1A1109}
+#askThing{background:var(--oxblood);border:1px solid var(--oxblood);color:var(--paper)}
+.ask-btns button:active{transform:scale(.97)}
+
+.viewer{position:fixed;inset:0;z-index:20;background:#0C0908;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  padding:calc(env(safe-area-inset-top,0px) + 16px) 14px calc(16px + var(--bar))}
+.viewer[hidden]{display:none}
+.viewer img{max-width:100%;max-height:72vh;object-fit:contain;border-radius:3px}
+.viewer .hint{margin:0;font-size:12px;color:var(--safelight);text-align:center;line-height:1.6}
+.vclose{min-height:50px;padding:0 26px;border-radius:3px;border:1px solid var(--edge);
+  background:#191211;color:var(--paper);font-family:var(--ui);font-size:12px;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="head">
+    <h1 class="mark" id="mark"></h1>
+    <div class="headside">
+      <a class="tgl" href="https://t.me/ProstoAyli" target="_blank" rel="noopener"
+         aria-label="Telegram: Просто Айли" title="Просто Айли">
+        <svg viewBox="0 0 240 240" width="18" height="18" aria-hidden="true">
+          <path fill="currentColor" d="M228.6 4.9 10.9 90.6c-9.3 3.7-9 13.2.3 16.3l55.4 17.6 21.4 65.7c2.2 6.2 6.9 7.7 11.4 3.7l30.9-28.3 57 42c6.6 3.7 12.4.9 14.1-6.6L239.4 16c2.1-9-4-13.9-10.8-11.1ZM86.5 118.6l111-70.3c4.2-2.6 8.1-1.2 5 1.7l-91.4 83.3-3.6 39.7-21-54.4Z"/>
+        </svg>
+      </a>
+      <div class="lang" role="group" aria-label="Language">
+        <button id="ru" aria-pressed="true">RU</button>
+        <button id="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+  <div class="status" id="status"></div>
+  <div class="tabs" role="tablist">
+    <button id="tabCut" role="tab" aria-selected="true" data-t="tab_cut"></button>
+    <button id="tabArt" role="tab" aria-selected="false" data-t="tab_art"></button>
+    <button id="tabQr" role="tab" aria-selected="false" data-t="tab_qr"></button>
+  </div>
+  <div class="tools" id="tools">
+    <button class="tbtn auto" id="tAuto" data-t="autocut"></button>
+    <button class="tbtn" id="tWand" aria-pressed="false" data-t="t_wand"></button>
+    <button class="tbtn" id="tErase" aria-pressed="false" data-t="t_erase"></button>
+    <button class="tbtn" id="tRestore" aria-pressed="false" data-t="t_restore"></button>
+    <button class="tbtn" id="tUndo" data-t="undo"></button>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+  <div class="board" id="board"><canvas id="cv"></canvas></div>
+</div>
+
+<div class="bar">
+  <button id="paste" class="hot" data-t="paste"></button>
+  <label for="fLib" tabindex="0" data-t="gallery"></label>
+  <button id="tune" data-t="settings"></button>
+  <button id="toArt" class="amber" disabled data-t="toart"></button>
+  <button id="copy" hidden data-t="copy"></button>
+  <button id="dl" class="amber" hidden disabled data-t="download"></button>
+</div>
+
+<div class="pickers">
+  <input type="file" id="fCam" accept="image/*" capture="environment">
+  <input type="file" id="fLib" accept="image/*">
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-label="Settings">
+  <div class="grip"></div>
+  <div class="mini" id="miniBox" hidden>
+    <div class="frame" id="miniFrame"><canvas id="mini"></canvas></div>
+  </div>
+  <p class="tip" id="tipCut"></p>
+  <p class="tip" id="tipEmoji" hidden></p>
+
+  <!-- вкладка «Вырезать» -->
+  <div class="fld" data-grp="cut">
+    <div class="row-lbl"><span data-t="bg"></span></div>
+    <select id="bg">
+      <option value="none" selected data-t="bg_none"></option>
+      <option value="white" data-t="bg_white"></option>
+      <option value="dark" data-t="bg_dark"></option>
+      <option value="blur" data-t="bg_blur"></option>
+    </select>
+  </div>
+  <div class="fld" data-grp="cut">
+    <div class="row-lbl"><span data-t="soft"></span><b id="softVal">2</b></div>
+    <input type="range" id="soft" min="0" max="8" step="1" value="2">
+  </div>
+  <div class="fld" data-grp="cut">
+    <div class="row-lbl"><span data-t="edge"></span><b id="edgeVal">0</b></div>
+    <input type="range" id="edge" min="-40" max="40" step="2" value="0">
+  </div>
+
+  <p class="tip" data-grp="cut" id="tipManual"></p>
+  <div class="fld" data-grp="cut">
+    <div class="row-lbl"><span data-t="tool"></span></div>
+    <select id="tool">
+      <option value="none" selected data-t="t_none"></option>
+      <option value="wand" data-t="t_wand"></option>
+      <option value="erase" data-t="t_erase"></option>
+      <option value="restore" data-t="t_restore"></option>
+    </select>
+  </div>
+  <div class="fld" data-grp="cut">
+    <div class="row-lbl"><span data-t="tol"></span><b id="tolVal">32</b></div>
+    <input type="range" id="tol" min="8" max="90" step="2" value="32">
+  </div>
+  <div class="fld" data-grp="cut">
+    <div class="row-lbl"><span data-t="brush"></span><b id="brushVal">28</b></div>
+    <input type="range" id="brush" min="6" max="90" step="2" value="28">
+  </div>
+
+  <!-- вкладка «QR-код» -->
+  <div class="fld" data-grp="qr">
+    <div class="row-lbl"><span data-t="tab_qr"></span></div>
+    <input type="text" id="qrText" data-t-ph="qr_ph" autocapitalize="off" spellcheck="false">
+  </div>
+  <div class="fld" data-grp="qr">
+    <div class="row-lbl"><span data-t="qr_lvl"></span></div>
+    <select id="qrLvl">
+      <option value="L" data-t="qr_l"></option>
+      <option value="M" selected data-t="qr_m"></option>
+      <option value="Q" data-t="qr_q"></option>
+      <option value="H" data-t="qr_h"></option>
+    </select>
+  </div>
+  <div class="fld" data-grp="qr">
+    <div class="row-lbl"><span data-t="qr_style"></span></div>
+    <select id="qrStyle">
+      <option value="img" selected data-t="qr_img"></option>
+      <option value="blocks" data-t="qr_blocks"></option>
+    </select>
+    <p class="tip" id="tipQrBlocks" hidden></p>
+  </div>
+
+  <!-- вкладка «Символы» -->
+  <div class="fld" data-grp="art">
+    <div class="row-lbl"><span data-t="mode"></span></div>
+    <select id="mode">
+      <option value="chars" selected data-t="m_chars"></option>
+      <option value="emoji" data-t="m_emoji"></option>
+      <option value="braille" data-t="m_brl"></option>
+    </select>
+  </div>
+  <div class="fld" data-grp="art">
+    <div class="row-lbl"><span data-t="detail"></span><b id="colsVal">90</b></div>
+    <input type="range" id="cols" min="24" max="200" step="2" value="90">
+  </div>
+  <div class="fld" data-grp="art" id="charsetWrap">
+    <div class="row-lbl"><span data-t="charset"></span></div>
+    <select id="charset">
+      <option value="punct" selected data-t="s_punct"></option>
+      <option value="classic" data-t="s_classic"></option>
+      <option value="detail" data-t="s_detail"></option>
+      <option value="blocks" data-t="s_blocks"></option>
+      <option value="binary" data-t="s_binary"></option>
+      <option value="braille" data-t="s_braille"></option>
+      <option value="custom" data-t="s_custom"></option>
+    </select>
+  </div>
+  <div class="fld" data-grp="art" id="customWrap" hidden>
+    <div class="row-lbl"><span data-t="darklight"></span></div>
+    <input type="text" id="custom" value="(:(;(!.! " spellcheck="false" autocapitalize="off">
+  </div>
+  <div class="fld" data-grp="art">
+    <div class="row-lbl"><span data-t="contrast"></span><b id="conVal">1.20</b></div>
+    <input type="range" id="con" min="0.3" max="2.5" step="0.05" value="1.2">
+  </div>
+  <div class="fld" data-grp="art">
+    <div class="row-lbl"><span data-t="bright"></span><b id="briVal">0</b></div>
+    <input type="range" id="bri" min="-80" max="80" step="1" value="0">
+  </div>
+  <div class="fld" data-grp="art">
+    <div class="row-lbl"><span data-t="scale"></span><b id="zoomVal"></b></div>
+    <input type="range" id="zoom" min="0" max="14" step="1" value="0">
+  </div>
+
+  <div class="fld" data-grp="art">
+    <div class="row-lbl"><span data-t="target"></span></div>
+    <select id="target">
+      <option value="none" selected data-t="g_none"></option>
+      <option value="steam" data-t="g_steam"></option>
+      <option value="tg" data-t="g_tg"></option>
+      <option value="vk" data-t="g_vk"></option>
+    </select>
+    <p class="tip" id="tipTarget" hidden></p>
+  </div>
+
+  <div class="fld" data-grp="art">
+    <div class="row-lbl"><span data-t="lheight"></span><b id="lhVal">1.00</b></div>
+    <input type="range" id="lh" min="0.8" max="1.7" step="0.05" value="1">
+    <p class="tip" id="tipLh"></p>
+  </div>
+
+  <div class="fld">
+    <div class="row-lbl"><span data-t="quality"></span><b id="qVal">1000 px</b></div>
+    <input type="range" id="quality" min="600" max="3000" step="100" value="1000">
+  </div>
+
+  <div class="chips">
+    <label class="chip" for="fCam" tabindex="0" data-t="camera"></label>
+    <button class="chip" id="undo" data-grp="cut" data-t="undo"></button>
+    <button class="chip" id="clearmask" data-grp="cut" data-t="clearmask"></button>
+    <button class="chip" id="redo" data-grp="cut" data-t="redo"></button>
+    <button class="chip" id="invert" data-grp="art" aria-pressed="false" data-t="invert"></button>
+    <button class="chip" id="color" data-grp="art" aria-pressed="false" data-t="color"></button>
+    <button class="chip" id="shareChip" data-t="share"></button>
+    <button class="chip" id="png" data-t="filepng"></button>
+    <button class="chip" id="txt" data-grp="art" data-t="filetxt"></button>
+    <button class="chip" id="reset" data-t="reset"></button>
+    <button class="chip" id="close" data-t="done"></button>
+  </div>
+</div>
+
+<div class="ask" id="ask" hidden>
+  <p class="ask-q" id="askQ"></p>
+  <div class="ask-btns">
+    <button id="askPerson"></button>
+    <button id="askThing"></button>
+  </div>
+</div>
+
+<div class="viewer" id="viewer" hidden>
+  <p class="hint" id="hint"></p>
+  <img id="vimg" alt="">
+  <button class="vclose" id="vclose" data-t="closeimg"></button>
+</div>
+
+<script>
+"use strict";
+
+/* ══════════════════════ словарь ══════════════════════ */
+const T={
+ru:{
+  mark:["Прояво","чная"], title:"Проявочная — вырезать и в символы", htmlLang:"ru",
+  ready:"пришли фото — вырежу человека и переведу в символы",
+  tab_cut:"Вырезать", tab_art:"Символы", tab_qr:"QR-код",
+  qr_ph:"Ссылка, текст или номер…",
+  qr_make:"Создать", qr_lvl:"Запас прочности",
+  qr_l:"L — минимальный", qr_m:"M — обычный", qr_q:"Q — повышенный", qr_h:"H — максимальный",
+  qr_style:"Вид", qr_img:"Картинка", qr_blocks:"Текст из блоков",
+  qr_done:(v,n)=>"QR готов · версия "+v+" · "+n+"×"+n+" модулей",
+  qr_long:"текст слишком длинный даже для максимального QR (2953 байта)",
+  qr_empty:"введи текст или ссылку",
+  qr_blockstip:"Блоки █ и пробелы — это настоящий сканируемый QR из текста. "+
+               "Вставлять только моноширинным: в Telegram в блок кода, в Steam в [code].",
+  paste:"Вставить", gallery:"Галерея", settings:"Настройки", camera:"Камера",
+  toart:"В символы →", copy:"Копировать", download:"Скачать", share:"Поделиться",
+  bg:"Фон", bg_none:"Прозрачный", bg_white:"Белый", bg_dark:"Тёмный", bg_blur:"Размытый оригинал",
+  soft:"Мягкость края", edge:"Строгость выреза", redo:"Пересчитать моделью",
+  autocut:"Убрать фон",
+  fallback_only:"фон убран по краям (без модели). Точнее — Палочкой",
+  ask_cut:"Убрать фон?",
+  cut_yes:"Убрать фон", cut_skip:"Не обязательно",
+  kept:(w,hh)=>"фото загружено целиком · "+w+"×"+hh+" px — можно сразу в «Символы»",
+  ask_what:"Что вырезаем?",
+  subj_person:"Человек", subj_thing:"Предмет",
+  thing_done:"фон убран по краям — похожий на рамку цвет стал прозрачным. Точность: «Похожесть цвета» и Палочка",
+  thing_fail:"не вышло отделить предмет — фон слишком пёстрый. Попробуй Палочкой по фону",
+  tool:"Инструмент", t_none:"Только смотреть", t_wand:"Палочка", t_erase:"Ластик", t_restore:"Вернуть",
+  tol:"Похожесть цвета", brush:"Размер кисти", undo:"Отменить", clearmask:"Вся картинка",
+  manual:"Модель не обязательна. «Палочка» убирает похожий по цвету фон одним касанием, "+
+         "«Ластик» стирает вручную, «Вернуть» возвращает стёртое. Всё офлайн.",
+  wanded:n=>"убрано "+n+" точек",
+  nothing:"отменять нечего",
+  maskfull:"маска сброшена — картинка целиком",
+  mode:"Режим", m_chars:"Символы", m_emoji:"Эмодзи-мозаика", m_brl:"Брайль — по точкам",
+  detail:"Детализация", charset:"Набор символов", darklight:"От тёмного к светлому",
+  contrast:"Контраст", bright:"Яркость", scale:"Масштаб", fit:"по ширине",
+  quality:"Размер файла PNG",
+  target:"Куда вставлять текст",
+  lheight:"Высота строки",
+  lhtip:"В окне комментария строки идут с просветом, а на картинке — вплотную. "+
+        "Этот ползунок растягивает арт по высоте, чтобы в Steam он не сплющивался. "+
+        "При выборе площадки значение ставится само, дальше можно подогнать на глаз.",
+  g_none:"Без ограничений", g_steam:"Steam — 1000 знаков",
+  g_tg:"Telegram — 4096", g_vk:"ВКонтакте — 4000",
+  fitted:(c,n,lim)=>"ширина подобрана: "+c+" симв. · "+n+" из "+lim+" знаков",
+  tip_steam:"Для Steam текст копируется вместе с тегом [code] — без него шрифт "+
+            "непропорциональный и рисунок разъезжается. Ширина держится до 40 знаков — "+
+            "более длинные строки окно комментария переносит, и арт складывается пополам.",
+  tip_tg:"Для Telegram текст оборачивается в тройные кавычки — получится блок кода, "+
+         "он моноширинный. Ширина держится до 32 знаков, чтобы на телефоне строки "+
+         "не переносились — перенос складывает арт пополам.",
+  tip_vk:"ВКонтакте моноширинного шрифта нет вообще, любой арт там разъедется. "+
+         "Надёжнее отправить картинкой — кнопка «Скачать».",
+  invert:"Инверсия", color:"Цвет", filepng:"Файл PNG", filetxt:"Файл .txt",
+  reset:"Сбросить", done:"Готово", closeimg:"Закрыть",
+  holdtip:"Задержи палец на картинке → «Сохранить в Фото»",
+  s_punct:"Знаки  @#&$%()[];:,.", s_classic:"Классика  @%#*+=-:.",
+  s_detail:"Подробный  70 символов", s_blocks:"Блоки  \u2588\u2593\u2592\u2591",
+  s_binary:"Двоичный  10", s_braille:"Брайль  \u28FF\u28E7\u28C7\u2807",
+  s_custom:"Свой набор…",
+  tipcut:"Надёжный путь без интернета: в «Фото» задержи палец на человеке → "+
+         "«Скопировать объект», вернись сюда и нажми «Вставить». "+
+         "Обычное фото тоже примется — тогда фон уберёт модель, её нужно скачать один раз.",
+  tipemoji:"На Android эмодзи выглядят иначе — текстовая мозаика у них рассыплется. "+
+           "Отправляй картинкой: она нарисована эмодзи твоего айфона и одинакова у всех.",
+  sample:"образец",
+  reading:(n,k)=>"читаю "+n+" · "+k+" КБ",
+  alphaok:(w,h,p)=>"фон уже вырезан · "+w+"×"+h+" px · объект "+p+"%",
+  segload:"загружаю модель, нужен интернет…",
+  working:"считаю…",
+  segok:(w,h,p)=>"фон убран · "+w+"×"+h+" px · объект "+p+"%",
+  segnone_fb:"человека не нашлось — убрал фон по краям. Подправь Палочкой или ползунком «Строгость»",
+  segfail_frame:"предпросмотр блокирует сторонние скрипты. Скачай файл и открой его в браузере — "+
+                "там модель загрузится",
+  segfail_file:"файл открыт напрямую (file://), браузер не пускает модель. "+
+               "В папке с файлом выполни: python -m http.server 8000 — и открой localhost:8000",
+  segfail_net:"не достучаться до cdn.jsdelivr.net. Похоже, сеть блокирует адрес — "+
+              "помогает VPN либо размещение сайта на Netlify",
+  segfail_ios:"модель не загрузилась. Проще вырезать на айфоне: «Фото» → задержать палец "+
+              "на человеке → «Скопировать объект» → сюда «Вставить»",
+  arted:(n,w,h)=>n+" · "+w+"×"+h+" символов",
+  needphoto:"сначала пришли фото",
+  nofile:"файл не получен", noread:"не удалось прочитать файл",
+  nodecode:"формат не поддерживается браузером",
+  noimage:"в буфере нет картинки — сначала скопируй объект в «Фото»",
+  pastefail:"браузер не дал буфер обмена — попробуй «Галерея»",
+  fail:e=>"сбой: "+e,
+  copied:n=>"скопировано — "+n+" строк",
+  emojicopy:"скопировано, но на Android будет иначе — надёжнее картинкой",
+  nocopy:"буфер обмена закрыт — сохрани файлом",
+  pngsize:(w,h,kb)=>"PNG "+w+"×"+h+" px · "+kb+" КБ",
+  saved_dl:"сохранено в папку «Загрузки»", saved_picked:"сохранено в выбранную папку",
+  inframe:"здесь загрузка заблокирована — сохрани картинку долгим нажатием",
+  noshare:e=>"отправка недоступна: "+e,
+  resetdone:"настройки сброшены",
+  sfx_cut:"-bez-fona", sfx_art:"-tekst"
+},
+en:{
+  mark:["Dark","room"], title:"Darkroom — cut out and turn to characters", htmlLang:"en",
+  ready:"send a photo — I will cut out the person and turn it into characters",
+  tab_cut:"Cut out", tab_art:"Characters", tab_qr:"QR code",
+  qr_ph:"Link, text or number…",
+  qr_make:"Create", qr_lvl:"Error tolerance",
+  qr_l:"L — minimal", qr_m:"M — normal", qr_q:"Q — high", qr_h:"H — maximum",
+  qr_style:"Style", qr_img:"Image", qr_blocks:"Text blocks",
+  qr_done:(v,n)=>"QR ready · version "+v+" · "+n+"×"+n+" modules",
+  qr_long:"text is too long even for the largest QR (2953 bytes)",
+  qr_empty:"enter some text or a link",
+  qr_blockstip:"Blocks █ and spaces make a real scannable QR out of text. "+
+               "Paste only as monospace: a code block in Telegram, [code] on Steam.",
+  paste:"Paste", gallery:"Gallery", settings:"Settings", camera:"Camera",
+  toart:"To characters →", copy:"Copy", download:"Download", share:"Share",
+  bg:"Background", bg_none:"Transparent", bg_white:"White", bg_dark:"Dark", bg_blur:"Blurred original",
+  soft:"Edge softness", edge:"Cut strictness", redo:"Recompute with model",
+  autocut:"Remove background",
+  fallback_only:"background removed from the edges (no model). Refine with the Wand",
+  ask_cut:"Remove the background?",
+  cut_yes:"Remove it", cut_skip:"Keep as is",
+  kept:(w,hh)=>"photo loaded as is · "+w+"×"+hh+" px — jump straight to Characters",
+  ask_what:"What are we cutting out?",
+  subj_person:"Person", subj_thing:"Object",
+  thing_done:"edge background removed — border-like colors became transparent. Tune: Color tolerance and the Wand",
+  thing_fail:"could not separate the object — the background is too varied. Try the Wand on it",
+  tool:"Tool", t_none:"View only", t_wand:"Wand", t_erase:"Eraser", t_restore:"Restore",
+  tol:"Color tolerance", brush:"Brush size", undo:"Undo", clearmask:"Whole image",
+  manual:"The model is optional. The Wand clears background of a similar colour in one tap, "+
+         "the Eraser wipes by hand, Restore brings it back. All offline.",
+  wanded:n=>"cleared "+n+" pixels",
+  nothing:"nothing to undo",
+  maskfull:"mask reset — whole image",
+  mode:"Mode", m_chars:"Characters", m_emoji:"Emoji mosaic", m_brl:"Braille — dot grid",
+  detail:"Detail", charset:"Character set", darklight:"Dark to light",
+  contrast:"Contrast", bright:"Brightness", scale:"Scale", fit:"fit width",
+  quality:"PNG file size",
+  target:"Where the text goes",
+  lheight:"Line height",
+  lhtip:"Comment boxes add spacing between lines, a picture does not. "+
+        "This slider stretches the art vertically so it is not squashed on Steam. "+
+        "Picking a platform sets it automatically; you can fine-tune by eye.",
+  g_none:"No limit", g_steam:"Steam — 1000 chars",
+  g_tg:"Telegram — 4096", g_vk:"VK — 4000",
+  fitted:(c,n,lim)=>"width fitted: "+c+" chars wide · "+n+" of "+lim+" characters",
+  tip_steam:"For Steam the text is copied inside a [code] tag — without it the font is "+
+            "proportional and the picture falls apart. Width is capped at 40 chars — "+
+            "longer lines wrap inside the comment box and fold the art in half.",
+  tip_tg:"For Telegram the text is wrapped in triple backticks, making a code block, "+
+         "which is monospace. Width is capped at 32 chars so lines do not wrap on "+
+         "phones — wrapping folds the art in half.",
+  tip_vk:"VK has no monospace font at all, so any art falls apart there. "+
+         "Sending the image is safer — the Download button.",
+  invert:"Invert", color:"Color", filepng:"Save PNG", filetxt:"Save .txt",
+  reset:"Reset", done:"Done", closeimg:"Close",
+  holdtip:"Press and hold the image → Save to Photos",
+  s_punct:"Punctuation  @#&$%()[];:,.", s_classic:"Classic  @%#*+=-:.",
+  s_detail:"Detailed  70 chars", s_blocks:"Blocks  \u2588\u2593\u2592\u2591",
+  s_binary:"Binary  10", s_braille:"Braille  \u28FF\u28E7\u28C7\u2807",
+  s_custom:"Custom set…",
+  tipcut:"Offline route: in Photos press and hold the person → Copy Subject, "+
+         "come back here and tap Paste. A normal photo works too — then the model "+
+         "removes the background, downloaded once.",
+  tipemoji:"Emoji look different on Android, so the text mosaic falls apart there. "+
+           "Send the image instead — it is drawn with your iPhone emoji.",
+  sample:"sample",
+  reading:(n,k)=>"reading "+n+" · "+k+" KB",
+  alphaok:(w,h,p)=>"already cut out · "+w+"×"+h+" px · subject "+p+"%",
+  segload:"loading the model, needs internet…",
+  working:"working…",
+  segok:(w,h,p)=>"background removed · "+w+"×"+h+" px · subject "+p+"%",
+  segnone_fb:"no person found — removed the border background instead. Tune it with the Wand or Strictness",
+  segfail_frame:"the preview blocks third-party scripts. Download the file and open it in a "+
+                "browser — the model will load there",
+  segfail_file:"opened directly as file://, so the browser refuses the model. "+
+               "In the file's folder run: python -m http.server 8000 — then open localhost:8000",
+  segfail_net:"cannot reach cdn.jsdelivr.net. The network seems to block it — "+
+              "a VPN or hosting the site on Netlify helps",
+  segfail_ios:"model failed to load. Easier on iPhone: Photos → hold the person → "+
+              "Copy Subject → Paste here",
+  arted:(n,w,h)=>n+" · "+w+"×"+h+" chars",
+  needphoto:"send a photo first",
+  nofile:"no file received", noread:"could not read the file",
+  nodecode:"format not supported by this browser",
+  noimage:"no image in the clipboard — copy the subject in Photos first",
+  pastefail:"the browser refused clipboard access — try Gallery",
+  fail:e=>"failed: "+e,
+  copied:n=>"copied — "+n+" lines",
+  emojicopy:"copied, but Android will show it differently — the image is safer",
+  nocopy:"clipboard blocked — save as a file",
+  pngsize:(w,h,kb)=>"PNG "+w+"×"+h+" px · "+kb+" KB",
+  saved_dl:"saved to your Downloads folder", saved_picked:"saved to the folder you chose",
+  inframe:"downloads are blocked here — press and hold the image to save it",
+  noshare:e=>"sharing unavailable: "+e,
+  resetdone:"settings reset",
+  sfx_cut:"-no-bg", sfx_art:"-text"
+}};
+let L=(navigator.language||"").toLowerCase().indexOf("ru")===0?"ru":"en";
+const t=k=>T[L][k];
+const el=id=>document.getElementById(id);
+
+/* ══════════════════════ состояние ══════════════════════ */
+const S={
+  tab:"cut", img:null, name:"", isSample:true,
+  mask:null, mw:0, mh:0, share:0,
+  bg:"none", soft:2, edge:0, srcData:null,
+  tool:"none", tol:32, brush:28, hist:[],
+  mode:"chars", cols:90, ramp:"punct", custom:"(:(;(!.! ",
+  con:1.2, bri:0, zoom:0, quality:1000, invert:false, color:false, target:"none", lh:1,
+  rows:[], cells:[], tint:[], w:0, h:0
+};
+
+/* ══════════════════ кодер QR (проверен реальным декодером) ══════════════════ */
+/* Компактный кодер QR: версии 1–10, byte-режим, уровни L/M/Q/H.
+   Без зависимостей — таблицы посчитаны по спецификации ISO/IEC 18004. */
+"use strict";
+
+const QR=(function(){
+  /* [версия][уровень L,M,Q,H] → [всего кодовых слов данных, число блоков g1, слов в блоке g1, число блоков g2, слов в блоке g2, ECC-слов на блок] */
+  const SPEC={
+    1:{L:[19,1,19,0,0,7],M:[16,1,16,0,0,10],Q:[13,1,13,0,0,13],H:[9,1,9,0,0,17]},
+    2:{L:[34,1,34,0,0,10],M:[28,1,28,0,0,16],Q:[22,1,22,0,0,22],H:[16,1,16,0,0,28]},
+    3:{L:[55,1,55,0,0,15],M:[44,1,44,0,0,26],Q:[34,2,17,0,0,18],H:[26,2,13,0,0,22]},
+    4:{L:[80,1,80,0,0,20],M:[64,2,32,0,0,18],Q:[48,2,24,0,0,26],H:[36,4,9,0,0,16]},
+    5:{L:[108,1,108,0,0,26],M:[86,2,43,0,0,24],Q:[62,2,15,2,16,18],H:[46,2,11,2,12,22]},
+    6:{L:[136,2,68,0,0,18],M:[108,4,27,0,0,16],Q:[76,4,19,0,0,24],H:[60,4,15,0,0,28]},
+    7:{L:[156,2,78,0,0,20],M:[124,4,31,0,0,18],Q:[88,2,14,4,15,18],H:[66,4,13,1,14,26]},
+    8:{L:[194,2,97,0,0,24],M:[154,2,38,2,39,22],Q:[110,4,18,2,19,22],H:[86,4,14,2,15,26]},
+    9:{L:[232,2,116,0,0,30],M:[182,3,36,2,37,22],Q:[132,4,16,4,17,20],H:[100,4,12,4,13,24]},
+    10:{L:[274,2,68,2,69,18],M:[216,4,43,1,44,26],Q:[154,6,19,2,20,24],H:[122,6,15,2,16,28]},
+    11:{L:[324,4,81,0,0,20],M:[254,1,50,4,51,30],Q:[180,4,22,4,23,28],H:[140,3,12,8,13,24]},
+    12:{L:[370,2,92,2,93,24],M:[290,6,36,2,37,22],Q:[206,4,20,6,21,26],H:[158,7,14,4,15,28]},
+    13:{L:[428,4,107,0,0,26],M:[334,8,37,1,38,22],Q:[244,8,20,4,21,24],H:[180,12,11,4,12,22]},
+    14:{L:[461,3,115,1,116,30],M:[365,4,40,5,41,24],Q:[261,11,16,5,17,20],H:[197,11,12,5,13,24]},
+    15:{L:[523,5,87,1,88,22],M:[415,5,41,5,42,24],Q:[295,5,24,7,25,30],H:[223,11,12,7,13,24]},
+    16:{L:[589,5,98,1,99,24],M:[453,7,45,3,46,28],Q:[325,15,19,2,20,24],H:[253,3,15,13,16,30]},
+    17:{L:[647,1,107,5,108,28],M:[507,10,46,1,47,28],Q:[367,1,22,15,23,28],H:[283,2,14,17,15,28]},
+    18:{L:[721,5,120,1,121,30],M:[563,9,43,4,44,26],Q:[397,17,22,1,23,28],H:[313,2,14,19,15,28]},
+    19:{L:[795,3,113,4,114,28],M:[627,3,44,11,45,26],Q:[445,17,21,4,22,26],H:[341,9,13,16,14,26]},
+    20:{L:[861,3,107,5,108,28],M:[669,3,41,13,42,26],Q:[485,15,24,5,25,30],H:[385,15,15,10,16,28]},
+    21:{L:[932,4,116,4,117,28],M:[714,17,42,0,0,26],Q:[512,17,22,6,23,28],H:[406,19,16,6,17,30]},
+    22:{L:[1006,2,111,7,112,28],M:[782,17,46,0,0,28],Q:[568,7,24,16,25,30],H:[442,34,13,0,0,24]},
+    23:{L:[1094,4,121,5,122,30],M:[860,4,47,14,48,28],Q:[614,11,24,14,25,30],H:[464,16,15,14,16,30]},
+    24:{L:[1174,6,117,4,118,30],M:[914,6,45,14,46,28],Q:[664,11,24,16,25,30],H:[514,30,16,2,17,30]},
+    25:{L:[1276,8,106,4,107,26],M:[1000,8,47,13,48,28],Q:[718,7,24,22,25,30],H:[538,22,15,13,16,30]},
+    26:{L:[1370,10,114,2,115,28],M:[1062,19,46,4,47,28],Q:[754,28,22,6,23,28],H:[596,33,16,4,17,30]},
+    27:{L:[1468,8,122,4,123,30],M:[1128,22,45,3,46,28],Q:[808,8,23,26,24,30],H:[628,12,15,28,16,30]},
+    28:{L:[1531,3,117,10,118,30],M:[1193,3,45,23,46,28],Q:[871,4,24,31,25,30],H:[661,11,15,31,16,30]},
+    29:{L:[1631,7,116,7,117,30],M:[1267,21,45,7,46,28],Q:[911,1,23,37,24,30],H:[701,19,15,26,16,30]},
+    30:{L:[1735,5,115,10,116,30],M:[1373,19,47,10,48,28],Q:[985,15,24,25,25,30],H:[745,23,15,25,16,30]},
+    31:{L:[1843,13,115,3,116,30],M:[1455,2,46,29,47,28],Q:[1033,42,24,1,25,30],H:[793,23,15,28,16,30]},
+    32:{L:[1955,17,115,0,0,30],M:[1541,10,46,23,47,28],Q:[1115,10,24,35,25,30],H:[845,19,15,35,16,30]},
+    33:{L:[2071,17,115,1,116,30],M:[1631,14,46,21,47,28],Q:[1171,29,24,19,25,30],H:[901,11,15,46,16,30]},
+    34:{L:[2191,13,115,6,116,30],M:[1725,14,46,23,47,28],Q:[1231,44,24,7,25,30],H:[961,59,16,1,17,30]},
+    35:{L:[2306,12,121,7,122,30],M:[1812,12,47,26,48,28],Q:[1286,39,24,14,25,30],H:[986,22,15,41,16,30]},
+    36:{L:[2434,6,121,14,122,30],M:[1914,6,47,34,48,28],Q:[1354,46,24,10,25,30],H:[1054,2,15,64,16,30]},
+    37:{L:[2566,17,122,4,123,30],M:[1992,29,46,14,47,28],Q:[1426,49,24,10,25,30],H:[1096,24,15,46,16,30]},
+    38:{L:[2702,4,122,18,123,30],M:[2102,13,46,32,47,28],Q:[1502,48,24,14,25,30],H:[1142,42,15,32,16,30]},
+    39:{L:[2812,20,117,4,118,30],M:[2216,40,47,7,48,28],Q:[1582,43,24,22,25,30],H:[1222,10,15,67,16,30]},
+    40:{L:[2956,19,118,6,119,30],M:[2334,18,47,31,48,28],Q:[1666,34,24,34,25,30],H:[1276,20,15,61,16,30]}
+  };
+  const ALIGN={2:[6,18],3:[6,22],4:[6,26],5:[6,30],6:[6,34],7:[6,22,38],8:[6,24,42],9:[6,26,46],10:[6,28,50],11:[6,30,54],12:[6,32,58],13:[6,34,62],14:[6,26,46,66],15:[6,26,48,70],16:[6,26,50,74],17:[6,30,54,78],18:[6,30,56,82],19:[6,30,58,86],20:[6,34,62,90],21:[6,28,50,72,94],22:[6,26,50,74,98],23:[6,30,54,78,102],24:[6,28,54,80,106],25:[6,32,58,84,110],26:[6,30,58,86,114],27:[6,34,62,90,118],28:[6,26,50,74,98,122],29:[6,30,54,78,102,126],30:[6,26,52,78,104,130],31:[6,30,56,82,108,134],32:[6,34,60,86,112,138],33:[6,30,58,86,114,142],34:[6,34,62,90,118,146],35:[6,30,54,78,102,126,150],36:[6,24,50,76,102,128,154],37:[6,28,54,80,106,132,158],38:[6,32,58,84,110,136,162],39:[6,26,54,82,110,138,166],40:[6,30,58,86,114,142,170]};
+
+  /* GF(256) */
+  const EXP=new Uint8Array(512), LOG=new Uint8Array(256);
+  (function(){let x=1;for(let i=0;i<255;i++){EXP[i]=x;LOG[x]=i;x<<=1;if(x&0x100)x^=0x11d;}
+    for(let i=255;i<512;i++)EXP[i]=EXP[i-255];})();
+  const mul=(a,b)=>(a&&b)?EXP[LOG[a]+LOG[b]]:0;
+
+  function genPoly(n){
+    let p=[1];
+    for(let i=0;i<n;i++){
+      const q=new Array(p.length+1).fill(0);
+      for(let j=0;j<p.length;j++){ q[j]^=mul(p[j],EXP[i]); q[j+1]^=p[j]; }
+      p=q;
+    }
+    return p;
+  }
+  function ecc(data,n){
+    const g=genPoly(n).reverse(), r=new Uint8Array(n);   // старшая степень первой
+    for(const d of data){
+      const f=d^r[0];
+      r.copyWithin(0,1); r[n-1]=0;
+      if(f) for(let j=0;j<n;j++) r[j]^=mul(g[j+1],f);
+    }
+    return r;
+  }
+
+  function encode(text, level){
+    const bytes=new TextEncoder().encode(text);
+    let ver=0, spec=null;
+    for(let v=1;v<=40;v++){
+      const s=SPEC[v][level];
+      const cap=s[0]-2-(v>9?1:0);       // заголовок: 4 бита режим + 8/16 бит длины
+      if(bytes.length<=cap){ ver=v; spec=s; break; }
+    }
+    if(!ver) return null;
+
+    /* битовый поток */
+    const bits=[];
+    const push=(val,len)=>{for(let i=len-1;i>=0;i--)bits.push((val>>i)&1);};
+    push(4,4);                                  // byte-режим
+    push(bytes.length, ver>9?16:8);
+    for(const b of bytes) push(b,8);
+    const total=spec[0]*8;
+    push(0,Math.min(4,total-bits.length));      // терминатор
+    while(bits.length%8) bits.push(0);
+    const data=[];
+    for(let i=0;i<bits.length;i+=8){let b=0;for(let j=0;j<8;j++)b=(b<<1)|bits[i+j];data.push(b);}
+    for(let pad=0xEC;data.length<spec[0];pad^=0xFD) data.push(pad);
+
+    /* блоки и коррекция */
+    const [,g1n,g1w,g2n,g2w,en]=spec;
+    const blocks=[],eccs=[];
+    let off=0;
+    for(let i=0;i<g1n;i++){const b=data.slice(off,off+g1w);off+=g1w;blocks.push(b);eccs.push(ecc(b,en));}
+    for(let i=0;i<g2n;i++){const b=data.slice(off,off+g2w);off+=g2w;blocks.push(b);eccs.push(ecc(b,en));}
+    const inter=[];
+    const maxw=Math.max(g1w,g2w||0);
+    for(let i=0;i<maxw;i++) for(const b of blocks) if(i<b.length) inter.push(b[i]);
+    for(let i=0;i<en;i++) for(const e of eccs) inter.push(e[i]);
+
+    /* матрица */
+    const size=17+ver*4;
+    const m=Array.from({length:size},()=>new Int8Array(size).fill(-1));
+    const setF=(x,y,v)=>{ if(y>=0&&y<size&&x>=0&&x<size) m[y][x]=v; };
+    const finder=(x,y)=>{
+      for(let dy=-1;dy<=7;dy++)for(let dx=-1;dx<=7;dx++){
+        const in7=dx>=0&&dx<7&&dy>=0&&dy<7;
+        const ring=in7&&(dx===0||dx===6||dy===0||dy===6);
+        const core=dx>=2&&dx<=4&&dy>=2&&dy<=4;
+        setF(x+dx,y+dy, (ring||core)?1:0);
+      }
+    };
+    finder(0,0); finder(size-7,0); finder(0,size-7);
+    for(let i=8;i<size-8;i++){ m[6][i]=i%2?0:1; m[i][6]=i%2?0:1; }
+    if(ALIGN[ver]) for(const cy of ALIGN[ver]) for(const cx of ALIGN[ver]){
+      const overFinder=(cx<9&&cy<9)||(cx>size-10&&cy<9)||(cx<9&&cy>size-10);
+      if(overFinder) continue;                   // пропускаем только углы с финдерами
+      for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)
+        setF(cx+dx,cy+dy,(Math.max(Math.abs(dx),Math.abs(dy))!==1)?1:0);
+    }
+    m[size-8][8]=1;                              // тёмный модуль
+
+    /* информация о версии — обязательна с версии 7 */
+    if(ver>=7){
+      let v=ver<<12;
+      for(let i=17;i>=12;i--) if((v>>i)&1) v^=0x1F25<<(i-12);
+      const vb=(ver<<12)|v;
+      for(let i=0;i<18;i++){
+        const b=(vb>>i)&1, r=(i/3)|0, c=i%3;
+        m[r][size-11+c]=b;                       // правый верх
+        m[size-11+c][r]=b;                       // левый низ
+      }
+    }
+    const fmtPos=[];                             // резерв под формат
+    for(let i=0;i<9;i++){ if(m[8][i]===-1){m[8][i]=0;fmtPos.push(0);} if(m[i][8]===-1)m[i][8]=0; }
+    for(let i=0;i<8;i++){ if(m[8][size-1-i]===-1)m[8][size-1-i]=0; if(m[size-1-i][8]===-1)m[size-1-i][8]=0; }
+    const reserved=m.map(r=>Int8Array.from(r));  // всё, что не -1 — служебное
+
+    /* размещение данных зигзагом */
+    let bi=0;
+    const bit=i=>(inter[i>>3]>>(7-(i&7)))&1;
+    for(let x=size-1;x>0;x-=2){
+      if(x===6)x--;
+      for(let k=0;k<size;k++){
+        const y=((x+1)&2)?k:size-1-k;            // направление колонки
+        for(const xx of [x,x-1]){
+          if(reserved[y][xx]!==-1) continue;
+          m[y][xx]=bi<inter.length*8?bit(bi):0;
+          bi++;
+        }
+      }
+    }
+
+    /* маски + формат */
+    const MASK=[(y,x)=>(y+x)%2===0,(y,x)=>y%2===0,(y,x)=>x%3===0,(y,x)=>(y+x)%3===0,
+      (y,x)=>((y>>1)+((x/3)|0))%2===0,(y,x)=>(y*x)%2+(y*x)%3===0,
+      (y,x)=>(((y*x)%2)+((y*x)%3))%2===0,(y,x)=>(((y+x)%2)+((y*x)%3))%2===0];
+    const LVL={L:1,M:0,Q:3,H:2};
+    function fmtBits(mask){
+      let f=(LVL[level]<<3)|mask, r=f<<10;
+      for(let i=14;i>=10;i--) if((r>>i)&1) r^=0x537<<(i-10);
+      return ((f<<10)|r)^0x5412;
+    }
+    function penalty(g){
+      let p=0;
+      for(let pass=0;pass<2;pass++){
+        for(let y=0;y<size;y++){
+          let run=1;
+          for(let x=1;x<size;x++){
+            const a=pass?g[x][y]:g[y][x], b=pass?g[x-1][y]:g[y][x-1];
+            if(a===b){run++;} else {if(run>=5)p+=run-2;run=1;}
+          }
+          if(run>=5)p+=run-2;
+        }
+      }
+      let dark=0;
+      for(let y=0;y<size;y++)for(let x=0;x<size;x++)dark+=g[y][x];
+      p+=Math.floor(Math.abs(dark*100/(size*size)-50)/5)*10;
+      return p;
+    }
+    let best=null,bestP=Infinity;
+    for(let mk=0;mk<8;mk++){
+      const g=m.map((row,y)=>row.map((v,x)=>reserved[y][x]!==-1?v:(v^(MASK[mk](y,x)?1:0))));
+      const f=fmtBits(mk);
+      for(let i=0;i<15;i++){
+        const b=(f>>(14-i))&1;
+        if(i<6)g[8][i]=b; else if(i<8)g[8][i+1]=b; else if(i===8)g[7][8]=b; else g[14-i][8]=b;
+        if(i<7)g[size-1-i][8]=b; else g[8][size-15+i]=b;
+      }
+      const p=penalty(g);
+      if(p<bestP){bestP=p;best=g;}
+    }
+    return {size,grid:best,version:ver};
+  }
+
+  return {encode};
+})();
+
+
+let lastStatus=null;
+function say(key,args,kind){
+  lastStatus={key,args,kind};
+  const v=t(key);
+  el("status").textContent = typeof v==="function" ? v.apply(null,args||[]) : v;
+  el("status").className="status"+(kind?" "+kind:"");
+}
+
+/* ══════════════════════ язык и вкладки ══════════════════════ */
+function applyLang(){
+  document.documentElement.lang=t("htmlLang");
+  document.title=t("title");
+  const m=t("mark");
+  el("mark").innerHTML=m[0]+"<span>"+m[1]+"</span>";
+  document.querySelectorAll("[data-t]").forEach(n=>{n.textContent=t(n.dataset.t);});
+  document.querySelectorAll("[data-t-ph]").forEach(n=>{n.placeholder=t(n.dataset.tPh);});
+  const tq=el("tipQrBlocks"); if(tq) tq.textContent=t("qr_blockstip");
+  el("tipCut").textContent=t("tipcut");
+  el("tipManual").textContent=t("manual");
+  el("tipEmoji").textContent=t("tipemoji");
+  targetTip();
+  el("tipLh").textContent=t("lhtip");
+  el("hint").textContent=t("holdtip");
+  el("zoomVal").textContent=S.zoom?S.zoom+"px":t("fit");
+  el("ru").setAttribute("aria-pressed",String(L==="ru"));
+  el("en").setAttribute("aria-pressed",String(L==="en"));
+  if(S.isSample)S.name=t("sample");
+  if(lastStatus) say(lastStatus.key,lastStatus.args,lastStatus.kind);
+}
+el("ru").addEventListener("click",()=>{L="ru";applyLang();});
+el("en").addEventListener("click",()=>{L="en";applyLang();});
+
+function setTab(tab){
+  S.tab=tab;
+  el("tabCut").setAttribute("aria-selected",String(tab==="cut"));
+  el("tabArt").setAttribute("aria-selected",String(tab==="art"));
+  el("tabQr").setAttribute("aria-selected",String(tab==="qr"));
+  el("paste").hidden = tab!=="cut";
+  document.querySelector('label[for="fLib"]').hidden = tab==="qr";
+  el("toArt").hidden = tab!=="cut";
+  el("copy").hidden  = tab==="cut";              // на QR копирует блоки
+  el("dl").hidden    = false;
+  document.querySelectorAll("[data-grp]").forEach(n=>{ n.hidden = n.dataset.grp!==tab; });
+  el("tipCut").hidden = tab!=="cut";
+  el("tools").hidden = tab!=="cut";
+  hideAsk();
+  sheetUI();
+  if(tab==="art") buildArt();
+  else if(tab==="qr"){
+    drawQr();
+    if(S.qr) say("qr_done",[S.qr.version,S.qr.size],"good");
+    else el("tune").click();
+  }
+  else drawCut();
+  if(window.__tgSync) window.__tgSync();
+}
+el("tabQr").addEventListener("click",()=>setTab("qr"));
+el("tabCut").addEventListener("click",()=>setTab("cut"));
+el("tabArt").addEventListener("click",()=>setTab("art"));
+
+function sheetUI(){
+  const emoji = S.tab==="art" && S.mode==="emoji";
+  const brl   = S.tab==="art" && S.mode==="braille";
+  el("charsetWrap").hidden = S.tab!=="art" || emoji || brl;
+  el("customWrap").hidden  = S.tab!=="art" || emoji || brl || S.ramp!=="custom";
+  el("invert").hidden = S.tab!=="art" || emoji;
+  el("color").hidden  = S.tab!=="art" || emoji || brl;
+  el("txt").hidden    = S.tab!=="art";
+  el("tipEmoji").hidden = !emoji;
+}
+
+/* ══════════════════════ эмодзи-палитра ══════════════════════ */
+const EMOJI_FONT='"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+const EMOJI_SET=(
+  "🟥🟧🟨🟩🟦🟪🟫⬛⬜🔴🟠🟡🟢🔵🟣🟤⚫⚪"+
+  "❤️🧡💛💚💙💜🖤🤍🤎💗💖"+
+  "🍎🍏🍊🍋🍌🍉🍇🍓🫐🍒🍑🥭🍍🥝🍅🍆🥑🥦🥬🥒🌶🌽🥕🧄🧅🥔"+
+  "🥐🍞🥖🧀🥚🥞🧇🥓🍗🍖🌭🍔🍟🍕🍩🍪🎂🍫🍬🍭🍯🥛☕🍵🍺🍷"+
+  "🌲🌳🌴🌵🌾🌿☘️🍀🍁🍂🍃🌊💧🔥⭐🌙☀️⛅☁️❄️⛄🌑🌕🌚🌝"+
+  "📕📗📘📙📔📒📚📖📄📊📈🗂📁💼🧳🎒👜"+
+  "🐻🐼🐨🐯🦁🐮🐷🐸🐵🐔🐧🐦🦆🦉🐺🐗🐴🦄🐝🐞🐟🐬🐳🦀🦐"+
+  "🏀🏈⚾🎾🏐🎱🎳🎯🎲🧩🔔🔑🧱🪵🪨"
+);
+const PAL=[];
+function ensurePalette(){
+  if(PAL.length) return PAL.length;
+  const N=22,c=document.createElement("canvas");c.width=c.height=N;
+  const g=c.getContext("2d",{willReadFrequently:true});
+  g.textAlign="center";g.textBaseline="middle";
+  for(const ch of Array.from(EMOJI_SET)){
+    if(ch==="\uFE0F") continue;
+    g.clearRect(0,0,N,N);
+    g.font=Math.round(N*0.86)+"px "+EMOJI_FONT;
+    g.fillText(ch,N/2,N/2);
+    const d=g.getImageData(0,0,N,N).data;
+    let r=0,gg=0,b=0,n=0;
+    for(let i=0;i<d.length;i+=4){ if(d[i+3]<40)continue; r+=d[i];gg+=d[i+1];b+=d[i+2];n++; }
+    if(n<N*N*0.10) continue;
+    PAL.push({ch,r:r/n,g:gg/n,b:b/n});
+  }
+  return PAL.length;
+}
+function nearest(r,g,b){
+  let best=PAL[0],bd=Infinity;
+  for(const p of PAL){
+    const rm=(r+p.r)/2,dr=r-p.r,dg=g-p.g,db=b-p.b;
+    const d=(2+rm/256)*dr*dr+4*dg*dg+(2+(255-rm)/256)*db*db;
+    if(d<bd){bd=d;best=p;}
+  }
+  return best.ch;
+}
+
+/* ══════════════════════ вырезание ══════════════════════ */
+const MP_CDNS=[
+  "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision",
+  "https://unpkg.com/@mediapipe/tasks-vision"
+];
+const MP_MODEL="https://storage.googleapis.com/mediapipe-models/image_segmenter/"+
+               "selfie_segmenter/float16/latest/selfie_segmenter.tflite";
+let segmenter=null;
+
+async function getSegmenter(){
+  if(segmenter) return segmenter;
+  let last=null;
+  for(const base of MP_CDNS){
+    try{
+      const mod=await import(base+"/vision_bundle.mjs");
+      const fs=await mod.FilesetResolver.forVisionTasks(base+"/wasm");
+      segmenter=await mod.ImageSegmenter.createFromOptions(fs,{
+        baseOptions:{modelAssetPath:MP_MODEL},
+        runningMode:"IMAGE",outputCategoryMask:true,outputConfidenceMasks:false});
+      return segmenter;
+    }catch(e){ last=e; }
+  }
+  throw last||new Error("CDN unreachable");
+}
+
+function fitSize(){
+  const w=Math.min(1280, S.img.naturalWidth);
+  return [w, Math.max(1, Math.round(S.img.naturalHeight*w/S.img.naturalWidth))];
+}
+
+function cacheSource(){
+  const [w,h]=fitSize();
+  const c=document.createElement("canvas");c.width=w;c.height=h;
+  const g=c.getContext("2d",{willReadFrequently:true});
+  g.drawImage(S.img,0,0,w,h);
+  S.srcData=g.getImageData(0,0,w,h).data;
+  S.mw=w;S.mh=h;S.hist=[];
+}
+
+/* готовая прозрачность (айфоновское «Скопировать объект») — модель не нужна */
+function maskFromAlpha(){
+  const n=S.mw*S.mh, d=S.srcData;
+  const a=new Float32Array(n);
+  let clear=0,hit=0;
+  for(let i=0,p=3;i<n;i++,p+=4){
+    a[i]=d[p];
+    if(d[p]<250)clear++;
+    if(d[p]>128)hit++;
+  }
+  if(clear<n*0.02) return false;
+  S.mask=a;S.share=Math.round(hit/n*100);
+  return true;
+}
+
+/* ───────── ручные инструменты: работают без сети ───────── */
+function ensureMask(){
+  if(!S.mask){ S.mask=new Float32Array(S.mw*S.mh).fill(255); S.share=100; }
+}
+function snapshot(){
+  ensureMask();
+  S.hist.push(Float32Array.from(S.mask));
+  if(S.hist.length>8) S.hist.shift();
+}
+
+/* палочка: заливка по связной области близкого цвета */
+function wandAt(mx,my){
+  snapshot();
+  const w=S.mw,h=S.mh,d=S.srcData,m=S.mask;
+  const s=(my*w+mx)*4, r0=d[s],g0=d[s+1],b0=d[s+2];
+  const tol=S.tol*S.tol*3;
+  const seen=new Uint8Array(w*h);
+  const stack=[my*w+mx];
+  let n=0;
+  while(stack.length){
+    const p=stack.pop();
+    if(seen[p]) continue;
+    seen[p]=1;
+    const q=p*4, dr=d[q]-r0, dg=d[q+1]-g0, db=d[q+2]-b0;
+    if(dr*dr+dg*dg+db*db>tol) continue;
+    if(m[p]!==0){ m[p]=0; n++; }
+    const x=p%w, y=(p/w)|0;
+    if(x>0) stack.push(p-1);
+    if(x<w-1) stack.push(p+1);
+    if(y>0) stack.push(p-w);
+    if(y<h-1) stack.push(p+w);
+  }
+  return n;
+}
+
+/* кисть: стереть или вернуть кружком */
+function brushAt(mx,my,val){
+  const w=S.mw,h=S.mh,m=S.mask,r=S.brush,r2=r*r;
+  const yA=Math.max(0,my-r), yB=Math.min(h-1,my+r);
+  const xA=Math.max(0,mx-r), xB=Math.min(w-1,mx+r);
+  for(let y=yA;y<=yB;y++){
+    const dy=y-my;
+    for(let x=xA;x<=xB;x++){
+      const dx=x-mx;
+      if(dx*dx+dy*dy<=r2) m[y*w+x]=val;
+    }
+  }
+}
+
+/* Запасной способ: фон — это то, что похоже по цвету на края кадра.
+   Заливка идёт от всей рамки, порог берётся из ползунка «Похожесть цвета». */
+function floodCut(){
+  const w=S.mw,h=S.mh,d=S.srcData;
+  const bg=new Uint8Array(w*h);
+  const stack=[];
+  const push=i=>{ if(!bg[i]){ bg[i]=1; stack.push(i); } };
+  for(let x=0;x<w;x++){ push(x); push((h-1)*w+x); }
+  for(let y=0;y<h;y++){ push(y*w); push(y*w+w-1); }
+  const lim=S.tol*S.tol*3;
+  while(stack.length){
+    const i=stack.pop(), q=i*4;
+    const r=d[q],g=d[q+1],b=d[q+2];
+    const x=i%w, y=(i/w)|0;
+    const nb=[];
+    if(x>0)nb.push(i-1); if(x<w-1)nb.push(i+1);
+    if(y>0)nb.push(i-w); if(y<h-1)nb.push(i+w);
+    for(const j of nb){
+      if(bg[j])continue;
+      const p=j*4, dr=d[p]-r, dg=d[p+1]-g, db=d[p+2]-b;
+      if(dr*dr+dg*dg+db*db<=lim){ bg[j]=1; stack.push(j); }
+    }
+  }
+  const a=new Float32Array(w*h);
+  let hit=0;
+  for(let i=0;i<a.length;i++){ if(!bg[i]){a[i]=255;hit++;} }
+  if(hit===0 || hit===w*h) return false;      // всё фоном или ничего — не помогло
+  S.mask=a; S.share=Math.round(hit/(w*h)*100);
+  return true;
+}
+
+async function segment(){
+  const seg=await getSegmenter();
+  say("working");
+  const w=S.mw,h=S.mh;
+  const c=document.createElement("canvas");c.width=w;c.height=h;
+  const g=c.getContext("2d",{willReadFrequently:true});
+  g.drawImage(S.img,0,0,w,h);
+  const res=seg.segment(c);
+  const mask=res.categoryMask, m=mask.getAsUint8Array();
+  const x0=w*0.25|0,x1=w*0.75|0,y0=h*0.2|0,y1=h*0.85|0;
+  const total={},mid={};
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const v=m[y*w+x];
+    total[v]=(total[v]||0)+1;
+    if(x>=x0&&x<x1&&y>=y0&&y<y1) mid[v]=(mid[v]||0)+1;
+  }
+  let subject=null,best=-1;
+  for(const k in total){
+    const share=total[k]/(w*h);
+    if(share>0.94||share<0.015) continue;
+    const sc=(mid[k]||0)/total[k];
+    if(sc>best){best=sc;subject=+k;}
+  }
+  mask.close(); if(res.close) res.close();
+  if(subject===null){
+    if(floodCut()){ drawCut(); say("segnone_fb",null,"good"); }
+    else { S.mask=null; say("segnone_fb",null,"bad"); }
+    return;
+  }
+  const a=new Float32Array(w*h);
+  let hit=0;
+  for(let i=0;i<m.length;i++) if(m[i]===subject){a[i]=255;hit++;}
+  S.mask=a;S.share=Math.round(hit/(w*h)*100);
+  drawCut();
+  say("segok",[w,h,S.share],"good");
+}
+
+/* мягкий край: разделяемое размытие маски, без ctx.filter */
+function blurAlpha(src,w,h,r){
+  if(r<1) return src;
+  const tmp=new Float32Array(w*h),out=new Float32Array(w*h),win=r*2+1;
+  const cl=(v,max)=>v<0?0:v>max?max:v;
+  for(let y=0;y<h;y++){
+    let s=0;
+    for(let x=-r;x<=r;x++) s+=src[y*w+cl(x,w-1)];
+    for(let x=0;x<w;x++){
+      tmp[y*w+x]=s/win;
+      s-=src[y*w+cl(x-r,w-1)]; s+=src[y*w+cl(x+r+1,w-1)];
+    }
+  }
+  for(let x=0;x<w;x++){
+    let s=0;
+    for(let y=-r;y<=r;y++) s+=tmp[cl(y,h-1)*w+x];
+    for(let y=0;y<h;y++){
+      out[y*w+x]=s/win;
+      s-=tmp[cl(y-r,h-1)*w+x]; s+=tmp[cl(y+r+1,h-1)*w+x];
+    }
+  }
+  return out;
+}
+
+/* собирает вырезанное с выбранным фоном */
+function composeCut(canvas){
+  const w=S.mw,h=S.mh;
+  canvas.width=w;canvas.height=h;
+  const g=canvas.getContext("2d",{willReadFrequently:true});
+  g.clearRect(0,0,w,h);
+  if(S.bg==="white"||S.bg==="dark"){
+    g.fillStyle=S.bg==="white"?"#FFFFFF":"#14100E";
+    g.fillRect(0,0,w,h);
+  }else if(S.bg==="blur"){
+    const k=Math.max(1,Math.round(w/40));
+    const s=document.createElement("canvas");
+    s.width=k;s.height=Math.max(1,Math.round(h*k/w));
+    s.getContext("2d").drawImage(S.img,0,0,s.width,s.height);
+    g.imageSmoothingEnabled=true;
+    g.drawImage(s,0,0,w,h);
+  }
+  const cut=document.createElement("canvas");cut.width=w;cut.height=h;
+  const cg=cut.getContext("2d",{willReadFrequently:true});
+  cg.drawImage(S.img,0,0,w,h);
+  const id=cg.getImageData(0,0,w,h);
+  const soft=blurAlpha(S.mask,w,h,S.soft), shift=S.edge*2.55;
+  for(let i=0,p=3;i<soft.length;i++,p+=4){
+    const v=soft[i]+shift;
+    id.data[p]=v<0?0:v>255?255:v;
+  }
+  cg.putImageData(id,0,0);
+  g.drawImage(cut,0,0);
+  return canvas;
+}
+
+/* маленькая копия холста — видно правки, не закрывая шторку */
+function drawMini(){
+  const box=el("miniBox"), sh=document.getElementById("sheet");
+  if(!sh||!sh.classList.contains("on")){ if(box) box.hidden=true; return; }
+  const m=el("mini"), fr=el("miniFrame");
+  try{
+    if(S.tab==="art"){
+      if(!S.rows.length){ box.hidden=true; return; }
+      paintArt(m,6,1);
+      fr.className="frame"+((S.color&&S.mode!=="emoji")?" dark":"");
+    }else{
+      if(!S.mask){ box.hidden=true; return; }
+      composeCut(m);
+      fr.className="frame check";
+    }
+  }catch(e){ box.hidden=true; return; }
+  box.hidden=false;
+  const k=Math.min(300/m.width, 150/m.height, 1);
+  m.style.width=Math.round(m.width*k)+"px";
+  m.style.height=Math.round(m.height*k)+"px";
+}
+
+function drawCut(){
+  if(S.tab!=="cut")return;
+  el("board").className="board";
+  if(!S.mask){ const c=el("cv"); c.width=1;c.height=1;
+    el("toArt").disabled=true; el("dl").disabled=true; return; }
+  composeCut(el("cv"));
+  el("toArt").disabled=false;
+  el("dl").disabled=false;
+  drawMini();
+}
+
+/* ══════════════════════ символы ══════════════════════ */
+const FONT='Menlo, Monaco, "Courier New", monospace';
+let CELL=0.6;
+(function(){
+  const g=document.createElement("canvas").getContext("2d");
+  g.font='200px '+FONT;
+  const w=g.measureText("M").width;
+  if(w>40&&w<300) CELL=w/200;
+})();
+
+/* лимиты площадок и обёртка, которая сохраняет моноширинность */
+/* maxw — сколько знаков влезает в окно площадки БЕЗ переноса строки.
+   Перенос страшнее лимита: арт складывается пополам и превращается в кашу. */
+const TARGETS={
+  none:  {lim:0,    pre:"",          post:"",          lh:1.00, maxw:0},
+  steam: {lim:1000, pre:"[code]\n",  post:"\n[/code]", lh:1.35, maxw:40},
+  tg:    {lim:4096, pre:"```\n",     post:"\n```",     lh:1.25, maxw:32},
+  vk:    {lim:4000, pre:"",          post:"",          lh:1.30, maxw:0}
+};
+
+let BRCELL=0.6;
+(function(){
+  const g=document.createElement("canvas").getContext("2d");
+  g.font='200px '+FONT;
+  const w=g.measureText("\u28FF").width;
+  if(w>40&&w<400) BRCELL=w/200;
+})();
+
+const RAMPS={
+  classic:"@%#*+=-:. ",
+  punct:"@#&$%()[]{}?*+=;:,. ",
+  detail:"$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ",
+  blocks:"\u2588\u2593\u2592\u2591 ",
+  binary:"10 ",
+  braille:"\u28FF\u28F7\u28E7\u28C7\u2887\u2807\u2803\u2801\u2800"
+};
+const ramp=()=>{const r=S.ramp==="custom"?(S.custom||" "):RAMPS[S.ramp];
+  return S.invert?Array.from(r).reverse().join(""):r;};
+
+const work=document.createElement("canvas");
+const wctx=work.getContext("2d",{willReadFrequently:true});
+
+/* источник для символов: вырезанное, если оно есть, иначе оригинал */
+function artSource(){
+  if(S.mask) return composeCut(document.createElement("canvas"));
+  return S.img;
+}
+
+function buildArt(){
+  if(S.tab!=="art") return;
+  if(!S.img){ say("needphoto",null,"bad"); return; }
+  try{
+    const emoji=S.mode==="emoji", brl=S.mode==="braille";
+    if(emoji && !ensurePalette()){ say("fail",["emoji font"],"bad"); return; }
+    const ch=ramp();
+    const src=artSource();
+    const sw=src.naturalWidth||src.width, sh=src.naturalHeight||src.height;
+    const asp=(emoji?1:(brl?BRCELL:CELL))/S.lh;   // просвет между строками
+    let c=emoji?Math.min(S.cols,72):S.cols;
+
+    /* если текст пойдёт в Steam или ВК, сужаем кадр, пока не влезет в лимит */
+    const G=TARGETS[S.target], extra=G.pre.length+G.post.length;
+    let fitted=false;
+    if(G.maxw && c>G.maxw){ c=G.maxw; fitted=true; }   // иначе строки переломятся
+    if(G.lim){
+      while(c>10){
+        const rr=Math.max(1,Math.round(c*(sh/sw)*asp));
+        if((c+1)*rr+extra<=G.lim) break;
+        c-=2; fitted=true;
+      }
+    }
+    const r=Math.max(1,Math.round(c*(sh/sw)*asp));
+    const lines=[],tints=[],cells=[];
+    const adj=v=>{const n=(v-128)*S.con+128+S.bri;return n<0?0:n>255?255:n;};
+    const holes=!!S.mask;
+
+    if(brl){
+      /* Каждый знак брайля — 8 точек, поэтому берём сетку вдвое шире и вчетверо выше.
+         Точки чёрно-белые, полутона даёт рассеивание ошибки по Флойду–Стейнбергу. */
+      const W=c*2, H=r*4;
+      work.width=W;work.height=H;
+      wctx.clearRect(0,0,W,H);
+      wctx.drawImage(src,0,0,W,H);
+      const d=wctx.getImageData(0,0,W,H).data;
+      const lum=new Float32Array(W*H), alpha=new Uint8Array(W*H);
+      for(let i=0,p=0;i<lum.length;i++,p+=4){
+        const A=d[p+3]; alpha[i]=A;
+        const R=d[p]*(A/255)+(1-A/255)*255,
+              G=d[p+1]*(A/255)+(1-A/255)*255,
+              B=d[p+2]*(A/255)+(1-A/255)*255;
+        lum[i]=adj(0.2126*R+0.7152*G+0.0722*B);
+      }
+      for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+        const i=y*W+x, old=lum[i], nv=old<128?0:255;
+        lum[i]=nv;
+        const e=old-nv;
+        if(x+1<W) lum[i+1]+=e*7/16;
+        if(y+1<H){
+          if(x>0)   lum[i+W-1]+=e*3/16;
+          lum[i+W]+=e*5/16;
+          if(x+1<W) lum[i+W+1]+=e*1/16;
+        }
+      }
+      const BIT=[[0,1,2,6],[3,4,5,7]];      // раскладка точек в кодировке брайля
+      for(let cy=0;cy<r;cy++){
+        let ln="", cl=[];
+        for(let cx=0;cx<c;cx++){
+          let bits=0;
+          for(let dx=0;dx<2;dx++)for(let dy=0;dy<4;dy++){
+            const px=cx*2+dx, py=cy*4+dy;
+            if(px>=W||py>=H) continue;
+            const i=py*W+px;
+            if(holes && alpha[i]<90) continue;
+            const on = S.invert ? lum[i]>=128 : lum[i]<128;
+            if(on) bits |= 1<<BIT[dx][dy];
+          }
+          const g=String.fromCharCode(0x2800+bits);
+          ln+=g; cl.push(g);
+        }
+        lines.push(ln); cells.push(cl);
+      }
+      S.rows=lines;S.cells=cells;S.tint=[];S.w=c;S.h=r;
+      drawArt();
+      if(G.lim) say("fitted",[c,text().length,G.lim], text().length<=G.lim?"good":"bad");
+      else say("arted",[S.name,c,r],"good");
+      return;
+    }
+
+    work.width=c;work.height=r;
+    wctx.clearRect(0,0,c,r);
+    wctx.drawImage(src,0,0,c,r);
+    const d=wctx.getImageData(0,0,c,r).data;
+
+    for(let y=0;y<r;y++){
+      let ln="",tn=[],cl=[];
+      for(let x=0;x<c;x++){
+        const i=(y*c+x)*4,A=d[i+3];
+        if(holes&&A<90){
+          cl.push(emoji?"":" ");
+          ln+=emoji?"\u2B1C":" ";
+          if(S.color&&!emoji)tn.push("#EDE6D8");
+          continue;
+        }
+        const R=d[i]*(A/255)+(1-A/255)*255,
+              G=d[i+1]*(A/255)+(1-A/255)*255,
+              B=d[i+2]*(A/255)+(1-A/255)*255;
+        if(emoji){
+          const e=nearest(adj(R),adj(G),adj(B));
+          cl.push(e);ln+=e;
+        }else{
+          const g=ch.charAt(Math.min(ch.length-1,Math.floor(adj(0.2126*R+0.7152*G+0.0722*B)/256*ch.length)));
+          cl.push(g);ln+=g;
+          if(S.color)tn.push("rgb("+d[i]+","+d[i+1]+","+d[i+2]+")");
+        }
+      }
+      lines.push(ln);cells.push(cl);
+      if(S.color&&!emoji)tints.push(tn);
+    }
+    S.rows=lines;S.cells=cells;S.tint=tints;S.w=c;S.h=r;
+    drawArt();
+    if(G.lim) say("fitted",[c,text().length,G.lim], text().length<=G.lim?"good":"bad");
+    else say("arted",[S.name,c,r],"good");
+  }catch(err){ say("fail",[err.message],"bad"); }
+}
+
+function paintArt(canvas,cellW,dpr){
+  const emoji=S.mode==="emoji";
+  const cell=S.mode==="braille"?BRCELL:CELL;
+  const lh=(emoji?cellW:cellW/cell)*S.lh;
+  const fs=emoji?cellW*0.92:cellW/cell;
+  const cols=S.w,rows=S.rows.length;
+  const cssW=cellW*cols,cssH=lh*rows;
+  canvas.width=Math.max(1,Math.round(cssW*dpr));
+  canvas.height=Math.max(1,Math.round(cssH*dpr));
+  canvas.style.width=cssW+"px";canvas.style.height=cssH+"px";
+  const g=canvas.getContext("2d");
+  g.setTransform(dpr,0,0,dpr,0,0);
+  g.fillStyle=(S.color&&!emoji)?"#0C0908":"#EDE6D8";
+  g.fillRect(0,0,cssW,cssH);
+  if(emoji){
+    g.font=fs+"px "+EMOJI_FONT;
+    g.textAlign="center";g.textBaseline="middle";
+    for(let y=0;y<rows;y++){
+      const line=S.cells[y];
+      for(let x=0;x<line.length;x++){
+        if(!line[x])continue;
+        g.fillText(line[x],x*cellW+cellW/2,y*lh+lh/2);
+      }
+    }
+    g.textAlign="left";g.textBaseline="top";
+    return {w:canvas.width,h:canvas.height};
+  }
+  g.font=fs+"px "+FONT;
+  g.textBaseline="top";
+  const off=(lh-fs)/2;                     // центрируем строку в её полосе
+  for(let y=0;y<rows;y++){
+    const ln=S.rows[y];
+    if(S.color){
+      for(let x=0;x<ln.length;x++){
+        g.fillStyle=S.tint[y][x];
+        g.fillText(ln.charAt(x),x*cellW,y*lh+off);
+      }
+    }else{
+      g.fillStyle="#14100E";
+      g.fillText(ln,0,y*lh+off);
+    }
+  }
+  return {w:canvas.width,h:canvas.height};
+}
+
+function drawArt(){
+  if(S.tab!=="art"||!S.rows.length)return;
+  const b=el("board");
+  b.className="board flat"+((S.color&&S.mode!=="emoji")?" dark":"");
+  const avail=Math.max(60, el("stage").clientWidth-24-16);
+  const cellW=S.zoom>0?S.zoom:avail/S.w;
+  const lh=(S.mode==="emoji"?cellW:cellW/(S.mode==="braille"?BRCELL:CELL))*S.lh;
+  let dpr=Math.min(3,window.devicePixelRatio||1);
+  while(cellW*S.w*dpr*lh*S.rows.length*dpr>16000000&&dpr>1) dpr-=0.5;
+  paintArt(el("cv"),cellW,dpr);
+  el("dl").disabled=false;
+  drawMini();
+}
+
+
+/* Причина у отказа модели каждый раз разная — подсказываем по обстановке */
+function segfailKey(){
+  if(inFrame) return "segfail_frame";
+  if(location.protocol==="file:") return "segfail_file";
+  const ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||
+            (navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  return ios ? "segfail_ios" : "segfail_net";
+}
+
+/* ══════════════════════ загрузка ══════════════════════ */
+function load(f){
+  if(!f){say("nofile",null,"bad");return;}
+  say("reading",[f.name||"file",Math.round(f.size/1024)]);
+  const fr=new FileReader();
+  fr.onerror=()=>say("noread",null,"bad");
+  fr.onload=()=>{
+    const im=new Image();
+    im.onload=async()=>{
+      S.img=im;S.mask=null;S.isSample=false;
+      S.name=(f.name||"photo").replace(/\.[^.]+$/,"");
+      if(S.tab!=="art") setTab("cut");
+      cacheSource();
+      const after=()=> S.tab==="art" ? buildArt() : drawCut();
+      if(maskFromAlpha()){
+        after();
+        say("alphaok",[S.mw,S.mh,S.share],"good");
+        return;
+      }
+      /* показываем фото целиком и спрашиваем, что вырезать */
+      ensureMask(); after();
+      if(S.tab==="cut") askCut();
+    };
+    im.onerror=()=>say("nodecode",null,"bad");
+    im.src=fr.result;
+  };
+  fr.readAsDataURL(f);
+}
+el("fCam").addEventListener("change",e=>load(e.target.files&&e.target.files[0]));
+el("fLib").addEventListener("change",e=>load(e.target.files&&e.target.files[0]));
+document.querySelectorAll("label[for]").forEach(l=>{
+  l.addEventListener("keydown",e=>{
+    if(e.key==="Enter"||e.key===" "){e.preventDefault();el(l.htmlFor).click();}});
+});
+el("paste").addEventListener("click",async()=>{
+  try{
+    if(!navigator.clipboard||!navigator.clipboard.read) throw new Error("no api");
+    const items=await navigator.clipboard.read();
+    for(const it of items){
+      const type=(it.types||[]).find(x=>x.indexOf("image/")===0);
+      if(type){ load(new File([await it.getType(type)],"clipboard.png",{type})); return; }
+    }
+    say("noimage",null,"bad");
+  }catch(e){ say("pastefail",null,"bad"); }
+});
+["dragover","drop"].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault()));
+document.addEventListener("drop",e=>load(e.dataTransfer.files[0]));
+document.addEventListener("paste",e=>{
+  const it=e.clipboardData&&e.clipboardData.items; if(!it)return;
+  for(const i of it) if(i.type.indexOf("image/")===0){load(i.getAsFile());break;}
+});
+el("toArt").addEventListener("click",()=>setTab("art"));
+
+
+/* ══════════════════ вкладка QR ══════════════════ */
+S.qr=null;                       // {size,grid,version}
+function buildQr(){
+  const txt=(el("qrText").value||"").trim();
+  if(!txt){ S.qr=null; say("qr_empty",null,"bad"); drawQr(); return; }
+  const q=QR.encode(txt, el("qrLvl").value);
+  if(!q){ S.qr=null; say("qr_long",null,"bad"); drawQr(); return; }
+  S.qr=q;
+  drawQr();
+  say("qr_done",[q.version,q.size],"good");
+}
+function qrRows(){
+  /* два модуля в одном знаке: █ ▀ ▄ и пробел — QR остаётся квадратным в моношрифте */
+  const g=S.qr.grid,n=S.qr.size,out=[];
+  const Q=2;                                    // тихая зона в модулях
+  for(let y=-Q;y<n+Q;y+=2){
+    let ln="";
+    for(let x=-Q;x<n+Q;x++){
+      const top=(y>=0&&y<n&&x>=0&&x<n)?g[y][x]:0;
+      const bot=(y+1>=0&&y+1<n&&x>=0&&x<n)?g[y+1][x]:0;
+      ln+= top&&bot?"\u2588": top?"\u2580": bot?"\u2584":" ";
+    }
+    out.push(ln);
+  }
+  return out;
+}
+function drawQr(){
+  if(S.tab!=="qr")return;
+  const b=el("board"), c=el("cv");
+  if(!S.qr){ c.width=1;c.height=1; b.className="board flat"; el("dl").disabled=true; return; }
+  const style=el("qrStyle").value;
+  const avail=Math.max(120, el("stage").clientWidth-24-16);
+  if(style==="blocks"){
+    const rows=qrRows();
+    const cellW=Math.min(14, avail/rows[0].length);
+    const dpr=Math.min(3,window.devicePixelRatio||1);
+    const lh=cellW/0.5;                          // блоки почти квадратны при lh=2*cellW
+    c.width=Math.round(rows[0].length*cellW*dpr);
+    c.height=Math.round(rows.length*lh*dpr);
+    c.style.width=(rows[0].length*cellW)+"px";
+    c.style.height=(rows.length*lh)+"px";
+    const g=c.getContext("2d");
+    g.setTransform(dpr,0,0,dpr,0,0);
+    g.fillStyle="#FFFFFF";g.fillRect(0,0,c.width,c.height);
+    g.fillStyle="#14100E";
+    g.font=(lh)+"px "+FONT; g.textBaseline="top";
+    rows.forEach((ln,i)=>g.fillText(ln,0,i*lh));
+  }else{
+    const n=S.qr.size, Q=4;                      // тихая зона 4 модуля
+    const mod=Math.max(2,Math.floor(Math.min(avail,420)/(n+Q*2)));
+    const px=(n+Q*2)*mod, dpr=Math.min(3,window.devicePixelRatio||1);
+    c.width=px*dpr; c.height=px*dpr;
+    c.style.width=px+"px"; c.style.height=px+"px";
+    const g=c.getContext("2d");
+    g.setTransform(dpr,0,0,dpr,0,0);
+    g.fillStyle="#FFFFFF"; g.fillRect(0,0,px,px);
+    g.fillStyle="#14100E";
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++)
+      if(S.qr.grid[y][x]) g.fillRect((Q+x)*mod,(Q+y)*mod,mod,mod);
+  }
+  b.className="board flat";
+  el("dl").disabled=false;
+}
+let qrTimer=null;
+el("qrText").addEventListener("input",()=>{clearTimeout(qrTimer);qrTimer=setTimeout(buildQr,250);});
+el("qrLvl").addEventListener("change",buildQr);
+el("qrStyle").addEventListener("change",()=>{
+  el("tipQrBlocks").hidden = el("qrStyle").value!=="blocks";
+  drawQr();
+});
+
+/* ══════════════════════ настройки ══════════════════════ */
+const sheet=el("sheet"),scrim=el("scrim");
+el("tune").addEventListener("click",()=>{
+  sheet.classList.add("on");scrim.classList.add("on");drawMini();
+});
+const shut=()=>{sheet.classList.remove("on");scrim.classList.remove("on");el("miniBox").hidden=true;};
+el("close").addEventListener("click",shut);
+scrim.addEventListener("click",shut);
+
+el("bg").addEventListener("change",e=>{S.bg=e.target.value;drawCut();});
+el("soft").addEventListener("input",e=>{S.soft=+e.target.value;el("softVal").textContent=S.soft;drawCut();});
+el("edge").addEventListener("input",e=>{S.edge=+e.target.value;el("edgeVal").textContent=S.edge;drawCut();});
+
+/* ───────── двухшаговый вопрос ───────── */
+let askStep="cut";                    // "cut" → «убрать?», "subj" → «человек или предмет?»
+function askCut(){
+  askStep="cut";
+  el("askQ").textContent=t("ask_cut");
+  el("askPerson").textContent=t("cut_yes");
+  el("askThing").textContent=t("cut_skip");
+  el("ask").hidden=false;
+}
+function askSubject(){
+  askStep="subj";
+  el("askQ").textContent=t("ask_what");
+  el("askPerson").textContent=t("subj_person");
+  el("askThing").textContent=t("subj_thing");
+  el("ask").hidden=false;
+}
+function hideAsk(){ el("ask").hidden=true; }
+
+async function cutPerson(){
+  hideAsk();
+  try{ say("segload"); await segment(); }
+  catch(e){
+    if(floodCut()){ drawCut(); say("fallback_only",null,"good"); }
+    else say(segfailKey(),null,"bad");
+  }
+}
+function cutThing(){
+  hideAsk();
+  say("working");
+  requestAnimationFrame(()=>{
+    if(floodCut()){ drawCut(); say("thing_done",null,"good"); }
+    else { ensureMask(); drawCut(); say("thing_fail",null,"bad"); }
+  });
+}
+el("askPerson").addEventListener("click",()=>{
+  if(askStep==="cut") askSubject();          // «Убрать фон» → второй вопрос
+  else cutPerson();
+});
+el("askThing").addEventListener("click",()=>{
+  if(askStep==="cut"){ hideAsk(); say("kept",[S.mw,S.mh],"good"); }
+  else cutThing();
+});
+
+/* ───────── рисование по холсту ───────── */
+let painting=false, pending=false;
+function redrawCut(){
+  if(pending)return; pending=true;
+  requestAnimationFrame(()=>{pending=false;drawCut();});
+}
+function toMask(e){
+  const r=el("cv").getBoundingClientRect();
+  if(!r.width||!r.height) return [-1,-1];
+  return [Math.round((e.clientX-r.left)/r.width*S.mw),
+          Math.round((e.clientY-r.top)/r.height*S.mh)];
+}
+el("cv").addEventListener("pointerdown",e=>{
+  if(S.tab!=="cut"||S.tool==="none"||!S.img)return;
+  const [x,y]=toMask(e);
+  if(x<0||y<0||x>=S.mw||y>=S.mh)return;
+  e.preventDefault();
+  if(S.tool==="wand"){
+    ensureMask();
+    const n=wandAt(x,y);
+    drawCut(); say("wanded",[n],"good");
+    return;
+  }
+  snapshot(); painting=true;
+  try{ el("cv").setPointerCapture(e.pointerId); }catch(_){}
+  brushAt(x,y,S.tool==="erase"?0:255); redrawCut();
+});
+el("cv").addEventListener("pointermove",e=>{
+  if(!painting)return;
+  e.preventDefault();
+  const [x,y]=toMask(e);
+  if(x<0||y<0||x>=S.mw||y>=S.mh)return;
+  brushAt(x,y,S.tool==="erase"?0:255); redrawCut();
+});
+["pointerup","pointercancel","pointerleave"].forEach(ev=>
+  el("cv").addEventListener(ev,()=>{painting=false;}));
+
+function setTool(v){
+  S.tool = (S.tool===v) ? "none" : v;      // повторное нажатие выключает
+  el("tool").value=S.tool;
+  el("tWand").setAttribute("aria-pressed",String(S.tool==="wand"));
+  el("tErase").setAttribute("aria-pressed",String(S.tool==="erase"));
+  el("tRestore").setAttribute("aria-pressed",String(S.tool==="restore"));
+  el("cv").style.touchAction = S.tool==="none" ? "" : "none";
+  el("cv").style.cursor      = S.tool==="none" ? "" : "crosshair";
+}
+el("tool").addEventListener("change",e=>{ S.tool="none"; setTool(e.target.value); });
+let autoBusy=false;
+el("tAuto").addEventListener("click",()=>{
+  if(!S.img){ say("needphoto",null,"bad"); return; }
+  askSubject();
+});
+el("tWand").addEventListener("click",()=>setTool("wand"));
+el("tErase").addEventListener("click",()=>setTool("erase"));
+el("tRestore").addEventListener("click",()=>setTool("restore"));
+el("tUndo").addEventListener("click",()=>el("undo").click());
+el("tol").addEventListener("input",e=>{S.tol=+e.target.value;el("tolVal").textContent=S.tol;});
+el("brush").addEventListener("input",e=>{S.brush=+e.target.value;el("brushVal").textContent=S.brush;});
+el("undo").addEventListener("click",()=>{
+  if(!S.hist.length){say("nothing",null,"bad");return;}
+  S.mask=S.hist.pop(); drawCut(); say("resetdone",null,"good");
+});
+el("clearmask").addEventListener("click",()=>{
+  if(!S.img){say("needphoto",null,"bad");return;}
+  snapshot();
+  S.mask=new Float32Array(S.mw*S.mh).fill(255); S.share=100;
+  drawCut(); say("maskfull",null,"good");
+});
+
+el("redo").addEventListener("click",async()=>{
+  if(!S.img){say("needphoto",null,"bad");return;}
+  try{ say("segload"); await segment(); }catch(e){ say(segfailKey(),null,"bad"); }
+});
+
+el("mode").addEventListener("change",e=>{S.mode=e.target.value;sheetUI();buildArt();});
+el("cols").addEventListener("input",e=>{S.cols=+e.target.value;el("colsVal").textContent=S.cols;buildArt();});
+el("con").addEventListener("input",e=>{S.con=+e.target.value;el("conVal").textContent=S.con.toFixed(2);buildArt();});
+el("bri").addEventListener("input",e=>{S.bri=+e.target.value;el("briVal").textContent=S.bri;buildArt();});
+el("zoom").addEventListener("input",e=>{S.zoom=+e.target.value;
+  el("zoomVal").textContent=S.zoom?S.zoom+"px":t("fit");drawArt();});
+function targetTip(){
+  const k={steam:"tip_steam",tg:"tip_tg",vk:"tip_vk"}[S.target];
+  el("tipTarget").hidden = !k;
+  if(k) el("tipTarget").textContent = t(k);
+}
+el("target").addEventListener("change",e=>{
+  S.target=e.target.value;
+  targetTip();
+  S.lh=TARGETS[S.target].lh;                 // ставим просвет под площадку
+  el("lh").value=S.lh; el("lhVal").textContent=S.lh.toFixed(2);
+  buildArt();
+});
+el("lh").addEventListener("input",e=>{
+  S.lh=+e.target.value; el("lhVal").textContent=S.lh.toFixed(2); buildArt();
+});
+el("quality").addEventListener("input",e=>{S.quality=+e.target.value;el("qVal").textContent=S.quality+" px";});
+el("charset").addEventListener("change",e=>{S.ramp=e.target.value;sheetUI();buildArt();});
+el("custom").addEventListener("input",e=>{S.custom=e.target.value;buildArt();});
+const tog=(id,k)=>el(id).addEventListener("click",()=>{S[k]=!S[k];
+  el(id).setAttribute("aria-pressed",String(S[k]));buildArt();});
+tog("invert","invert");tog("color","color");
+addEventListener("resize",()=>{S.tab==="art"?drawArt():drawCut();});
+if(window.visualViewport)visualViewport.addEventListener("resize",()=>{S.tab==="art"&&drawArt();});
+
+const DEFAULTS={bg:"none",soft:2,edge:0,tool:"none",tol:32,brush:28,mode:"chars",cols:90,ramp:"punct",
+  custom:"(:(;(!.! ",con:1.2,bri:0,zoom:0,quality:1000,invert:false,color:false,target:"none",lh:1};
+el("reset").addEventListener("click",()=>{
+  Object.keys(DEFAULTS).forEach(k=>{S[k]=DEFAULTS[k];});
+  el("bg").value=S.bg;
+  S.tool="none"; el("tool").value="none";
+  el("cv").style.touchAction=""; el("cv").style.cursor="";
+  ["tWand","tErase","tRestore"].forEach(i=>el(i).setAttribute("aria-pressed","false"));
+  el("tol").value=S.tol; el("tolVal").textContent=S.tol;
+  el("brush").value=S.brush; el("brushVal").textContent=S.brush;
+  el("soft").value=S.soft; el("softVal").textContent=S.soft;
+  el("edge").value=S.edge; el("edgeVal").textContent=S.edge;
+  el("mode").value=S.mode;
+  el("cols").value=S.cols; el("colsVal").textContent=S.cols;
+  el("charset").value=S.ramp; el("custom").value=S.custom;
+  el("con").value=S.con; el("conVal").textContent=S.con.toFixed(2);
+  el("bri").value=S.bri; el("briVal").textContent=S.bri;
+  el("zoom").value=S.zoom; el("zoomVal").textContent=t("fit");
+  el("quality").value=S.quality; el("qVal").textContent=S.quality+" px";
+  el("target").value=S.target; targetTip();
+  el("lh").value=S.lh; el("lhVal").textContent=S.lh.toFixed(2);
+  el("invert").setAttribute("aria-pressed","false");
+  el("color").setAttribute("aria-pressed","false");
+  sheetUI();
+  S.tab==="art"?buildArt():drawCut();
+  say("resetdone",null,"good");
+});
+
+/* ══════════════════════ вывод ══════════════════════ */
+const text=()=>{
+  if(S.tab==="qr" && S.qr){
+    const body=qrRows().join("\n");
+    const G=TARGETS[S.target];
+    return (G.lim?G.pre:"") + body + (G.lim?G.post:"");
+  }
+  const G=TARGETS[S.target];
+  return G.pre + S.rows.join("\n") + G.post;
+};
+const outName=ext=> S.tab==="qr" ? "qr-code."+ext :
+  (S.name||"photo")+t(S.tab==="art"?"sfx_art":"sfx_cut")+"."+ext;
+const inFrame=(()=>{try{return window.top!==window.self;}catch(e){return true;}})();
+
+function pngBlob(){
+  const off=document.createElement("canvas");
+  let size;
+  if(S.tab==="qr" && S.qr){
+    const n=S.qr.size,Q=4,mod=Math.max(6,Math.round(S.quality/(n+Q*2)));
+    const px=(n+Q*2)*mod;
+    off.width=px;off.height=px;
+    const g=off.getContext("2d");
+    g.fillStyle="#FFFFFF";g.fillRect(0,0,px,px);
+    g.fillStyle="#000000";
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++)
+      if(S.qr.grid[y][x]) g.fillRect((Q+x)*mod,(Q+y)*mod,mod,mod);
+    size={w:px,h:px};
+    return new Promise(r=>off.toBlob(b=>r({blob:b,size}),"image/png"));
+  }
+  if(S.tab==="art"){
+    size=paintArt(off,Math.max(3,S.quality/S.w),1);
+  }else{
+    composeCut(off); size={w:off.width,h:off.height};
+  }
+  return new Promise(r=>off.toBlob(b=>r({blob:b,size}),"image/png"));
+}
+function viewImage(blob){
+  const url=URL.createObjectURL(blob);
+  el("vimg").src=url;el("viewer").hidden=false;
+  el("vclose").onclick=()=>{el("viewer").hidden=true;URL.revokeObjectURL(url);};
+}
+async function save(blob,ext,size){
+  const name=outName(ext);
+  if(window.showSaveFilePicker){
+    try{
+      const h=await showSaveFilePicker({suggestedName:name,
+        types:[{accept:ext==="png"?{"image/png":[".png"]}:{"text/plain":[".txt"]}}]});
+      const w=await h.createWritable();await w.write(blob);await w.close();
+      say("saved_picked",null,"good");return;
+    }catch(e){ if(e.name==="AbortError")return; }
+  }
+  try{
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;a.download=name;a.rel="noopener";
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),8000);
+  }catch(e){}
+  if(inFrame){ say("inframe",null,"bad"); if(ext==="png")viewImage(blob); }
+  else if(size) say("pngsize",[size.w,size.h,Math.round(blob.size/1024)],"good");
+  else say("saved_dl",null,"good");
+}
+el("png").addEventListener("click",async()=>{
+  if(!S.img&&!S.rows.length){say("needphoto",null,"bad");return;}
+  const r=await pngBlob(); S.tab==="art"?drawArt():drawCut(); save(r.blob,"png",r.size);
+});
+el("txt").addEventListener("click",()=>save(new Blob([text()],{type:"text/plain;charset=utf-8"}),"txt"));
+/* «Скачать» — сразу файл, без системного меню */
+el("dl").addEventListener("click",async()=>{
+  if(!S.rows.length&&!S.img){say("needphoto",null,"bad");return;}
+  const r=await pngBlob(); S.tab==="art"?drawArt():drawCut();
+  save(r.blob,"png",r.size);
+});
+
+/* «Поделиться» — системное меню, если браузер его даёт */
+el("shareChip").addEventListener("click",async()=>{
+  try{
+    const r=await pngBlob(); S.tab==="art"?drawArt():drawCut();
+    const file=new File([r.blob],outName("png"),{type:"image/png"});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:t("title")});return;
+    }
+    save(r.blob,"png",r.size);
+  }catch(e){ if(e.name!=="AbortError")say("noshare",[e.message],"bad"); }
+});
+el("copy").addEventListener("click",async()=>{
+  const done=()=> (S.tab!=="qr" && S.mode==="emoji") ? say("emojicopy",null,"bad") : say("copied",[text().split("\n").length],"good");
+  try{ await navigator.clipboard.writeText(text()); done(); }
+  catch(e){
+    const ta=document.createElement("textarea");ta.value=text();
+    ta.style.cssText="position:fixed;opacity:0";
+    document.body.appendChild(ta);ta.focus();ta.select();
+    let ok=false;try{ok=document.execCommand("copy");}catch(_){}
+    ta.remove();
+    ok?done():say("nocopy",null,"bad");
+  }
+});
+
+/* ══════════════════════ старт ══════════════════════ */
+applyLang();
+setTab("cut");
+say("ready");
+
+/* ══════════════════════ Telegram Mini App ══════════════════════ */
+(function(){
+  const tg = window.Telegram && window.Telegram.WebApp;
+  if(!tg) return;
+  tg.ready(); tg.expand();
+  try{ tg.disableVerticalSwipes(); }catch(e){}
+  try{ tg.setHeaderColor("#16110F"); tg.setBackgroundColor("#16110F"); }catch(e){}
+  const lc=(tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code)||"";
+  if(lc){ L = lc.indexOf("ru")===0 ? "ru" : "en"; applyLang(); }
+  const syncH=()=>{
+    const px=tg.viewportStableHeight||tg.viewportHeight||window.innerHeight;
+    document.documentElement.style.setProperty("--app-h", px+"px");
+    S.tab==="art"?drawArt():S.tab==="qr"?drawQr():drawCut();
+  };
+  syncH(); tg.onEvent("viewportChanged", syncH);
+  const back=tg.BackButton;
+  window.__tgSync=()=>{ try{ S.tab!=="cut"?back.show():back.hide(); }catch(e){} };
+  try{ back.onClick(()=>setTab("cut")); }catch(e){}
+  window.__tgSync();
+  const ch=document.querySelector(".tgl");
+  if(ch) ch.addEventListener("click",e=>{
+    e.preventDefault();
+    try{ tg.openTelegramLink("https://t.me/ProstoAyli"); }
+    catch(_){ location.href="https://t.me/ProstoAyli"; }
+  });
+  const buzz=s=>{ try{ tg.HapticFeedback.impactOccurred(s||"light"); }catch(e){} };
+  ["paste","toArt","tune","dl","copy","png","tabCut","tabArt","tabQr","tAuto","tWand","tErase","tRestore","tUndo","askPerson","askThing"]
+   .forEach(id=>{ const n=document.getElementById(id);
+     if(n) n.addEventListener("click",()=>buzz(id==="tAuto"?"medium":"light")); });
+})();
+
+</script>
+</body>
+</html>
