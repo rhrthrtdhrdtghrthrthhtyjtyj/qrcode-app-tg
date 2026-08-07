@@ -852,65 +852,80 @@ function code128(text){
 
 /* ══════════════════ чтение Code 128 с фото ══════════════════ */
 /* Чтение Code 128 с фотографии.
-   Идея: ведём по кадру наклонные линии, меряем длины чёрных и белых полос,
-   переводим их в ширины модулей и сверяем с таблицей образцов. */
+   Ядро повторяет проверенный подход ZXing: символ определяется не жёстким
+   округлением ширин, а выбором ближайшего образца по среднему отклонению. */
 
 function makeDecoder(C128, C128STOP){
-  /* образец → значение */
-  const PAT={};
-  C128.forEach((p,i)=>{ if(PAT[p]===undefined) PAT[p]=i; });
-
-  /* "11011001100" → [1,1,2,2,2,2] (длины серий) */
   function pat2runs(p){
     const r=[]; let n=1;
     for(let i=1;i<p.length;i++){ if(p[i]===p[i-1])n++; else{r.push(n);n=1;} }
     r.push(n); return r;
   }
-  const RUNS={};
-  for(const p in PAT) RUNS[pat2runs(p).join(",")]=PAT[p];
-  const STOPRUNS=pat2runs(C128STOP).join(",");   // 7 серий: 2,3,3,1,1,1,2
+  const PATTERNS=C128.map(pat2runs);
+  PATTERNS.push(pat2runs(C128STOP));
+  const STOP=106;
+  const MAX_AVG=0.25, MAX_ONE=0.7;
 
-  /* серии ширин → значение символа; ширина модуля берётся из суммы */
-  function runsToVal(runs, total){
-    const unit=total/11;
-    const q=runs.map(r=>Math.max(1,Math.min(4,Math.round(r/unit))));
-    if(q.reduce((a,b)=>a+b,0)!==11) return null;
-    const v=RUNS[q.join(",")];
-    return v===undefined?null:v;
+  function variance(counters, pattern){
+    let total=0, plen=0;
+    for(let i=0;i<counters.length;i++){ total+=counters[i]; plen+=pattern[i]; }
+    if(total<plen) return Infinity;
+    const unit=total/plen, maxOne=MAX_ONE*unit;
+    let sum=0;
+    for(let i=0;i<counters.length;i++){
+      const d=Math.abs(counters[i]-pattern[i]*unit);
+      if(d>maxOne) return Infinity;
+      sum+=d;
+    }
+    return sum/total;
   }
 
-  /* значения → строка (наборы B и C, переключения) */
+  function bestCode(counters){
+    let best=-1, bestV=MAX_AVG;
+    for(let c=0;c<PATTERNS.length;c++){
+      const p=PATTERNS[c];
+      const v=variance(counters, p.length===7?p.slice(0,6):p);
+      if(v<bestV){ bestV=v; best=c; }
+    }
+    return best;
+  }
+
   function valsToText(vals){
-    if(vals.length<3) return null;
     const start=vals[0];
     if(start<103||start>105) return null;
     const check=vals[vals.length-1];
     let sum=start;
     for(let i=1;i<vals.length-1;i++) sum+=vals[i]*i;
     if(sum%103!==check) return null;
+    /* Значения 96–101 означают разное в разных наборах!
+       В цифровом C любое 0..99 — это пара цифр, а не служебный код. */
     let mode = start===105?"C":(start===104?"B":"A");
     let out="";
     for(let i=1;i<vals.length-1;i++){
       const v=vals[i];
+      if(mode==="C"){
+        if(v<=99){ out+=String(v).padStart(2,"0"); continue; }
+        if(v===100){ mode="B"; continue; }
+        if(v===101){ mode="A"; continue; }
+        continue;                              // 102 — FNC1
+      }
+      if(mode==="B"){
+        if(v<=95){ out+=String.fromCharCode(v+32); continue; }
+        if(v===99){ mode="C"; continue; }
+        if(v===100){ mode="A"; continue; }
+        continue;                              // 96,97,98,101,102 — служебные
+      }
+      /* набор A */
+      if(v<=63){ out+=String.fromCharCode(v+32); continue; }
+      if(v<=95) continue;                       // управляющие символы
       if(v===99){ mode="C"; continue; }
       if(v===100){ mode="B"; continue; }
-      if(v===101){ mode="A"; continue; }
-      if(v>=96) continue;                       // служебные — пропускаем
-      if(mode==="C") out+=String(v).padStart(2,"0");
-      else out+=String.fromCharCode(v+32);
     }
-    return out;
+    return out.length?out:null;
   }
 
-  /* одна линия пикселей (0..255) → найденные строки */
-  function readLine(line){
+  function readAt(line,thr){
     const n=line.length;
-    if(n<60) return [];
-    let mn=255,mx=0;
-    for(const v of line){ if(v<mn)mn=v; if(v>mx)mx=v; }
-    if(mx-mn<40) return [];
-    const thr=(mn+mx)/2;
-    /* серии: чередование тёмное/светлое */
     const runs=[], dark=[];
     let cur=line[0]<thr, len=1;
     for(let i=1;i<n;i++){
@@ -921,42 +936,52 @@ function makeDecoder(C128, C128STOP){
     runs.push(len); dark.push(cur);
 
     const found=[];
-    for(let s=0;s<runs.length-12;s++){
-      if(!dark[s]) continue;                    // символ начинается с тёмной полосы
-      const vals=[]; let i=s, ok=true;
-      while(i+6<=runs.length){
-        const six=runs.slice(i,i+6);
-        const total=six.reduce((a,b)=>a+b,0);
-        if(vals.length===0){
-          const v=runsToVal(six,total);
-          if(v===null||v<103||v>105){ ok=false; break; }
-          vals.push(v); i+=6; continue;
-        }
-        /* стоп-символ — 7 серий */
-        const seven=runs.slice(i,i+7);
-        if(seven.length===7){
-          const t7=seven.reduce((a,b)=>a+b,0), u=t7/13;
-          const q=seven.map(r=>Math.max(1,Math.min(4,Math.round(r/u))));
-          if(q.reduce((a,b)=>a+b,0)===13 && q.join(",")===STOPRUNS){
+    for(let s=0;s+6<runs.length;s++){
+      if(!dark[s]) continue;
+      const six=runs.slice(s,s+6);
+      const code=bestCode(six);
+      if(code<103||code>105) continue;
+      const unit=six.reduce((a,b)=>a+b,0)/11;
+      if(s>0 && !(!dark[s-1] && runs[s-1]>=unit*5)) continue;
+
+      const vals=[code];
+      let i=s+6, done=false;
+      while(i+6<=runs.length && vals.length<80){
+        const c6=runs.slice(i,i+6);
+        const c=bestCode(c6);
+        if(c<0) break;
+        if(c===STOP){
+          const after=i+7;
+          const ok = after>=runs.length || (!dark[after] && runs[after]>=unit*3);
+          if(ok && vals.length>=3){
             const txt=valsToText(vals);
             if(txt) found.push(txt);
-            ok=false; break;
           }
+          done=true; break;
         }
-        const v=runsToVal(six,total);
-        if(v===null){ ok=false; break; }
-        vals.push(v); i+=6;
-        if(vals.length>60){ ok=false; break; }
+        vals.push(c); i+=6;
       }
+      if(done) s=i;
     }
     return found;
   }
 
-  /* весь кадр: пробуем горизонтали и лёгкие наклоны */
+  function readLine(line){
+    const n=line.length;
+    if(n<60) return [];
+    let mn=255,mx=0;
+    for(const v of line){ if(v<mn)mn=v; if(v>mx)mx=v; }
+    if(mx-mn<40) return [];
+    const out=[];
+    for(const k of [0.35,0.45,0.5,0.55,0.65])
+      for(const t of readAt(line, mn+(mx-mn)*k)) out.push(t);
+    return out;
+  }
+
   function decode(gray,w,h){
     const hits={};
-    const angles=[0,-0.05,0.05,-0.1,0.1,-0.16,0.16];
-    const lines=Math.min(120,Math.max(30,h>>2));
+    const angles=[0,-0.04,0.04,-0.09,0.09,-0.15,0.15,-0.22,0.22];
+    const lines=Math.min(140,Math.max(40,h>>2));
     for(const a of angles){
       for(let k=0;k<lines;k++){
         const y0=Math.round((k+0.5)*h/lines);
@@ -969,14 +994,18 @@ function makeDecoder(C128, C128STOP){
         }
         if(bad) continue;
         for(const t of readLine(line)) hits[t]=(hits[t]||0)+1;
-        /* и в обратную сторону — код мог быть отражён */
         const rev=Uint8Array.from(line).reverse();
         for(const t of readLine(rev)) hits[t]=(hits[t]||0)+1;
       }
     }
-    return Object.keys(hits)
-      .filter(t=>t.length>=4 && hits[t]>=2)     // отсекаем случайные совпадения
-      .sort((a,b)=>hits[b]-hits[a]);
+    /* короткие коды принимаем только при уверенном подтверждении */
+    const all=Object.entries(hits).filter(e=>e[0].length>=2 && (e[0].length>=6 || e[1]>=8));
+    if(!all.length) return [];
+    const top=Math.max.apply(null, all.map(e=>e[1]));
+    return all
+      .filter(e=>e[1]>=Math.max(3, top*0.15))
+      .sort((a,b)=>b[1]-a[1])
+      .map(e=>e[0]);
   }
 
   return {decode};
