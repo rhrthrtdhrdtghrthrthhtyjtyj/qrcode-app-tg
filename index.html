@@ -253,6 +253,14 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
     </select>
   </div>
   <div class="fld" data-grp="qr">
+    <div class="row-lbl"><span data-t="code_size"></span></div>
+    <select id="codeSize">
+      <option value="s" data-t="sz_s"></option>
+      <option value="m" selected data-t="sz_m"></option>
+      <option value="l" data-t="sz_l"></option>
+    </select>
+  </div>
+  <div class="fld" data-grp="qr">
     <div class="row-lbl"><span id="qrLbl"></span></div>
     <input type="text" id="qrText" data-t-ph="qr_ph" autocapitalize="off" spellcheck="false">
   </div>
@@ -340,13 +348,14 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
   </div>
 
   <div class="chips">
-    <label class="chip" for="fCam" tabindex="0" data-t="camera"></label>
+    <label class="chip" for="fCam" id="camLbl" tabindex="0" data-t="camera"></label>
     <button class="chip" id="undo" data-grp="cut" data-t="undo"></button>
     <button class="chip" id="clearmask" data-grp="cut" data-t="clearmask"></button>
     <button class="chip" id="redo" data-grp="cut" data-t="redo"></button>
     <button class="chip" id="invert" data-grp="art" aria-pressed="false" data-t="invert"></button>
     <button class="chip" id="color" data-grp="art" aria-pressed="false" data-t="color"></button>
     <label class="chip" for="fScan" data-grp="qr" tabindex="0" data-t="scan_btn"></label>
+    <button class="chip" id="barNum" data-grp="qr" aria-pressed="true" data-t="barnum"></button>
     <button class="chip" id="copyChip" data-t="copy"></button>
     <button class="chip" id="shareChip" data-t="share"></button>
     <button class="chip" id="png" data-t="filepng"></button>
@@ -389,6 +398,9 @@ ru:{
   bars_done:n=>"готово "+n+" штрих-кода — один под другим, как на чеке",
   bar_hint:"несколько чисел вводи через пробел — получишь несколько кодов",
   scan_btn:"Прочитать с фото",
+  cam_scan:"Снять код камерой",
+  code_size:"Размер кода", sz_s:"Малый", sz_m:"Обычный", sz_l:"Крупный",
+  barnum:"Номер под кодом",
   scanning:"ищу штрих-код на снимке…",
   scan_ok:n=>"найдено кодов: "+n+" — числа подставлены",
   scan_none:"штрих-код не распознан. Сними ближе, ровно и без бликов",
@@ -500,6 +512,9 @@ en:{
   bars_done:n=>n+" barcodes ready — stacked, like on a receipt",
   bar_hint:"separate several numbers with spaces to get several codes",
   scan_btn:"Read from photo",
+  cam_scan:"Scan with camera",
+  code_size:"Code size", sz_s:"Small", sz_m:"Normal", sz_l:"Large",
+  barnum:"Number below",
   scanning:"looking for a barcode…",
   scan_ok:n=>n+" code(s) found — numbers filled in",
   scan_none:"no barcode recognised. Shoot closer, straight on, without glare",
@@ -1033,6 +1048,7 @@ function applyLang(){
   const tq=el("tipQrBlocks"); if(tq) tq.textContent=t("qr_blockstip");
   const tb=el("tipBar"); if(tb) tb.textContent=t("bar_hint");
   if(el("qrLbl")) kindUI();
+  if(el("camLbl")) el("camLbl").textContent=t(S.tab==="qr"?"cam_scan":"camera");
   el("tipCut").textContent=t("tipcut");
   el("tipManual").textContent=t("manual");
   el("tipEmoji").textContent=t("tipemoji");
@@ -1086,6 +1102,7 @@ function sheetUI(){
   el("color").hidden  = S.tab!=="art" || emoji || brl;
   el("txt").hidden    = S.tab!=="art";
   el("copyChip").hidden = S.tab==="cut";
+  el("camLbl").textContent = t(S.tab==="qr"?"cam_scan":"camera");
   el("tipEmoji").hidden = !emoji;
 }
 
@@ -1663,7 +1680,12 @@ function load(f){
   };
   fr.readAsDataURL(f);
 }
-el("fCam").addEventListener("change",e=>load(e.target.files&&e.target.files[0]));
+el("fCam").addEventListener("change",e=>{
+  const f=e.target.files&&e.target.files[0];
+  e.target.value="";
+  /* на вкладке кодов снимок идёт не в вырезание, а в распознавание */
+  if(S.tab==="qr") scanFile(f); else load(f);
+});
 el("fLib").addEventListener("change",e=>load(e.target.files&&e.target.files[0]));
 document.querySelectorAll("label[for]").forEach(l=>{
   l.addEventListener("keydown",e=>{
@@ -1691,6 +1713,8 @@ el("toArt").addEventListener("click",()=>setTab("art"));
 
 /* ══════════════════ вкладка QR ══════════════════ */
 S.qr=null; S.bars=null;          // {size,grid,version} | [{txt,bits}, …]
+S.codeSize="m"; S.barNum=true;   // масштаб кода и подпись под полосами
+const SIZEK={s:0.6, m:1, l:1.6};
 function buildQr(){
   const txt=(el("qrText").value||"").trim();
   S.bars=null;
@@ -1764,8 +1788,8 @@ function drawBar(c){
   const dpr=Math.min(3,window.devicePixelRatio||1);
   const avail=Math.max(160, el("stage").clientWidth-24-16);
   const maxBits=Math.max(...S.bars.map(b=>b.bits.length));
-  const M=Math.max(1.2, Math.min(4, avail/(maxBits+20)));
-  paintBars(c,M,dpr,true);
+  const M=Math.max(1, Math.min(6, avail/(maxBits+20)*SIZEK[S.codeSize]));
+  paintBars(c,M,dpr,S.barNum);
 }
 function drawQr(){
   if(S.tab!=="qr")return;
@@ -1791,7 +1815,7 @@ function drawQr(){
     rows.forEach((ln,i)=>g.fillText(ln,0,i*lh));
   }else{
     const n=S.qr.size, Q=4;                      // тихая зона 4 модуля
-    const mod=Math.max(2,Math.floor(Math.min(avail,420)/(n+Q*2)));
+    const mod=Math.max(1,Math.floor(Math.min(avail,420)/(n+Q*2)*SIZEK[S.codeSize]));
     const px=(n+Q*2)*mod, dpr=Math.min(3,window.devicePixelRatio||1);
     c.width=px*dpr; c.height=px*dpr;
     c.style.width=px+"px"; c.style.height=px+"px";
@@ -1809,6 +1833,12 @@ function drawQr(){
 let qrTimer=null;
 el("qrText").addEventListener("input",()=>{clearTimeout(qrTimer);qrTimer=setTimeout(buildQr,250);});
 el("qrLvl").addEventListener("change",buildQr);
+el("codeSize").addEventListener("change",e=>{ S.codeSize=e.target.value; drawQr(); });
+el("barNum").addEventListener("click",()=>{
+  S.barNum=!S.barNum;
+  el("barNum").setAttribute("aria-pressed",String(S.barNum));
+  drawQr();
+});
 function kindUI(){
   const bar=el("codeKind").value==="bar";
   el("qrLbl").textContent = t(bar?"lbl_bar":"lbl_qr");
@@ -2007,6 +2037,8 @@ el("reset").addEventListener("click",()=>{
   el("zoom").value=S.zoom; el("zoomVal").textContent=t("fit");
   el("quality").value=S.quality; el("qVal").textContent=S.quality+" px";
   el("target").value=S.target; targetTip();
+  S.codeSize="m"; el("codeSize").value="m";
+  S.barNum=true; el("barNum").setAttribute("aria-pressed","true");
   el("lh").value=S.lh; el("lhVal").textContent=S.lh.toFixed(2);
   el("invert").setAttribute("aria-pressed","false");
   el("color").setAttribute("aria-pressed","false");
@@ -2017,9 +2049,7 @@ el("reset").addEventListener("click",()=>{
 
 
 /* ───────── чтение штрих-кода с фотографии ───────── */
-el("fScan").addEventListener("change",e=>{
-  const file=e.target.files&&e.target.files[0];
-  e.target.value="";
+function scanFile(file){
   if(!file){ say("nofile",null,"bad"); return; }
   say("scanning");
   const fr=new FileReader();
@@ -2052,6 +2082,10 @@ el("fScan").addEventListener("change",e=>{
     im.src=fr.result;
   };
   fr.readAsDataURL(file);
+}
+el("fScan").addEventListener("change",e=>{
+  const f=e.target.files&&e.target.files[0]; e.target.value="";
+  scanFile(f);
 });
 
 /* ══════════════════════ вывод ══════════════════════ */
@@ -2083,12 +2117,12 @@ function pngBlob(){
   let size;
   if(S.tab==="qr" && S.bars){
     const maxBits=Math.max(...S.bars.map(b=>b.bits.length));
-    const M=Math.max(3,Math.round(S.quality/(maxBits+20)));
-    size=paintBars(off,M,1,true);
+    const M=Math.max(2,Math.round(S.quality/(maxBits+20)*SIZEK[S.codeSize]));
+    size=paintBars(off,M,1,S.barNum);
     return new Promise(r=>off.toBlob(b2=>r({blob:b2,size}),"image/png"));
   }
   if(S.tab==="qr" && S.qr){
-    const n=S.qr.size,Q=4,mod=Math.max(6,Math.round(S.quality/(n+Q*2)));
+    const n=S.qr.size,Q=4,mod=Math.max(4,Math.round(S.quality/(n+Q*2)*SIZEK[S.codeSize]));
     const px=(n+Q*2)*mod;
     off.width=px;off.height=px;
     const g=off.getContext("2d");
