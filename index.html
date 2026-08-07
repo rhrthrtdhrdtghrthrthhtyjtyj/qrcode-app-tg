@@ -246,6 +246,13 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 
   <!-- вкладка «QR-код» -->
   <div class="fld" data-grp="qr">
+    <div class="row-lbl"><span data-t="code_kind"></span></div>
+    <select id="codeKind">
+      <option value="qr" selected data-t="kind_qr"></option>
+      <option value="bar" data-t="kind_bar"></option>
+    </select>
+  </div>
+  <div class="fld" data-grp="qr">
     <div class="row-lbl"><span data-t="tab_qr"></span></div>
     <input type="text" id="qrText" data-t-ph="qr_ph" autocapitalize="off" spellcheck="false">
   </div>
@@ -370,6 +377,11 @@ ru:{
   ready:"пришли фото — вырежу человека и переведу в символы",
   tab_cut:"Вырезать", tab_art:"Символы", tab_qr:"QR-код",
   qr_ph:"Ссылка, текст или номер…",
+  code_kind:"Тип кода",
+  kind_qr:"QR-код", kind_bar:"Штрих-код (Code 128)",
+  bar_done:n=>"штрих-код готов · "+n+" полос",
+  bar_ascii:"для штрих-кода только латиница, цифры и знаки — кириллица не влезает в Code 128",
+  bar_long:"слишком длинно для штрих-кода — он станет нечитаемым. До ~40 знаков",
   qr_make:"Создать", qr_lvl:"Запас прочности",
   qr_l:"L — минимальный", qr_m:"M — обычный", qr_q:"Q — повышенный", qr_h:"H — максимальный",
   qr_style:"Вид", qr_img:"Картинка", qr_blocks:"Текст из блоков",
@@ -467,6 +479,11 @@ en:{
   ready:"send a photo — I will cut out the person and turn it into characters",
   tab_cut:"Cut out", tab_art:"Characters", tab_qr:"QR code",
   qr_ph:"Link, text or number…",
+  code_kind:"Code type",
+  kind_qr:"QR code", kind_bar:"Barcode (Code 128)",
+  bar_done:n=>"barcode ready · "+n+" bars",
+  bar_ascii:"barcodes take only Latin letters, digits and symbols — Code 128 has no Cyrillic",
+  bar_long:"too long for a barcode — it would become unreadable. Up to ~40 chars",
   qr_make:"Create", qr_lvl:"Error tolerance",
   qr_l:"L — minimal", qr_m:"M — normal", qr_q:"Q — high", qr_h:"H — maximum",
   qr_style:"Style", qr_img:"Image", qr_blocks:"Text blocks",
@@ -782,6 +799,34 @@ const QR=(function(){
   return {encode};
 })();
 
+
+
+/* ══════════════════ кодер Code 128 (проверен декодером zbar) ══════════════════ */
+const C128=["11011001100","11001101100","11001100110","10010011000","10010001100","10001001100","10011001000","10011000100","10001100100","11001001000","11001000100","11000100100","10110011100","10011011100","10011001110","10111001100","10011101100","10011100110","11001110010","11001011100","11001001110","11011100100","11001110100","11101101110","11101001100","11100101100","11100100110","11101100100","11100110100","11100110010","11011011000","11011000110","11000110110","10100011000","10001011000","10001000110","10110001000","10001101000","10001100010","11010001000","11000101000","11000100010","10110111000","10110001110","10001101110","10111011000","10111000110","10001110110","11101110110","11010001110","11000101110","11011101000","11011100010","11011101110","11101011000","11101000110","11100010110","11101101000","11101100010","11100011010","11101111010","11001000010","11110001010","10100110000","10100001100","10010110000","10010000110","10000101100","10000100110","10110010000","10110000100","10011010000","10011000010","10000110100","10000110010","11000010010","11001010000","11110111010","11000010100","10001111010","10100111100","10010111100","10010011110","10111100100","10011110100","10011110010","11110100100","11110010100","11110010010","11011011110","11011110110","11110110110","10101111000","10100011110","10001011110","10111101000","10111100010","11110101000","11110100010","10111011110","10111101110","11101011110","11110101110","11010000100","11010010000","11010011100"];
+const C128STOP="1100011101011";
+function code128(text){
+  if([...text].some(c=>c.charCodeAt(0)<32||c.charCodeAt(0)>126)) return {err:"ascii"};
+  if(text.length>40) return {err:"long"};
+  const vals=[];
+  let i=0, mode=null;
+  const digits=j=>{let n=0;while(j+n<text.length&&text[j+n]>='0'&&text[j+n]<='9')n++;return n;};
+  while(i<text.length){
+    const d=digits(i);
+    if((d>=4&&d%2===0)||(mode==='C'&&d>=2)||d>=6){
+      if(mode!=='C'){ vals.push(vals.length?99:105); mode='C'; }
+      vals.push(+text.slice(i,i+2)); i+=2;
+    }else{
+      if(mode!=='B'){ vals.push(vals.length?100:104); mode='B'; }
+      vals.push(text.charCodeAt(i)-32); i++;
+    }
+  }
+  let sum=vals[0];
+  for(let j=1;j<vals.length;j++) sum+=vals[j]*j;
+  vals.push(sum%103);
+  let bits="";
+  for(const v of vals) bits+=C128[v];
+  return {bits:bits+C128STOP};
+}
 
 let lastStatus=null;
 function say(key,args,kind){
@@ -1443,10 +1488,20 @@ el("toArt").addEventListener("click",()=>setTab("art"));
 
 
 /* ══════════════════ вкладка QR ══════════════════ */
-S.qr=null;                       // {size,grid,version}
+S.qr=null; S.bar=null;           // {size,grid,version} | битовая строка полос
 function buildQr(){
   const txt=(el("qrText").value||"").trim();
+  S.bar=null;
   if(!txt){ S.qr=null; say("qr_empty",null,"bad"); drawQr(); return; }
+  if(el("codeKind").value==="bar"){
+    S.qr=null;
+    const r=code128(txt);
+    if(r.err){ say(r.err==="ascii"?"bar_ascii":"bar_long",null,"bad"); drawQr(); return; }
+    S.bar=r.bits;
+    drawQr();
+    say("bar_done",[r.bits.length],"good");
+    return;
+  }
   const q=QR.encode(txt, el("qrLvl").value);
   if(!q){ S.qr=null; say("qr_long",null,"bad"); drawQr(); return; }
   S.qr=q;
@@ -1468,9 +1523,24 @@ function qrRows(){
   }
   return out;
 }
+function drawBar(c){
+  const bits=S.bar, dpr=Math.min(3,window.devicePixelRatio||1);
+  const avail=Math.max(160, el("stage").clientWidth-24-16);
+  const M=Math.max(1.5, Math.min(4, avail/(bits.length+20)));
+  const W=Math.round((bits.length+20)*M), H=Math.round(Math.min(140, W*0.4));
+  c.width=W*dpr; c.height=H*dpr;
+  c.style.width=W+"px"; c.style.height=H+"px";
+  const g=c.getContext("2d");
+  g.setTransform(dpr,0,0,dpr,0,0);
+  g.fillStyle="#FFFFFF"; g.fillRect(0,0,W,H);
+  g.fillStyle="#14100E";
+  for(let i=0;i<bits.length;i++)
+    if(bits[i]==="1") g.fillRect(10*M+i*M, 12, M+0.05, H-24);
+}
 function drawQr(){
   if(S.tab!=="qr")return;
   const b=el("board"), c=el("cv");
+  if(S.bar){ drawBar(c); b.className="board flat"; el("dl").disabled=false; return; }
   if(!S.qr){ c.width=1;c.height=1; b.className="board flat"; el("dl").disabled=true; return; }
   const style=el("qrStyle").value;
   const avail=Math.max(120, el("stage").clientWidth-24-16);
@@ -1508,6 +1578,12 @@ function drawQr(){
 let qrTimer=null;
 el("qrText").addEventListener("input",()=>{clearTimeout(qrTimer);qrTimer=setTimeout(buildQr,250);});
 el("qrLvl").addEventListener("change",buildQr);
+el("codeKind").addEventListener("change",()=>{
+  const bar=el("codeKind").value==="bar";
+  el("qrLvl").closest(".fld").hidden=bar;
+  el("qrStyle").closest(".fld").hidden=bar;
+  buildQr();
+});
 el("qrStyle").addEventListener("change",()=>{
   el("tipQrBlocks").hidden = el("qrStyle").value!=="blocks";
   drawQr();
@@ -1703,6 +1779,18 @@ el("reset").addEventListener("click",()=>{
 
 /* ══════════════════════ вывод ══════════════════════ */
 const text=()=>{
+  if(S.tab==="qr" && S.bar){
+    const bits=S.bar, M=Math.max(3,Math.round(S.quality/(bits.length+20)));
+    const W=(bits.length+20)*M, H=Math.max(120, Math.round(W*0.35));
+    off.width=W; off.height=H;
+    const g=off.getContext("2d");
+    g.fillStyle="#FFFFFF"; g.fillRect(0,0,W,H);
+    g.fillStyle="#000000";
+    for(let i=0;i<bits.length;i++)
+      if(bits[i]==="1") g.fillRect(10*M+i*M, 14, M, H-28);
+    size={w:W,h:H};
+    return new Promise(r=>off.toBlob(b2=>r({blob:b2,size}),"image/png"));
+  }
   if(S.tab==="qr" && S.qr){
     const body=qrRows().join("\n");
     const G=TARGETS[S.target];
@@ -1718,6 +1806,18 @@ const inFrame=(()=>{try{return window.top!==window.self;}catch(e){return true;}}
 function pngBlob(){
   const off=document.createElement("canvas");
   let size;
+  if(S.tab==="qr" && S.bar){
+    const bits=S.bar, M=Math.max(3,Math.round(S.quality/(bits.length+20)));
+    const W=(bits.length+20)*M, H=Math.max(120, Math.round(W*0.35));
+    off.width=W; off.height=H;
+    const g=off.getContext("2d");
+    g.fillStyle="#FFFFFF"; g.fillRect(0,0,W,H);
+    g.fillStyle="#000000";
+    for(let i=0;i<bits.length;i++)
+      if(bits[i]==="1") g.fillRect(10*M+i*M, 14, M, H-28);
+    size={w:W,h:H};
+    return new Promise(r=>off.toBlob(b2=>r({blob:b2,size}),"image/png"));
+  }
   if(S.tab==="qr" && S.qr){
     const n=S.qr.size,Q=4,mod=Math.max(6,Math.round(S.quality/(n+Q*2)));
     const px=(n+Q*2)*mod;
