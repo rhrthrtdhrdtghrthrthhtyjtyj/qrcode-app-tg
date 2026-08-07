@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#16110F">
 <title>Проявочная</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{
   --ink:#16110F; --tray:#221A16; --edge:#3A2A22;
@@ -18,7 +17,7 @@
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
 body{background:var(--ink);color:var(--paper);font-family:var(--ui);font-size:15px;
-  display:flex;flex-direction:column;height:var(--app-h,100dvh)}
+  display:flex;flex-direction:column;height:100dvh}
 
 .top{flex:0 0 auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 0;
   border-bottom:1px solid var(--edge)}
@@ -91,7 +90,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,label:focus-visibl
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--tray);
   border-top:1px solid var(--edge);border-radius:14px 14px 0 0;
   padding:8px 18px calc(22px + var(--bar));transform:translateY(102%);
-  transition:transform .25s cubic-bezier(.2,.8,.3,1);max-height:80vh;overflow:auto}
+  transition:transform .25s cubic-bezier(.2,.8,.3,1);max-height:86dvh;overflow:auto}
 .sheet.on{transform:translateY(0)}
 .grip{width:42px;height:4px;border-radius:2px;background:#4E3A2E;margin:6px auto 12px}
 .mini{position:sticky;top:0;z-index:2;background:var(--tray);
@@ -195,6 +194,7 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 <div class="pickers">
   <input type="file" id="fCam" accept="image/*" capture="environment">
   <input type="file" id="fLib" accept="image/*">
+  <input type="file" id="fScan" accept="image/*">
 </div>
 
 <div class="scrim" id="scrim"></div>
@@ -253,7 +253,7 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
     </select>
   </div>
   <div class="fld" data-grp="qr">
-    <div class="row-lbl"><span data-t="tab_qr"></span></div>
+    <div class="row-lbl"><span id="qrLbl"></span></div>
     <input type="text" id="qrText" data-t-ph="qr_ph" autocapitalize="off" spellcheck="false">
   </div>
   <div class="fld" data-grp="qr">
@@ -272,6 +272,7 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
       <option value="blocks" data-t="qr_blocks"></option>
     </select>
     <p class="tip" id="tipQrBlocks" hidden></p>
+    <p class="tip" id="tipBar" hidden></p>
   </div>
 
   <!-- вкладка «Символы» -->
@@ -345,6 +346,8 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
     <button class="chip" id="redo" data-grp="cut" data-t="redo"></button>
     <button class="chip" id="invert" data-grp="art" aria-pressed="false" data-t="invert"></button>
     <button class="chip" id="color" data-grp="art" aria-pressed="false" data-t="color"></button>
+    <label class="chip" for="fScan" data-grp="qr" tabindex="0" data-t="scan_btn"></label>
+    <button class="chip" id="copyChip" data-t="copy"></button>
     <button class="chip" id="shareChip" data-t="share"></button>
     <button class="chip" id="png" data-t="filepng"></button>
     <button class="chip" id="txt" data-grp="art" data-t="filetxt"></button>
@@ -363,6 +366,7 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 
 <div class="viewer" id="viewer" hidden>
   <p class="hint" id="hint"></p>
+  <p class="hint" id="hint2"></p>
   <img id="vimg" alt="">
   <button class="vclose" id="vclose" data-t="closeimg"></button>
 </div>
@@ -377,9 +381,17 @@ ru:{
   ready:"пришли фото — вырежу человека и переведу в символы",
   tab_cut:"Вырезать", tab_art:"Символы", tab_qr:"QR-код",
   qr_ph:"Ссылка, текст или номер…",
+  lbl_qr:"Ссылка или текст", lbl_bar:"Номер или код",
+  ph_bar:"Номер: 227202250076539133…",
   code_kind:"Тип кода",
   kind_qr:"QR-код", kind_bar:"Штрих-код (Code 128)",
   bar_done:n=>"штрих-код готов · "+n+" полос",
+  bars_done:n=>"готово "+n+" штрих-кода — один под другим, как на чеке",
+  bar_hint:"несколько чисел вводи через пробел — получишь несколько кодов",
+  scan_btn:"Прочитать с фото",
+  scanning:"ищу штрих-код на снимке…",
+  scan_ok:n=>"найдено кодов: "+n+" — числа подставлены",
+  scan_none:"штрих-код не распознан. Сними ближе, ровно и без бликов",
   bar_ascii:"для штрих-кода только латиница, цифры и знаки — кириллица не влезает в Code 128",
   bar_long:"слишком длинно для штрих-кода — он станет нечитаемым. До ~40 знаков",
   qr_make:"Создать", qr_lvl:"Запас прочности",
@@ -433,6 +445,7 @@ ru:{
   invert:"Инверсия", color:"Цвет", filepng:"Файл PNG", filetxt:"Файл .txt",
   reset:"Сбросить", done:"Готово", closeimg:"Закрыть",
   holdtip:"Задержи палец на картинке → «Сохранить в Фото»",
+  holdtip2:"Или «Поделиться» в настройках — отправит картинку сразу в чат",
   s_punct:"Знаки  @#&$%()[];:,.", s_classic:"Классика  @%#*+=-:.",
   s_detail:"Подробный  70 символов", s_blocks:"Блоки  \u2588\u2593\u2592\u2591",
   s_binary:"Двоичный  10", s_braille:"Брайль  \u28FF\u28E7\u28C7\u2807",
@@ -469,7 +482,7 @@ ru:{
   nocopy:"буфер обмена закрыт — сохрани файлом",
   pngsize:(w,h,kb)=>"PNG "+w+"×"+h+" px · "+kb+" КБ",
   saved_dl:"сохранено в папку «Загрузки»", saved_picked:"сохранено в выбранную папку",
-  inframe:"здесь загрузка заблокирована — сохрани картинку долгим нажатием",
+  inframe:"внутри Telegram файлы не скачиваются. Задержи палец на картинке → «Сохранить в Фото»",
   noshare:e=>"отправка недоступна: "+e,
   resetdone:"настройки сброшены",
   sfx_cut:"-bez-fona", sfx_art:"-tekst"
@@ -479,9 +492,17 @@ en:{
   ready:"send a photo — I will cut out the person and turn it into characters",
   tab_cut:"Cut out", tab_art:"Characters", tab_qr:"QR code",
   qr_ph:"Link, text or number…",
+  lbl_qr:"Link or text", lbl_bar:"Number or code",
+  ph_bar:"Number: 227202250076539133…",
   code_kind:"Code type",
   kind_qr:"QR code", kind_bar:"Barcode (Code 128)",
   bar_done:n=>"barcode ready · "+n+" bars",
+  bars_done:n=>n+" barcodes ready — stacked, like on a receipt",
+  bar_hint:"separate several numbers with spaces to get several codes",
+  scan_btn:"Read from photo",
+  scanning:"looking for a barcode…",
+  scan_ok:n=>n+" code(s) found — numbers filled in",
+  scan_none:"no barcode recognised. Shoot closer, straight on, without glare",
   bar_ascii:"barcodes take only Latin letters, digits and symbols — Code 128 has no Cyrillic",
   bar_long:"too long for a barcode — it would become unreadable. Up to ~40 chars",
   qr_make:"Create", qr_lvl:"Error tolerance",
@@ -535,6 +556,7 @@ en:{
   invert:"Invert", color:"Color", filepng:"Save PNG", filetxt:"Save .txt",
   reset:"Reset", done:"Done", closeimg:"Close",
   holdtip:"Press and hold the image → Save to Photos",
+  holdtip2:"Or use Share in settings to send the image straight to a chat",
   s_punct:"Punctuation  @#&$%()[];:,.", s_classic:"Classic  @%#*+=-:.",
   s_detail:"Detailed  70 chars", s_blocks:"Blocks  \u2588\u2593\u2592\u2591",
   s_binary:"Binary  10", s_braille:"Braille  \u28FF\u28E7\u28C7\u2807",
@@ -571,7 +593,7 @@ en:{
   nocopy:"clipboard blocked — save as a file",
   pngsize:(w,h,kb)=>"PNG "+w+"×"+h+" px · "+kb+" KB",
   saved_dl:"saved to your Downloads folder", saved_picked:"saved to the folder you chose",
-  inframe:"downloads are blocked here — press and hold the image to save it",
+  inframe:"Telegram blocks downloads. Press and hold the image → Save to Photos",
   noshare:e=>"sharing unavailable: "+e,
   resetdone:"settings reset",
   sfx_cut:"-no-bg", sfx_art:"-text"
@@ -828,6 +850,141 @@ function code128(text){
   return {bits:bits+C128STOP};
 }
 
+/* ══════════════════ чтение Code 128 с фото ══════════════════ */
+/* Чтение Code 128 с фотографии.
+   Идея: ведём по кадру наклонные линии, меряем длины чёрных и белых полос,
+   переводим их в ширины модулей и сверяем с таблицей образцов. */
+
+function makeDecoder(C128, C128STOP){
+  /* образец → значение */
+  const PAT={};
+  C128.forEach((p,i)=>{ if(PAT[p]===undefined) PAT[p]=i; });
+
+  /* "11011001100" → [1,1,2,2,2,2] (длины серий) */
+  function pat2runs(p){
+    const r=[]; let n=1;
+    for(let i=1;i<p.length;i++){ if(p[i]===p[i-1])n++; else{r.push(n);n=1;} }
+    r.push(n); return r;
+  }
+  const RUNS={};
+  for(const p in PAT) RUNS[pat2runs(p).join(",")]=PAT[p];
+  const STOPRUNS=pat2runs(C128STOP).join(",");   // 7 серий: 2,3,3,1,1,1,2
+
+  /* серии ширин → значение символа; ширина модуля берётся из суммы */
+  function runsToVal(runs, total){
+    const unit=total/11;
+    const q=runs.map(r=>Math.max(1,Math.min(4,Math.round(r/unit))));
+    if(q.reduce((a,b)=>a+b,0)!==11) return null;
+    const v=RUNS[q.join(",")];
+    return v===undefined?null:v;
+  }
+
+  /* значения → строка (наборы B и C, переключения) */
+  function valsToText(vals){
+    if(vals.length<3) return null;
+    const start=vals[0];
+    if(start<103||start>105) return null;
+    const check=vals[vals.length-1];
+    let sum=start;
+    for(let i=1;i<vals.length-1;i++) sum+=vals[i]*i;
+    if(sum%103!==check) return null;
+    let mode = start===105?"C":(start===104?"B":"A");
+    let out="";
+    for(let i=1;i<vals.length-1;i++){
+      const v=vals[i];
+      if(v===99){ mode="C"; continue; }
+      if(v===100){ mode="B"; continue; }
+      if(v===101){ mode="A"; continue; }
+      if(v>=96) continue;                       // служебные — пропускаем
+      if(mode==="C") out+=String(v).padStart(2,"0");
+      else out+=String.fromCharCode(v+32);
+    }
+    return out;
+  }
+
+  /* одна линия пикселей (0..255) → найденные строки */
+  function readLine(line){
+    const n=line.length;
+    if(n<60) return [];
+    let mn=255,mx=0;
+    for(const v of line){ if(v<mn)mn=v; if(v>mx)mx=v; }
+    if(mx-mn<40) return [];
+    const thr=(mn+mx)/2;
+    /* серии: чередование тёмное/светлое */
+    const runs=[], dark=[];
+    let cur=line[0]<thr, len=1;
+    for(let i=1;i<n;i++){
+      const d=line[i]<thr;
+      if(d===cur) len++;
+      else { runs.push(len); dark.push(cur); len=1; cur=d; }
+    }
+    runs.push(len); dark.push(cur);
+
+    const found=[];
+    for(let s=0;s<runs.length-12;s++){
+      if(!dark[s]) continue;                    // символ начинается с тёмной полосы
+      const vals=[]; let i=s, ok=true;
+      while(i+6<=runs.length){
+        const six=runs.slice(i,i+6);
+        const total=six.reduce((a,b)=>a+b,0);
+        if(vals.length===0){
+          const v=runsToVal(six,total);
+          if(v===null||v<103||v>105){ ok=false; break; }
+          vals.push(v); i+=6; continue;
+        }
+        /* стоп-символ — 7 серий */
+        const seven=runs.slice(i,i+7);
+        if(seven.length===7){
+          const t7=seven.reduce((a,b)=>a+b,0), u=t7/13;
+          const q=seven.map(r=>Math.max(1,Math.min(4,Math.round(r/u))));
+          if(q.reduce((a,b)=>a+b,0)===13 && q.join(",")===STOPRUNS){
+            const txt=valsToText(vals);
+            if(txt) found.push(txt);
+            ok=false; break;
+          }
+        }
+        const v=runsToVal(six,total);
+        if(v===null){ ok=false; break; }
+        vals.push(v); i+=6;
+        if(vals.length>60){ ok=false; break; }
+      }
+    }
+    return found;
+  }
+
+  /* весь кадр: пробуем горизонтали и лёгкие наклоны */
+  function decode(gray,w,h){
+    const hits={};
+    const angles=[0,-0.05,0.05,-0.1,0.1,-0.16,0.16];
+    const lines=Math.min(120,Math.max(30,h>>2));
+    for(const a of angles){
+      for(let k=0;k<lines;k++){
+        const y0=Math.round((k+0.5)*h/lines);
+        const line=new Uint8Array(w);
+        let bad=false;
+        for(let x=0;x<w;x++){
+          const y=Math.round(y0+(x-w/2)*a);
+          if(y<0||y>=h){ bad=true; break; }
+          line[x]=gray[y*w+x];
+        }
+        if(bad) continue;
+        for(const t of readLine(line)) hits[t]=(hits[t]||0)+1;
+        /* и в обратную сторону — код мог быть отражён */
+        const rev=Uint8Array.from(line).reverse();
+        for(const t of readLine(rev)) hits[t]=(hits[t]||0)+1;
+      }
+    }
+    return Object.keys(hits)
+      .filter(t=>t.length>=4 && hits[t]>=2)     // отсекаем случайные совпадения
+      .sort((a,b)=>hits[b]-hits[a]);
+  }
+
+  return {decode};
+}
+
+
+const SCAN=makeDecoder(C128,C128STOP);
+
 let lastStatus=null;
 function say(key,args,kind){
   lastStatus={key,args,kind};
@@ -845,12 +1002,15 @@ function applyLang(){
   document.querySelectorAll("[data-t]").forEach(n=>{n.textContent=t(n.dataset.t);});
   document.querySelectorAll("[data-t-ph]").forEach(n=>{n.placeholder=t(n.dataset.tPh);});
   const tq=el("tipQrBlocks"); if(tq) tq.textContent=t("qr_blockstip");
+  const tb=el("tipBar"); if(tb) tb.textContent=t("bar_hint");
+  if(el("qrLbl")) kindUI();
   el("tipCut").textContent=t("tipcut");
   el("tipManual").textContent=t("manual");
   el("tipEmoji").textContent=t("tipemoji");
   targetTip();
   el("tipLh").textContent=t("lhtip");
   el("hint").textContent=t("holdtip");
+  if(el("hint2")) el("hint2").textContent=t("holdtip2");
   el("zoomVal").textContent=S.zoom?S.zoom+"px":t("fit");
   el("ru").setAttribute("aria-pressed",String(L==="ru"));
   el("en").setAttribute("aria-pressed",String(L==="en"));
@@ -896,6 +1056,7 @@ function sheetUI(){
   el("invert").hidden = S.tab!=="art" || emoji;
   el("color").hidden  = S.tab!=="art" || emoji || brl;
   el("txt").hidden    = S.tab!=="art";
+  el("copyChip").hidden = S.tab==="cut";
   el("tipEmoji").hidden = !emoji;
 }
 
@@ -1172,7 +1333,19 @@ function drawMini(){
   if(!sh||!sh.classList.contains("on")){ if(box) box.hidden=true; return; }
   const m=el("mini"), fr=el("miniFrame");
   try{
-    if(S.tab==="art"){
+    if(S.tab==="qr"){
+      if(S.bars){ paintBars(m,2,1,false); }
+      else if(S.qr){
+        const n=S.qr.size,Q=2,mod=2,px=(n+Q*2)*mod;
+        m.width=px;m.height=px;
+        const g=m.getContext("2d");
+        g.fillStyle="#FFFFFF";g.fillRect(0,0,px,px);
+        g.fillStyle="#14100E";
+        for(let y=0;y<n;y++)for(let x=0;x<n;x++)
+          if(S.qr.grid[y][x]) g.fillRect((Q+x)*mod,(Q+y)*mod,mod,mod);
+      }else{ box.hidden=true; return; }
+      fr.className="frame";
+    }else if(S.tab==="art"){
       if(!S.rows.length){ box.hidden=true; return; }
       paintArt(m,6,1);
       fr.className="frame"+((S.color&&S.mode!=="emoji")?" dark":"");
@@ -1488,18 +1661,24 @@ el("toArt").addEventListener("click",()=>setTab("art"));
 
 
 /* ══════════════════ вкладка QR ══════════════════ */
-S.qr=null; S.bar=null;           // {size,grid,version} | битовая строка полос
+S.qr=null; S.bars=null;          // {size,grid,version} | [{txt,bits}, …]
 function buildQr(){
   const txt=(el("qrText").value||"").trim();
-  S.bar=null;
+  S.bars=null;
   if(!txt){ S.qr=null; say("qr_empty",null,"bad"); drawQr(); return; }
   if(el("codeKind").value==="bar"){
     S.qr=null;
-    const r=code128(txt);
-    if(r.err){ say(r.err==="ascii"?"bar_ascii":"bar_long",null,"bad"); drawQr(); return; }
-    S.bar=r.bits;
+    /* несколько чисел через пробел, запятую или перенос — каждый станет своим кодом */
+    const parts=txt.split(/[\s,;]+/).filter(Boolean).slice(0,8);
+    const list=[];
+    for(const part of parts){
+      const r=code128(part);
+      if(r.err){ S.bars=null; say(r.err==="ascii"?"bar_ascii":"bar_long",null,"bad"); drawQr(); return; }
+      list.push({txt:part, bits:r.bits});
+    }
+    S.bars=list;
     drawQr();
-    say("bar_done",[r.bits.length],"good");
+    say(list.length>1?"bars_done":"bar_done",[list.length>1?list.length:list[0].bits.length],"good");
     return;
   }
   const q=QR.encode(txt, el("qrLvl").value);
@@ -1523,24 +1702,46 @@ function qrRows(){
   }
   return out;
 }
-function drawBar(c){
-  const bits=S.bar, dpr=Math.min(3,window.devicePixelRatio||1);
-  const avail=Math.max(160, el("stage").clientWidth-24-16);
-  const M=Math.max(1.5, Math.min(4, avail/(bits.length+20)));
-  const W=Math.round((bits.length+20)*M), H=Math.round(Math.min(140, W*0.4));
-  c.width=W*dpr; c.height=H*dpr;
+/* рисует стопку штрих-кодов; M — ширина одного модуля в пикселях */
+function paintBars(c,M,dpr,label){
+  const list=S.bars;
+  const maxBits=Math.max(...list.map(b=>b.bits.length));
+  const W=Math.round((maxBits+20)*M);
+  const barH=Math.round(Math.max(46, Math.min(150, W*0.22)));
+  const cap=label?Math.round(M*7)+6:0;                 // место под подпись
+  const rowH=barH+cap+Math.round(M*4);
+  const H=rowH*list.length+Math.round(M*4);
+  c.width=Math.round(W*dpr); c.height=Math.round(H*dpr);
   c.style.width=W+"px"; c.style.height=H+"px";
   const g=c.getContext("2d");
   g.setTransform(dpr,0,0,dpr,0,0);
   g.fillStyle="#FFFFFF"; g.fillRect(0,0,W,H);
-  g.fillStyle="#14100E";
-  for(let i=0;i<bits.length;i++)
-    if(bits[i]==="1") g.fillRect(10*M+i*M, 12, M+0.05, H-24);
+  list.forEach((b,k)=>{
+    const y=Math.round(M*2)+k*rowH;
+    const x0=Math.round((W-b.bits.length*M)/2);        // по центру
+    g.fillStyle="#14100E";
+    for(let i=0;i<b.bits.length;i++)
+      if(b.bits[i]==="1") g.fillRect(x0+i*M, y, M+0.05, barH);
+    if(label){
+      g.font=Math.round(M*7)+"px "+FONT;
+      g.textAlign="center"; g.textBaseline="top";
+      g.fillText(b.txt, W/2, y+barH+4);
+      g.textAlign="left";
+    }
+  });
+  return {w:c.width,h:c.height};
+}
+function drawBar(c){
+  const dpr=Math.min(3,window.devicePixelRatio||1);
+  const avail=Math.max(160, el("stage").clientWidth-24-16);
+  const maxBits=Math.max(...S.bars.map(b=>b.bits.length));
+  const M=Math.max(1.2, Math.min(4, avail/(maxBits+20)));
+  paintBars(c,M,dpr,true);
 }
 function drawQr(){
   if(S.tab!=="qr")return;
   const b=el("board"), c=el("cv");
-  if(S.bar){ drawBar(c); b.className="board flat"; el("dl").disabled=false; return; }
+  if(S.bars){ drawBar(c); b.className="board flat"; el("dl").disabled=false; drawMini(); return; }
   if(!S.qr){ c.width=1;c.height=1; b.className="board flat"; el("dl").disabled=true; return; }
   const style=el("qrStyle").value;
   const avail=Math.max(120, el("stage").clientWidth-24-16);
@@ -1574,14 +1775,22 @@ function drawQr(){
   }
   b.className="board flat";
   el("dl").disabled=false;
+  drawMini();
 }
 let qrTimer=null;
 el("qrText").addEventListener("input",()=>{clearTimeout(qrTimer);qrTimer=setTimeout(buildQr,250);});
 el("qrLvl").addEventListener("change",buildQr);
+function kindUI(){
+  const bar=el("codeKind").value==="bar";
+  el("qrLbl").textContent = t(bar?"lbl_bar":"lbl_qr");
+  el("qrText").placeholder = t(bar?"ph_bar":"qr_ph");
+}
 el("codeKind").addEventListener("change",()=>{
   const bar=el("codeKind").value==="bar";
+  kindUI();
   el("qrLvl").closest(".fld").hidden=bar;
   el("qrStyle").closest(".fld").hidden=bar;
+  el("tipBar").hidden=!bar;
   buildQr();
 });
 el("qrStyle").addEventListener("change",()=>{
@@ -1777,19 +1986,49 @@ el("reset").addEventListener("click",()=>{
   say("resetdone",null,"good");
 });
 
+
+/* ───────── чтение штрих-кода с фотографии ───────── */
+el("fScan").addEventListener("change",e=>{
+  const file=e.target.files&&e.target.files[0];
+  e.target.value="";
+  if(!file){ say("nofile",null,"bad"); return; }
+  say("scanning");
+  const fr=new FileReader();
+  fr.onerror=()=>say("noread",null,"bad");
+  fr.onload=()=>{
+    const im=new Image();
+    im.onerror=()=>say("nodecode",null,"bad");
+    im.onload=()=>{
+      /* ужимаем до 1400 px — этого хватает и считается быстро */
+      const w=Math.min(1400, im.naturalWidth);
+      const hh=Math.max(1,Math.round(im.naturalHeight*w/im.naturalWidth));
+      const c=document.createElement("canvas");
+      c.width=w; c.height=hh;
+      const g=c.getContext("2d",{willReadFrequently:true});
+      g.drawImage(im,0,0,w,hh);
+      const d=g.getImageData(0,0,w,hh).data;
+      const gray=new Uint8Array(w*hh);
+      for(let i=0,p=0;i<gray.length;i++,p+=4)
+        gray[i]=(d[p]*0.299+d[p+1]*0.587+d[p+2]*0.114)|0;
+      let res=[];
+      try{ res=SCAN.decode(gray,w,hh); }catch(_){ res=[]; }
+      if(!res.length){ say("scan_none",null,"bad"); return; }
+      if(S.tab!=="qr") setTab("qr");
+      el("codeKind").value="bar";
+      el("codeKind").dispatchEvent(new Event("change"));
+      el("qrText").value=res.join(" ");
+      buildQr();
+      say("scan_ok",[res.length],"good");
+    };
+    im.src=fr.result;
+  };
+  fr.readAsDataURL(file);
+});
+
 /* ══════════════════════ вывод ══════════════════════ */
 const text=()=>{
-  if(S.tab==="qr" && S.bar){
-    const bits=S.bar, M=Math.max(3,Math.round(S.quality/(bits.length+20)));
-    const W=(bits.length+20)*M, H=Math.max(120, Math.round(W*0.35));
-    off.width=W; off.height=H;
-    const g=off.getContext("2d");
-    g.fillStyle="#FFFFFF"; g.fillRect(0,0,W,H);
-    g.fillStyle="#000000";
-    for(let i=0;i<bits.length;i++)
-      if(bits[i]==="1") g.fillRect(10*M+i*M, 14, M, H-28);
-    size={w:W,h:H};
-    return new Promise(r=>off.toBlob(b2=>r({blob:b2,size}),"image/png"));
+  if(S.tab==="qr" && S.bars){          // у штрих-кода копируем сами числа
+    return S.bars.map(b=>b.txt).join("\n");
   }
   if(S.tab==="qr" && S.qr){
     const body=qrRows().join("\n");
@@ -1802,20 +2041,21 @@ const text=()=>{
 const outName=ext=> S.tab==="qr" ? "qr-code."+ext :
   (S.name||"photo")+t(S.tab==="art"?"sfx_art":"sfx_cut")+"."+ext;
 const inFrame=(()=>{try{return window.top!==window.self;}catch(e){return true;}})();
+/* Telegram, VK и прочие встроенные браузеры глушат скачивание файлов —
+   там единственный рабочий путь: показать картинку и сохранить долгим нажатием. */
+const inApp=(()=>{
+  if(inFrame) return true;
+  if(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData!==undefined) return true;
+  return /Telegram|Instagram|FBAN|FBAV|VKClient|Line\//i.test(navigator.userAgent||"");
+})();
 
 function pngBlob(){
   const off=document.createElement("canvas");
   let size;
-  if(S.tab==="qr" && S.bar){
-    const bits=S.bar, M=Math.max(3,Math.round(S.quality/(bits.length+20)));
-    const W=(bits.length+20)*M, H=Math.max(120, Math.round(W*0.35));
-    off.width=W; off.height=H;
-    const g=off.getContext("2d");
-    g.fillStyle="#FFFFFF"; g.fillRect(0,0,W,H);
-    g.fillStyle="#000000";
-    for(let i=0;i<bits.length;i++)
-      if(bits[i]==="1") g.fillRect(10*M+i*M, 14, M, H-28);
-    size={w:W,h:H};
+  if(S.tab==="qr" && S.bars){
+    const maxBits=Math.max(...S.bars.map(b=>b.bits.length));
+    const M=Math.max(3,Math.round(S.quality/(maxBits+20)));
+    size=paintBars(off,M,1,true);
     return new Promise(r=>off.toBlob(b2=>r({blob:b2,size}),"image/png"));
   }
   if(S.tab==="qr" && S.qr){
@@ -1844,6 +2084,11 @@ function viewImage(blob){
 }
 async function save(blob,ext,size){
   const name=outName(ext);
+  if(inApp && ext==="png"){          // встроенный браузер: скачивание не сработает
+    viewImage(blob);
+    say("inframe",null,"bad");
+    return;
+  }
   if(window.showSaveFilePicker){
     try{
       const h=await showSaveFilePicker({suggestedName:name,
@@ -1863,22 +2108,33 @@ async function save(blob,ext,size){
   else if(size) say("pngsize",[size.w,size.h,Math.round(blob.size/1024)],"good");
   else say("saved_dl",null,"good");
 }
+/* есть ли что сохранять на текущей вкладке */
+function hasOutput(){
+  if(S.tab==="qr") return !!(S.qr||S.bars);
+  if(S.tab==="art") return !!S.rows.length;
+  return !!S.img;
+}
+function redrawCurrent(){
+  S.tab==="art"?drawArt():S.tab==="qr"?drawQr():drawCut();
+}
+
 el("png").addEventListener("click",async()=>{
-  if(!S.img&&!S.rows.length){say("needphoto",null,"bad");return;}
-  const r=await pngBlob(); S.tab==="art"?drawArt():drawCut(); save(r.blob,"png",r.size);
+  if(!hasOutput()){say("needphoto",null,"bad");return;}
+  const r=await pngBlob(); redrawCurrent(); save(r.blob,"png",r.size);
 });
 el("txt").addEventListener("click",()=>save(new Blob([text()],{type:"text/plain;charset=utf-8"}),"txt"));
 /* «Скачать» — сразу файл, без системного меню */
 el("dl").addEventListener("click",async()=>{
-  if(!S.rows.length&&!S.img){say("needphoto",null,"bad");return;}
-  const r=await pngBlob(); S.tab==="art"?drawArt():drawCut();
+  if(!hasOutput()){say("needphoto",null,"bad");return;}
+  const r=await pngBlob(); redrawCurrent();
   save(r.blob,"png",r.size);
 });
 
 /* «Поделиться» — системное меню, если браузер его даёт */
+el("copyChip").addEventListener("click",()=>el("copy").click());
 el("shareChip").addEventListener("click",async()=>{
   try{
-    const r=await pngBlob(); S.tab==="art"?drawArt():drawCut();
+    const r=await pngBlob(); redrawCurrent();
     const file=new File([r.blob],outName("png"),{type:"image/png"});
     if(navigator.canShare&&navigator.canShare({files:[file]})){
       await navigator.share({files:[file],title:t("title")});return;
@@ -1903,38 +2159,6 @@ el("copy").addEventListener("click",async()=>{
 applyLang();
 setTab("cut");
 say("ready");
-
-/* ══════════════════════ Telegram Mini App ══════════════════════ */
-(function(){
-  const tg = window.Telegram && window.Telegram.WebApp;
-  if(!tg) return;
-  tg.ready(); tg.expand();
-  try{ tg.disableVerticalSwipes(); }catch(e){}
-  try{ tg.setHeaderColor("#16110F"); tg.setBackgroundColor("#16110F"); }catch(e){}
-  const lc=(tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code)||"";
-  if(lc){ L = lc.indexOf("ru")===0 ? "ru" : "en"; applyLang(); }
-  const syncH=()=>{
-    const px=tg.viewportStableHeight||tg.viewportHeight||window.innerHeight;
-    document.documentElement.style.setProperty("--app-h", px+"px");
-    S.tab==="art"?drawArt():S.tab==="qr"?drawQr():drawCut();
-  };
-  syncH(); tg.onEvent("viewportChanged", syncH);
-  const back=tg.BackButton;
-  window.__tgSync=()=>{ try{ S.tab!=="cut"?back.show():back.hide(); }catch(e){} };
-  try{ back.onClick(()=>setTab("cut")); }catch(e){}
-  window.__tgSync();
-  const ch=document.querySelector(".tgl");
-  if(ch) ch.addEventListener("click",e=>{
-    e.preventDefault();
-    try{ tg.openTelegramLink("https://t.me/ProstoAyli"); }
-    catch(_){ location.href="https://t.me/ProstoAyli"; }
-  });
-  const buzz=s=>{ try{ tg.HapticFeedback.impactOccurred(s||"light"); }catch(e){} };
-  ["paste","toArt","tune","dl","copy","png","tabCut","tabArt","tabQr","tAuto","tWand","tErase","tRestore","tUndo","askPerson","askThing"]
-   .forEach(id=>{ const n=document.getElementById(id);
-     if(n) n.addEventListener("click",()=>buzz(id==="tAuto"?"medium":"light")); });
-})();
-
 </script>
 </body>
 </html>
