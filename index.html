@@ -140,6 +140,10 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 .viewer[hidden]{display:none}
 .viewer img{max-width:100%;max-height:72vh;object-fit:contain;border-radius:3px}
 .viewer .hint{margin:0;font-size:12px;color:var(--safelight);text-align:center;line-height:1.6}
+.vback{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:14px;
+  width:44px;height:44px;border-radius:3px;border:1px solid var(--edge);
+  background:#191211;color:var(--paper);font-size:22px;line-height:1;cursor:pointer}
+.vback:active{transform:scale(.95)}
 .vclose{min-height:50px;padding:0 26px;border-radius:3px;border:1px solid var(--edge);
   background:#191211;color:var(--paper);font-family:var(--ui);font-size:12px;
   letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
@@ -374,6 +378,7 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 </div>
 
 <div class="viewer" id="viewer" hidden>
+  <button class="vback" id="vback" aria-label="Назад">←</button>
   <p class="hint" id="hint"></p>
   <p class="hint" id="hint2"></p>
   <img id="vimg" alt="">
@@ -2140,11 +2145,30 @@ function pngBlob(){
   }
   return new Promise(r=>off.toBlob(b=>r({blob:b,size}),"image/png"));
 }
-function viewImage(blob){
-  const url=URL.createObjectURL(blob);
-  el("vimg").src=url;el("viewer").hidden=false;
-  el("vclose").onclick=()=>{el("viewer").hidden=true;URL.revokeObjectURL(url);};
+let viewUrl=null;
+function viewerOpen(){ return !el("viewer").hidden; }
+function closeViewer(){
+  if(!viewerOpen()) return false;
+  el("viewer").hidden=true;
+  if(viewUrl){ URL.revokeObjectURL(viewUrl); viewUrl=null; }
+  if(window.__tgSync) window.__tgSync();
+  return true;
 }
+function viewImage(blob){
+  if(viewUrl) URL.revokeObjectURL(viewUrl);
+  viewUrl=URL.createObjectURL(blob);
+  el("vimg").src=viewUrl;
+  el("viewer").hidden=false;
+  /* добавляем шаг в историю: системная кнопка «назад» и свайп закроют картинку */
+  try{ history.pushState({viewer:1},""); }catch(_){}
+  if(window.__tgSync) window.__tgSync();
+}
+el("vback").addEventListener("click",()=>el("vclose").click());
+el("vclose").addEventListener("click",()=>{
+  if(history.state&&history.state.viewer) history.back();
+  else closeViewer();
+});
+addEventListener("popstate",()=>{ closeViewer(); });
 async function save(blob,ext,size){
   const name=outName(ext);
   if(inApp && ext==="png"){          // встроенный браузер: скачивание не сработает
