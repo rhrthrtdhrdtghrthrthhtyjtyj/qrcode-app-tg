@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#16110F">
 <title>Проявочная</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{
   --ink:#16110F; --tray:#221A16; --edge:#3A2A22;
@@ -17,7 +18,7 @@
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
 body{background:var(--ink);color:var(--paper);font-family:var(--ui);font-size:15px;
-  display:flex;flex-direction:column;height:100dvh}
+  display:flex;flex-direction:column;height:var(--app-h,100dvh)}
 
 .top{flex:0 0 auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 0;
   border-bottom:1px solid var(--edge)}
@@ -90,7 +91,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,label:focus-visibl
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--tray);
   border-top:1px solid var(--edge);border-radius:14px 14px 0 0;
   padding:8px 18px calc(22px + var(--bar));transform:translateY(102%);
-  transition:transform .25s cubic-bezier(.2,.8,.3,1);max-height:86dvh;overflow:auto}
+  transition:transform .25s cubic-bezier(.2,.8,.3,1);max-height:80vh;overflow:auto}
 .sheet.on{transform:translateY(0)}
 .grip{width:42px;height:4px;border-radius:2px;background:#4E3A2E;margin:6px auto 12px}
 .mini{position:sticky;top:0;z-index:2;background:var(--tray);
@@ -134,16 +135,18 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 #askThing{background:var(--oxblood);border:1px solid var(--oxblood);color:var(--paper)}
 .ask-btns button:active{transform:scale(.97)}
 
-.viewer{position:fixed;inset:0;z-index:20;background:#0C0908;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-  padding:calc(env(safe-area-inset-top,0px) + 16px) 14px calc(16px + var(--bar))}
+.viewer{position:fixed;left:0;right:0;top:0;height:var(--app-h,100dvh);z-index:20;
+  background:#0C0908;display:flex;flex-direction:column;
+  padding:calc(env(safe-area-inset-top,0px) + 10px) 12px calc(12px + var(--bar))}
 .viewer[hidden]{display:none}
-.viewer img{max-width:100%;max-height:72vh;object-fit:contain;border-radius:3px}
-.viewer .hint{margin:0;font-size:12px;color:var(--safelight);text-align:center;line-height:1.6}
-.vback{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:14px;
-  width:44px;height:44px;border-radius:3px;border:1px solid var(--edge);
+.viewer img{max-width:100%;max-height:100%;object-fit:contain;border-radius:3px}
+.viewer .hint{flex:0 0 auto;margin:8px 0 0;font-size:12px;color:var(--safelight);text-align:center;line-height:1.5}
+.vbar{flex:0 0 auto;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.vback{width:46px;height:46px;flex:0 0 auto;border-radius:3px;border:1px solid var(--edge);
   background:#191211;color:var(--paper);font-size:22px;line-height:1;cursor:pointer}
 .vback:active{transform:scale(.95)}
+.viewer .vclose{flex:1;min-height:46px;margin:0}
+.vwrap{flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center}
 .vclose{min-height:50px;padding:0 26px;border-radius:3px;border:1px solid var(--edge);
   background:#191211;color:var(--paper);font-family:var(--ui);font-size:12px;
   letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
@@ -378,11 +381,13 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 </div>
 
 <div class="viewer" id="viewer" hidden>
-  <button class="vback" id="vback" aria-label="Назад">←</button>
+  <div class="vbar">
+    <button class="vback" id="vback" aria-label="Назад">←</button>
+    <button class="vclose" id="vclose" data-t="closeimg"></button>
+  </div>
+  <div class="vwrap"><img id="vimg" alt=""></div>
   <p class="hint" id="hint"></p>
   <p class="hint" id="hint2"></p>
-  <img id="vimg" alt="">
-  <button class="vclose" id="vclose" data-t="closeimg"></button>
 </div>
 
 <script>
@@ -2246,6 +2251,43 @@ el("copy").addEventListener("click",async()=>{
 applyLang();
 setTab("cut");
 say("ready");
+
+/* ══════════════════════ Telegram Mini App ══════════════════════ */
+(function(){
+  const tg = window.Telegram && window.Telegram.WebApp;
+  if(!tg) return;
+  tg.ready(); tg.expand();
+  try{ tg.disableVerticalSwipes(); }catch(e){}
+  try{ tg.setHeaderColor("#16110F"); tg.setBackgroundColor("#16110F"); }catch(e){}
+  const lc=(tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code)||"";
+  if(lc){ L = lc.indexOf("ru")===0 ? "ru" : "en"; applyLang(); }
+  const syncH=()=>{
+    const px=tg.viewportStableHeight||tg.viewportHeight||window.innerHeight;
+    document.documentElement.style.setProperty("--app-h", px+"px");
+    S.tab==="art"?drawArt():S.tab==="qr"?drawQr():drawCut();
+  };
+  syncH(); tg.onEvent("viewportChanged", syncH);
+  const back=tg.BackButton;
+  window.__tgSync=()=>{
+    try{ (viewerOpen()||S.tab!=="cut") ? back.show() : back.hide(); }catch(e){}
+  };
+  try{ back.onClick(()=>{
+    if(viewerOpen()){ el("vclose").click(); return; }
+    setTab("cut");
+  }); }catch(e){}
+  window.__tgSync();
+  const ch=document.querySelector(".tgl");
+  if(ch) ch.addEventListener("click",e=>{
+    e.preventDefault();
+    try{ tg.openTelegramLink("https://t.me/ProstoAyli"); }
+    catch(_){ location.href="https://t.me/ProstoAyli"; }
+  });
+  const buzz=s=>{ try{ tg.HapticFeedback.impactOccurred(s||"light"); }catch(e){} };
+  ["paste","toArt","tune","dl","copy","copyChip","png","tabCut","tabArt","tabQr","tAuto","tWand","tErase","tRestore","tUndo","askPerson","askThing","barNum","vback","vclose"]
+   .forEach(id=>{ const n=document.getElementById(id);
+     if(n) n.addEventListener("click",()=>buzz(id==="tAuto"?"medium":"light")); });
+})();
+
 </script>
 </body>
 </html>
