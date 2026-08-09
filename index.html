@@ -132,6 +132,9 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 .ask-btns button{flex:1;min-height:56px;border-radius:3px;font-family:var(--ui);
   font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-weight:700}
 #askPerson{background:var(--safelight);border:1px solid var(--safelight);color:#1A1109}
+.save3 button{background:#191211;border:1px solid var(--edge);color:var(--paper);font-size:11px}
+.save3 #smFile{background:var(--safelight);border-color:var(--safelight);color:#1A1109}
+.save3 button[hidden]{display:none}
 #askThing{background:var(--oxblood);border:1px solid var(--oxblood);color:var(--paper)}
 .ask-btns button:active{transform:scale(.97)}
 
@@ -372,6 +375,15 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
   </div>
 </div>
 
+<div class="ask" id="saveMenu" hidden>
+  <p class="ask-q" id="saveQ"></p>
+  <div class="ask-btns save3">
+    <button id="smCopy" data-t="copy"></button>
+    <button id="smShare" data-t="share"></button>
+    <button id="smFile" data-t="filepng"></button>
+  </div>
+</div>
+
 <div class="ask" id="ask" hidden>
   <p class="ask-q" id="askQ"></p>
   <div class="ask-btns">
@@ -426,6 +438,7 @@ ru:{
                "Вставлять только моноширинным: в Telegram в блок кода, в Steam в [code].",
   paste:"Вставить", gallery:"Галерея", settings:"Настройки", camera:"Камера",
   toart:"В символы →", copy:"Копировать", download:"Скачать", share:"Поделиться",
+  save_what:"Как сохранить?",
   bg:"Фон", bg_none:"Прозрачный", bg_white:"Белый", bg_dark:"Тёмный", bg_blur:"Размытый оригинал",
   soft:"Мягкость края", edge:"Строгость выреза", redo:"Пересчитать моделью",
   autocut:"Убрать фон",
@@ -540,6 +553,7 @@ en:{
                "Paste only as monospace: a code block in Telegram, [code] on Steam.",
   paste:"Paste", gallery:"Gallery", settings:"Settings", camera:"Camera",
   toart:"To characters →", copy:"Copy", download:"Download", share:"Share",
+  save_what:"How to save?",
   bg:"Background", bg_none:"Transparent", bg_white:"White", bg_dark:"Dark", bg_blur:"Blurred original",
   soft:"Edge softness", edge:"Cut strictness", redo:"Recompute with model",
   autocut:"Remove background",
@@ -1088,7 +1102,7 @@ function setTab(tab){
   document.querySelectorAll("[data-grp]").forEach(n=>{ n.hidden = n.dataset.grp!==tab; });
   el("tipCut").hidden = tab!=="cut";
   el("tools").hidden = tab!=="cut";
-  hideAsk();
+  hideAsk(); closeSaveMenu();
   sheetUI();
   if(tab==="art") buildArt();
   else if(tab==="qr"){
@@ -1873,6 +1887,7 @@ el("tune").addEventListener("click",()=>{
   sheet.classList.add("on");scrim.classList.add("on");drawMini();
 });
 const shut=()=>{sheet.classList.remove("on");scrim.classList.remove("on");el("miniBox").hidden=true;};
+el("tune").addEventListener("click",closeSaveMenu);
 el("close").addEventListener("click",shut);
 scrim.addEventListener("click",shut);
 
@@ -2216,8 +2231,21 @@ el("png").addEventListener("click",async()=>{
 });
 el("txt").addEventListener("click",()=>save(new Blob([text()],{type:"text/plain;charset=utf-8"}),"txt"));
 /* «Скачать» — сразу файл, без системного меню */
-el("dl").addEventListener("click",async()=>{
+/* «Скачать» сначала спрашивает, каким способом */
+function openSaveMenu(){
+  el("saveQ").textContent=t("save_what");
+  el("smCopy").hidden = S.tab==="cut";       // на вырезании копировать нечего
+  el("saveMenu").hidden=false;
+}
+function closeSaveMenu(){ el("saveMenu").hidden=true; }
+el("dl").addEventListener("click",()=>{
   if(!hasOutput()){say("needphoto",null,"bad");return;}
+  openSaveMenu();
+});
+el("smCopy").addEventListener("click",()=>{ closeSaveMenu(); el("copy").click(); });
+el("smShare").addEventListener("click",()=>{ closeSaveMenu(); el("shareChip").click(); });
+el("smFile").addEventListener("click",async()=>{
+  closeSaveMenu();
   const r=await pngBlob(); redrawCurrent();
   save(r.blob,"png",r.size);
 });
@@ -2273,6 +2301,7 @@ say("ready");
   };
   try{ back.onClick(()=>{
     if(viewerOpen()){ el("vclose").click(); return; }
+    if(!el("saveMenu").hidden){ closeSaveMenu(); return; }
     setTab("cut");
   }); }catch(e){}
   window.__tgSync();
@@ -2283,7 +2312,7 @@ say("ready");
     catch(_){ location.href="https://t.me/ProstoAyli"; }
   });
   const buzz=s=>{ try{ tg.HapticFeedback.impactOccurred(s||"light"); }catch(e){} };
-  ["paste","toArt","tune","dl","copy","copyChip","png","tabCut","tabArt","tabQr","tAuto","tWand","tErase","tRestore","tUndo","askPerson","askThing","barNum","vback","vclose"]
+  ["paste","toArt","tune","dl","copy","copyChip","png","tabCut","tabArt","tabQr","tAuto","tWand","tErase","tRestore","tUndo","askPerson","askThing","barNum","vback","vclose","smCopy","smShare","smFile"]
    .forEach(id=>{ const n=document.getElementById(id);
      if(n) n.addEventListener("click",()=>buzz(id==="tAuto"?"medium":"light")); });
 })();
