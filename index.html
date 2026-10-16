@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#16110F">
 <title>Проявочная</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{
   --ink:#16110F; --tray:#221A16; --edge:#3A2A22;
@@ -18,7 +17,7 @@
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
 body{background:var(--ink);color:var(--paper);font-family:var(--ui);font-size:15px;
-  display:flex;flex-direction:column;height:var(--app-h,100dvh)}
+  display:flex;flex-direction:column;height:100dvh}
 
 .top{flex:0 0 auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 0;
   border-bottom:1px solid var(--edge)}
@@ -91,7 +90,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,label:focus-visibl
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--tray);
   border-top:1px solid var(--edge);border-radius:14px 14px 0 0;
   padding:8px 18px calc(22px + var(--bar));transform:translateY(102%);
-  transition:transform .25s cubic-bezier(.2,.8,.3,1);max-height:80vh;overflow:auto}
+  transition:transform .25s cubic-bezier(.2,.8,.3,1);max-height:86dvh;overflow:auto}
 .sheet.on{transform:translateY(0)}
 .grip{width:42px;height:4px;border-radius:2px;background:#4E3A2E;margin:6px auto 12px}
 .mini{position:sticky;top:0;z-index:2;background:var(--tray);
@@ -1103,6 +1102,7 @@ function setTab(tab){
   el("tipCut").hidden = tab!=="cut";
   el("tools").hidden = tab!=="cut";
   hideAsk(); closeSaveMenu();
+  el("board").hidden=false;
   sheetUI();
   if(tab==="art") buildArt();
   else if(tab==="qr"){
@@ -1434,8 +1434,9 @@ function drawMini(){
 function drawCut(){
   if(S.tab!=="cut")return;
   el("board").className="board";
-  if(!S.mask){ const c=el("cv"); c.width=1;c.height=1;
+  if(!S.mask){ const c=el("cv"); c.width=1;c.height=1; el("board").hidden=true;
     el("toArt").disabled=true; el("dl").disabled=true; return; }
+  el("board").hidden=false;
   composeCut(el("cv"));
   el("toArt").disabled=false;
   el("dl").disabled=false;
@@ -1653,8 +1654,10 @@ function paintArt(canvas,cellW,dpr){
 }
 
 function drawArt(){
-  if(S.tab!=="art"||!S.rows.length)return;
+  if(S.tab!=="art")return;
   const b=el("board");
+  if(!S.rows.length){ b.hidden=true; el("dl").disabled=true; return; }
+  b.hidden=false;
   b.className="board flat"+((S.color&&S.mode!=="emoji")?" dark":"");
   const avail=Math.max(60, el("stage").clientWidth-24-16);
   const cellW=S.zoom>0?S.zoom:avail/S.w;
@@ -1818,8 +1821,10 @@ function drawBar(c){
 function drawQr(){
   if(S.tab!=="qr")return;
   const b=el("board"), c=el("cv");
-  if(S.bars){ drawBar(c); b.className="board flat"; el("dl").disabled=false; drawMini(); return; }
-  if(!S.qr){ c.width=1;c.height=1; b.className="board flat"; el("dl").disabled=true; return; }
+  if(S.bars){ b.hidden=false; drawBar(c); b.className="board flat";
+    el("dl").disabled=false; el("copy").disabled=false; drawMini(); return; }
+  if(!S.qr){ c.width=1;c.height=1; b.hidden=true; el("dl").disabled=true; el("copy").disabled=true; return; }
+  b.hidden=false; el("copy").disabled=false;
   const style=el("qrStyle").value;
   const avail=Math.max(120, el("stage").clientWidth-24-16);
   if(style==="blocks"){
@@ -2096,7 +2101,7 @@ function scanFile(file){
         gray[i]=(d[p]*0.299+d[p+1]*0.587+d[p+2]*0.114)|0;
       let res=[];
       try{ res=SCAN.decode(gray,w,hh); }catch(_){ res=[]; }
-      if(!res.length){ say("scan_none",null,"bad"); return; }
+      if(!res.length){ say("scan_none",null,"bad"); drawQr(); return; }
       if(S.tab!=="qr") setTab("qr");
       el("codeKind").value="bar";
       el("codeKind").dispatchEvent(new Event("change"));
@@ -2279,44 +2284,6 @@ el("copy").addEventListener("click",async()=>{
 applyLang();
 setTab("cut");
 say("ready");
-
-/* ══════════════════════ Telegram Mini App ══════════════════════ */
-(function(){
-  const tg = window.Telegram && window.Telegram.WebApp;
-  if(!tg) return;
-  tg.ready(); tg.expand();
-  try{ tg.disableVerticalSwipes(); }catch(e){}
-  try{ tg.setHeaderColor("#16110F"); tg.setBackgroundColor("#16110F"); }catch(e){}
-  const lc=(tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code)||"";
-  if(lc){ L = lc.indexOf("ru")===0 ? "ru" : "en"; applyLang(); }
-  const syncH=()=>{
-    const px=tg.viewportStableHeight||tg.viewportHeight||window.innerHeight;
-    document.documentElement.style.setProperty("--app-h", px+"px");
-    S.tab==="art"?drawArt():S.tab==="qr"?drawQr():drawCut();
-  };
-  syncH(); tg.onEvent("viewportChanged", syncH);
-  const back=tg.BackButton;
-  window.__tgSync=()=>{
-    try{ (viewerOpen()||S.tab!=="cut") ? back.show() : back.hide(); }catch(e){}
-  };
-  try{ back.onClick(()=>{
-    if(viewerOpen()){ el("vclose").click(); return; }
-    if(!el("saveMenu").hidden){ closeSaveMenu(); return; }
-    setTab("cut");
-  }); }catch(e){}
-  window.__tgSync();
-  const ch=document.querySelector(".tgl");
-  if(ch) ch.addEventListener("click",e=>{
-    e.preventDefault();
-    try{ tg.openTelegramLink("https://t.me/ProstoAyli"); }
-    catch(_){ location.href="https://t.me/ProstoAyli"; }
-  });
-  const buzz=s=>{ try{ tg.HapticFeedback.impactOccurred(s||"light"); }catch(e){} };
-  ["paste","toArt","tune","dl","copy","copyChip","png","tabCut","tabArt","tabQr","tAuto","tWand","tErase","tRestore","tUndo","askPerson","askThing","barNum","vback","vclose","smCopy","smShare","smFile"]
-   .forEach(id=>{ const n=document.getElementById(id);
-     if(n) n.addEventListener("click",()=>buzz(id==="tAuto"?"medium":"light")); });
-})();
-
 </script>
 </body>
 </html>
