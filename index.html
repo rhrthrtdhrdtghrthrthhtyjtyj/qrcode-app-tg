@@ -236,8 +236,8 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
     <div class="trp-tools">
       <button class="trp-chip wide" id="trOrig" aria-pressed="false" data-t="tr_orig"></button>
       <span class="trp-gap" aria-hidden="true"></span>
-      <button class="trp-chip" data-sep="===" aria-pressed="false">===</button>
-      <button class="trp-chip" data-sep="=" aria-pressed="false">=</button>
+      <button class="trp-chip" data-sep="═══" aria-pressed="false">═══</button>
+      <button class="trp-chip" data-sep="═" aria-pressed="false">═</button>
       <button class="trp-chip" data-sep="—" aria-pressed="false">—</button>
       <button class="trp-chip wide" data-sep="" aria-pressed="false" data-t="tr_sep_blank"></button>
     </div>
@@ -325,7 +325,8 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
   </div>
   <div class="fld" data-grp="tr">
     <div class="row-lbl"><span data-t="tr_sep"></span></div>
-    <input type="text" id="trSep" value="===" spellcheck="false" autocapitalize="off">
+    <input type="text" id="trSep" value="═══" spellcheck="false" autocapitalize="off">
+    <p class="tip" data-t="tr_sep_tip"></p>
   </div>
   <div class="fld" data-grp="tr">
     <div class="row-lbl"><span data-t="tr_eng"></span></div>
@@ -520,6 +521,7 @@ ru:{
   tr_done:e=>"переведено · "+e,
   tr_done_fb:(e,f)=>"переведено через "+e+" — "+f+" не смог",
   tr_orig:"Оригинал", tr_sep_blank:"пусто",
+  tr_sep_tip:"= и - превращаются в ═ и ─: иначе Telegram сделает из строки над ними заголовок, а сам разделитель пропадёт.",
   eng_deepl:"DeepL — через свой Worker",
   tr_deepl:"Адрес Worker для DeepL",
   tr_deepl_tip:"DeepL не принимает запросы прямо со страницы (отвечает 403), а ключ нельзя класть "+
@@ -666,6 +668,7 @@ en:{
   tr_done:e=>"translated · "+e,
   tr_done_fb:(e,f)=>"translated via "+e+" — "+f+" could not",
   tr_orig:"Original", tr_sep_blank:"blank",
+  tr_sep_tip:"= and - become ═ and ─: otherwise Telegram turns the line above them into a heading and the separator disappears.",
   eng_deepl:"DeepL — via your own Worker",
   tr_deepl:"Worker address for DeepL",
   tr_deepl_tip:"DeepL refuses requests made straight from a page (403), and the key must not live "+
@@ -811,6 +814,7 @@ pl:{
   tr_done:e=>"przetłumaczono · "+e,
   tr_done_fb:(e,f)=>"przetłumaczono przez "+e+" — "+f+" nie dał rady",
   tr_orig:"Oryginał", tr_sep_blank:"pusto",
+  tr_sep_tip:"= i - zamieniają się w ═ i ─: inaczej Telegram zrobi z linijki nad nimi nagłówek, a separator zniknie.",
   eng_deepl:"DeepL — przez własny Worker",
   tr_deepl:"Adres Workera dla DeepL",
   tr_deepl_tip:"DeepL odrzuca zapytania wysyłane prosto ze strony (403), a klucza nie wolno trzymać "+
@@ -959,6 +963,7 @@ de:{
   tr_done:e=>"übersetzt · "+e,
   tr_done_fb:(e,f)=>"übersetzt mit "+e+" — "+f+" hat es nicht geschafft",
   tr_orig:"Original", tr_sep_blank:"leer",
+  tr_sep_tip:"= und - werden zu ═ und ─: sonst macht Telegram aus der Zeile darüber eine Überschrift, und der Trenner verschwindet.",
   eng_deepl:"DeepL — über eigenen Worker",
   tr_deepl:"Worker-Adresse für DeepL",
   tr_deepl_tip:"DeepL lehnt Anfragen direkt von einer Webseite ab (403), und der Schlüssel darf "+
@@ -1108,6 +1113,7 @@ fr:{
   tr_done:e=>"traduit · "+e,
   tr_done_fb:(e,f)=>"traduit via "+e+" — "+f+" n'a pas réussi",
   tr_orig:"Original", tr_sep_blank:"vide",
+  tr_sep_tip:"= et - deviennent ═ et ─ : sinon Telegram transforme la ligne au-dessus en titre et le séparateur disparaît.",
   eng_deepl:"DeepL — via ton propre Worker",
   tr_deepl:"Adresse du Worker pour DeepL",
   tr_deepl_tip:"DeepL refuse les requêtes envoyées directement depuis une page (403), et la clé ne doit "+
@@ -2559,7 +2565,13 @@ const TR_LANGS=[
   ["ja","японский","Japanese"],["ko","корейский","Korean"],["ar","арабский","Arabic"],
   ["ka","грузинский","Georgian"],["hy","армянский","Armenian"]
 ];
-const TR_DEF={from:"auto",to1:"en",to2:"pl",sep:"===",eng:"google",orig:"0",deepl:""};
+const TR_DEF={from:"auto",to1:"en",to2:"pl",sep:"═══",eng:"google",orig:"0",deepl:""};
+/* Telegram читает Markdown: «===» или «=» под строкой делает её заголовком (и разделитель пропадает),
+   «---» «***» «___» — линия, «#» «>» «```» «~~~» «||» тоже разметка. Меняем такие знаки на похожие. */
+const TG_SAFE={"=":"═","-":"─","*":"∗","_":"＿","#":"＃",">":"›","+":"＋","~":"∼","`":"ˋ","|":"│"};
+const tgSep=s=>String(s||"").trim()
+  .replace(/[=\-*_#>+~`|]/g,c=>TG_SAFE[c])
+  .replace(/^(\d+)([.)])/,(m,d,q)=>d+(q==="."?"․":"）"));   // «1.» в начале строки — нумерованный список
 const TR_KEY="proyav.tr";
 S.tr=Object.assign({},TR_DEF);
 S.trOut=""; S.trParts=null;      // {src, res:[…]} — из них собирается вывод
@@ -2567,6 +2579,7 @@ try{
   const s=JSON.parse(localStorage.getItem(TR_KEY)||"null");
   if(s&&typeof s==="object") for(const k in TR_DEF) if(typeof s[k]==="string") S.tr[k]=s[k];
 }catch(_){}
+S.tr.sep=tgSep(S.tr.sep);
 function saveTr(){ try{ localStorage.setItem(TR_KEY,JSON.stringify(S.tr)); }catch(_){} }
 
 function fillLangs(){
@@ -2717,14 +2730,14 @@ let trSeq=0, trTimer=null, trLast="";
 function composeTr(){
   const P=S.trParts;
   if(!P){ S.trOut=""; renderTr(); return; }
-  const sep=(S.tr.sep||"").trim();
+  const sep=tgSep(S.tr.sep);
   const blocks=(S.tr.orig==="1"?[P.src]:[]).concat(P.res);
   S.trOut=blocks.join(sep?"\n"+sep+"\n":"\n\n");
   renderTr();
 }
 function syncTrChips(){
   el("trOrig").setAttribute("aria-pressed",String(S.tr.orig==="1"));
-  const cur=(S.tr.sep||"").trim();
+  const cur=tgSep(S.tr.sep);
   document.querySelectorAll("[data-sep]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sep===cur)));
 }
 function renderTr(){
@@ -2796,6 +2809,9 @@ el("trDeepl").addEventListener("change",()=>{
 });
 el("trSep").addEventListener("input",()=>{
   S.tr.sep=el("trSep").value; saveTr(); syncTrChips(); composeTr();
+});
+el("trSep").addEventListener("change",()=>{
+  S.tr.sep=tgSep(el("trSep").value); el("trSep").value=S.tr.sep; saveTr(); syncTrChips(); composeTr();
 });
 document.querySelectorAll("[data-sep]").forEach(b=>b.addEventListener("click",()=>{
   S.tr.sep=b.dataset.sep; el("trSep").value=S.tr.sep; saveTr(); syncTrChips(); composeTr();
