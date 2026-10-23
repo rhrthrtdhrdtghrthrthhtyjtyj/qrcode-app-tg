@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#16110F">
 <title>Проявочная</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{
   --ink:#16110F; --tray:#221A16; --edge:#3A2A22;
@@ -17,7 +18,7 @@
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
 body{background:var(--ink);color:var(--paper);font-family:var(--ui);font-size:15px;
-  display:flex;flex-direction:column;height:100dvh}
+  display:flex;flex-direction:column;height:var(--app-h,100dvh)}
 
 .top{flex:0 0 auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 0;
   border-bottom:1px solid var(--edge)}
@@ -64,6 +65,12 @@ body{background:var(--ink);color:var(--paper);font-family:var(--ui);font-size:15
   word-break:break-word;cursor:pointer;transition:opacity .15s}
 .trp-out:empty::before{content:attr(data-empty);color:#9A8878}
 .trp-out.busy{opacity:.5}
+.trp-tools{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.trp-chip{min-height:38px;min-width:44px;padding:0 12px;border:1px solid var(--edge);border-radius:3px;
+  background:#191211;color:var(--muted);font-family:var(--ui);font-size:14px;cursor:pointer}
+.trp-chip[aria-pressed=true]{background:var(--safelight);border-color:var(--safelight);color:#1A1109;font-weight:700}
+.trp-chip.wide{font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.trp-gap{width:1px;height:24px;background:var(--edge);margin:0 4px}
 
 .tools{display:flex;gap:6px;padding:0 0 10px;flex-wrap:wrap}
 .tools[hidden]{display:none}
@@ -110,7 +117,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,label:focus-visibl
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--tray);
   border-top:1px solid var(--edge);border-radius:14px 14px 0 0;
   padding:8px 18px calc(22px + var(--bar));transform:translateY(102%);
-  transition:transform .25s cubic-bezier(.2,.8,.3,1);max-height:86dvh;overflow:auto}
+  transition:transform .25s cubic-bezier(.2,.8,.3,1);max-height:80vh;overflow:auto}
 .sheet.on{transform:translateY(0)}
 .grip{width:42px;height:4px;border-radius:2px;background:#4E3A2E;margin:6px auto 12px}
 .mini{position:sticky;top:0;z-index:2;background:var(--tray);
@@ -214,6 +221,14 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
     <div class="trp-lbl"><span data-t="tr_src"></span>
       <button class="trp-x" id="trClear" aria-label="Clear">×</button></div>
     <textarea id="trIn" rows="4" data-t-ph="tr_ph"></textarea>
+    <div class="trp-tools">
+      <button class="trp-chip wide" id="trOrig" aria-pressed="false" data-t="tr_orig"></button>
+      <span class="trp-gap" aria-hidden="true"></span>
+      <button class="trp-chip" data-sep="===" aria-pressed="false">===</button>
+      <button class="trp-chip" data-sep="=" aria-pressed="false">=</button>
+      <button class="trp-chip" data-sep="—" aria-pressed="false">—</button>
+      <button class="trp-chip wide" data-sep="" aria-pressed="false" data-t="tr_sep_blank"></button>
+    </div>
     <div class="trp-lbl"><span data-t="tr_res"></span><span class="trp-eng" id="trEng"></span></div>
     <div class="trp-out" id="trOut" role="button" tabindex="0" data-empty=""></div>
   </div>
@@ -305,8 +320,15 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
     <select id="trEngine">
       <option value="google" data-t="eng_google"></option>
       <option value="mymemory" data-t="eng_mm"></option>
+      <option value="deepl" data-t="eng_deepl"></option>
     </select>
     <p class="tip" id="tipTr"></p>
+  </div>
+  <div class="fld" data-grp="tr" id="trDeeplWrap">
+    <div class="row-lbl"><span data-t="tr_deepl"></span></div>
+    <input type="text" id="trDeepl" inputmode="url" autocapitalize="off" spellcheck="false"
+           placeholder="https://deepl.имя.workers.dev">
+    <p class="tip" id="tipDeepl"></p>
   </div>
 
   <!-- вкладка «QR-код» -->
@@ -484,7 +506,15 @@ ru:{
   tr_hello:"напиши или вставь текст — переведу сразу на два языка",
   tr_working:"перевожу…",
   tr_done:e=>"переведено · "+e,
-  tr_done_fb:(e,f)=>"переведено через "+e+" — "+f+" не ответил",
+  tr_done_fb:(e,f)=>"переведено через "+e+" — "+f+" не смог",
+  tr_orig:"Оригинал", tr_sep_blank:"пусто",
+  eng_deepl:"DeepL — через свой Worker",
+  tr_deepl:"Адрес Worker для DeepL",
+  tr_deepl_tip:"DeepL не принимает запросы прямо со страницы (отвечает 403), а ключ нельзя класть "+
+               "в сайт — его утащат. Поэтому нужен посредник: бесплатный Cloudflare Worker, у которого "+
+               "ключ хранится в секрете. Код — в файле deepl-worker.js. Языки, которых нет в DeepL, "+
+               "переведёт Google.",
+  tr_nodeepl:"DeepL не настроен — перевёл через Google. Впиши адрес Worker в настройках",
   tr_fail:"переводчики не ответили — проверь интернет и попробуй ещё раз",
   tr_need:"сначала напиши текст",
   tr_long:"слишком длинно — до 5000 знаков за раз",
@@ -621,7 +651,14 @@ en:{
   tr_hello:"type or paste text — I translate into two languages at once",
   tr_working:"translating…",
   tr_done:e=>"translated · "+e,
-  tr_done_fb:(e,f)=>"translated via "+e+" — "+f+" did not answer",
+  tr_done_fb:(e,f)=>"translated via "+e+" — "+f+" could not",
+  tr_orig:"Original", tr_sep_blank:"blank",
+  eng_deepl:"DeepL — via your own Worker",
+  tr_deepl:"Worker address for DeepL",
+  tr_deepl_tip:"DeepL refuses requests made straight from a page (403), and the key must not live "+
+               "in the site — anyone could take it. So a go-between is needed: a free Cloudflare Worker "+
+               "that keeps the key secret. Code is in deepl-worker.js. Languages DeepL lacks go to Google.",
+  tr_nodeepl:"DeepL is not set up — translated with Google. Add the Worker address in settings",
   tr_fail:"translators did not answer — check the connection and try again",
   tr_need:"type some text first",
   tr_long:"too long — up to 5000 characters at a time",
@@ -1176,6 +1213,7 @@ function applyLang(){
   fillLangs();
   el("trOut").dataset.empty=t("tr_empty");
   el("tipTr").textContent=t("tr_tip");
+  el("tipDeepl").textContent=t("tr_deepl_tip");
   const tb=el("tipBar"); if(tb) tb.textContent=t("bar_hint");
   if(el("qrLbl")) kindUI();
   if(el("camLbl")) el("camLbl").textContent=t(S.tab==="qr"?"cam_scan":"camera");
@@ -1245,6 +1283,7 @@ function sheetUI(){
   const tr = S.tab==="tr";                    // для перевода картинки и камера не нужны
   el("camLbl").hidden = tr; el("png").hidden = tr; el("shareChip").hidden = tr;
   el("quality").closest(".fld").hidden = tr;
+  el("trDeeplWrap").hidden = !tr || S.tr.eng!=="deepl";
   el("camLbl").textContent = t(S.tab==="qr"?"cam_scan":"camera");
   el("tipEmoji").hidden = !emoji;
 }
@@ -2020,10 +2059,10 @@ const TR_LANGS=[
   ["ja","японский","Japanese"],["ko","корейский","Korean"],["ar","арабский","Arabic"],
   ["ka","грузинский","Georgian"],["hy","армянский","Armenian"]
 ];
-const TR_DEF={from:"auto",to1:"en",to2:"pl",sep:"===",eng:"google"};
+const TR_DEF={from:"auto",to1:"en",to2:"pl",sep:"===",eng:"google",orig:"0",deepl:""};
 const TR_KEY="proyav.tr";
 S.tr=Object.assign({},TR_DEF);
-S.trOut="";
+S.trOut=""; S.trParts=null;      // {src, res:[…]} — из них собирается вывод
 try{
   const s=JSON.parse(localStorage.getItem(TR_KEY)||"null");
   if(s&&typeof s==="object") for(const k in TR_DEF) if(typeof s[k]==="string") S.tr[k]=s[k];
@@ -2044,6 +2083,8 @@ function fillLangs(){
   S.tr.to1 =fill("trTo1",null,S.tr.to1,TR_DEF.to1);
   S.tr.to2 =fill("trTo2",["none",t("lang_none")],S.tr.to2,TR_DEF.to2);
   el("trSep").value=S.tr.sep;
+  el("trDeepl").value=S.tr.deepl;
+  syncTrChips();
   el("trEngine").value=S.tr.eng; if(el("trEngine").value!==S.tr.eng){ S.tr.eng=TR_DEF.eng; el("trEngine").value=S.tr.eng; }
 }
 
@@ -2076,9 +2117,31 @@ async function trMyMemory(q,sl,tl){
   if(/MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID LANGUAGE/i.test(tx)) throw new Error(tx);
   return decodeEntities(tx);
 }
+const DEEPL_T={en:"EN-US",pl:"PL",ru:"RU",uk:"UK",de:"DE",fr:"FR",es:"ES",it:"IT",pt:"PT-BR",
+  cs:"CS",tr:"TR","zh-CN":"ZH-HANS",ja:"JA",ko:"KO",ar:"AR"};
+const deeplUrl=()=>{ const u=(S.tr.deepl||"").trim(); return /^https:\/\/\S+$/i.test(u)?u:""; };
+async function trDeepL(q,sl,tl){
+  const url=deeplUrl();
+  if(!url) throw new Error("DeepL: нет адреса");
+  const target=DEEPL_T[tl];
+  if(!target) throw new Error("DeepL: язык "+tl);
+  const body={text:q,target};
+  if(sl!=="auto" && DEEPL_T[sl]) body.source=DEEPL_T[sl].split("-")[0];
+  const ctl=(typeof AbortController!=="undefined")?new AbortController():null;
+  const tm=setTimeout(()=>{ if(ctl) ctl.abort(); },12000);
+  try{
+    const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},
+                             body:JSON.stringify(body),signal:ctl?ctl.signal:undefined});
+    const j=await r.json().catch(()=>null);
+    const t=j&&j.translations&&j.translations[0]&&j.translations[0].text;
+    if(!r.ok||typeof t!=="string") throw new Error((j&&(j.message||j.error))||("DeepL "+r.status));
+    return t;
+  }finally{ clearTimeout(tm); }
+}
 const ENG={
   google:  {name:"Google",   fn:trGoogle,   fits:s=>encodeURIComponent(s).length<=4500},
-  mymemory:{name:"MyMemory", fn:trMyMemory, fits:s=>new TextEncoder().encode(s).length<=480}
+  mymemory:{name:"MyMemory", fn:trMyMemory, fits:s=>new TextEncoder().encode(s).length<=480},
+  deepl:   {name:"DeepL",    fn:trDeepL,    fits:s=>s.length<=4500}
 };
 
 /* Длинный текст режем под лимит переводчика: сначала по строкам,
@@ -2125,7 +2188,10 @@ async function viaEngine(key,text,sl,tl){
 }
 async function translateAll(text){
   const tr=S.tr;
-  const order=tr.eng==="mymemory"?["mymemory","google"]:["google","mymemory"];
+  let order=tr.eng==="mymemory"?["mymemory","google"]:
+            tr.eng==="deepl"?["deepl","google","mymemory"]:["google","mymemory"];
+  const noDeepl = tr.eng==="deepl" && !deeplUrl();
+  if(noDeepl) order=order.filter(k=>k!=="deepl");
   const targets=[tr.to1].concat(tr.to2&&tr.to2!=="none"&&tr.to2!==tr.to1?[tr.to2]:[]);
   const used=new Set(); let failed=null;
   const one=async tl=>{
@@ -2137,10 +2203,23 @@ async function translateAll(text){
     throw last||new Error("fail");
   };
   const res=await Promise.all(targets.map(one));
-  return {res, used:[...used].map(k=>ENG[k].name), failed};
+  return {res, used:[...used].map(k=>ENG[k].name), failed, noDeepl};
 }
 
 let trSeq=0, trTimer=null, trLast="";
+function composeTr(){
+  const P=S.trParts;
+  if(!P){ S.trOut=""; renderTr(); return; }
+  const sep=(S.tr.sep||"").trim();
+  const blocks=(S.tr.orig==="1"?[P.src]:[]).concat(P.res);
+  S.trOut=blocks.join(sep?"\n"+sep+"\n":"\n\n");
+  renderTr();
+}
+function syncTrChips(){
+  el("trOrig").setAttribute("aria-pressed",String(S.tr.orig==="1"));
+  const cur=(S.tr.sep||"").trim();
+  document.querySelectorAll("[data-sep]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.sep===cur)));
+}
 function renderTr(){
   el("trOut").textContent=S.trOut||"";
   if(S.tab==="tr") el("copy").disabled=!S.trOut;
@@ -2148,13 +2227,13 @@ function renderTr(){
 async function runTranslate(force){
   const text=el("trIn").value.replace(/\s+$/,"");
   if(!text.trim()){
-    trSeq++; trLast=""; S.trOut=""; renderTr(); el("trEng").textContent="";
+    trSeq++; trLast=""; S.trParts=null; composeTr(); el("trEng").textContent="";
     el("trOut").classList.remove("busy");
     if(force) say("tr_need",null,"bad"); else say("tr_hello");
     return;
   }
   if(text.length>5000){ say("tr_long",null,"bad"); return; }
-  const key=text+"\u0000"+JSON.stringify(S.tr);
+  const key=[text,S.tr.from,S.tr.to1,S.tr.to2,S.tr.eng,deeplUrl()].join("\u0000");  // разделитель и «Оригинал» сеть не трогают
   if(!force && key===trLast) return;
   trLast=key;
   const my=++trSeq;
@@ -2162,16 +2241,16 @@ async function runTranslate(force){
   try{
     const r=await translateAll(text);
     if(my!==trSeq) return;                    // пока ждали, текст уже поменялся
-    const sep=(S.tr.sep||"").trim();
-    S.trOut=r.res.join(sep?"\n"+sep+"\n":"\n\n");
-    renderTr();
+    S.trParts={src:text,res:r.res};
+    composeTr();
     el("trEng").textContent=r.used.join(" + ");
-    if(r.failed && r.used.indexOf(r.failed)<0) say("tr_done_fb",[r.used.join(" + "),r.failed],"good");
+    if(r.noDeepl) say("tr_nodeepl",null,"bad");
+    else if(r.failed && r.used.indexOf(r.failed)<0) say("tr_done_fb",[r.used.join(" + "),r.failed],"good");
     else say("tr_done",[r.used.join(" + ")],"good");
   }catch(e){
     if(my!==trSeq) return;
     trLast="";
-    S.trOut=""; renderTr(); el("trEng").textContent="";   // не оставляем перевод прошлого текста
+    S.trParts=null; composeTr(); el("trEng").textContent="";   // не оставляем перевод прошлого текста
     say("tr_fail",null,"bad");
   }finally{
     if(my===trSeq) el("trOut").classList.remove("busy");
@@ -2203,9 +2282,19 @@ const trSet=(id,k)=>el(id).addEventListener("change",()=>{
   if(el("trIn").value.trim()) runTranslate(false);
 });
 trSet("trFrom","from"); trSet("trTo1","to1"); trSet("trTo2","to2"); trSet("trEngine","eng");
+el("trEngine").addEventListener("change",sheetUI);
+el("trDeepl").addEventListener("change",()=>{
+  S.tr.deepl=el("trDeepl").value.trim(); el("trDeepl").value=S.tr.deepl; saveTr(); trLast="";
+  if(el("trIn").value.trim()) runTranslate(false);
+});
 el("trSep").addEventListener("input",()=>{
-  S.tr.sep=el("trSep").value; saveTr();
-  if(S.trOut){ trLast=""; trSoon(); }
+  S.tr.sep=el("trSep").value; saveTr(); syncTrChips(); composeTr();
+});
+document.querySelectorAll("[data-sep]").forEach(b=>b.addEventListener("click",()=>{
+  S.tr.sep=b.dataset.sep; el("trSep").value=S.tr.sep; saveTr(); syncTrChips(); composeTr();
+}));
+el("trOrig").addEventListener("click",()=>{
+  S.tr.orig=S.tr.orig==="1"?"0":"1"; saveTr(); syncTrChips(); composeTr();
 });
 el("tabTr").addEventListener("click",()=>setTab("tr"));
 
@@ -2395,7 +2484,7 @@ el("reset").addEventListener("click",()=>{
   el("lh").value=S.lh; el("lhVal").textContent=S.lh.toFixed(2);
   el("invert").setAttribute("aria-pressed","false");
   el("color").setAttribute("aria-pressed","false");
-  S.tr=Object.assign({},TR_DEF); saveTr(); fillLangs(); trLast="";
+  S.tr=Object.assign({},TR_DEF); saveTr(); fillLangs(); trLast=""; composeTr();
   if(S.tab==="tr" && el("trIn").value.trim()) runTranslate(false);
   sheetUI();
   S.tab==="art"?buildArt():drawCut();
@@ -2678,6 +2767,44 @@ el("copy").addEventListener("click",async()=>{
 applyLang();
 setTab("cut");
 say("ready");
+
+/* ══════════════════════ Telegram Mini App ══════════════════════ */
+(function(){
+  const tg = window.Telegram && window.Telegram.WebApp;
+  if(!tg) return;
+  tg.ready(); tg.expand();
+  try{ tg.disableVerticalSwipes(); }catch(e){}
+  try{ tg.setHeaderColor("#16110F"); tg.setBackgroundColor("#16110F"); }catch(e){}
+  const lc=(tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code)||"";
+  if(lc){ L = lc.indexOf("ru")===0 ? "ru" : "en"; applyLang(); }
+  const syncH=()=>{
+    const px=tg.viewportStableHeight||tg.viewportHeight||window.innerHeight;
+    document.documentElement.style.setProperty("--app-h", px+"px");
+    S.tab==="art"?drawArt():S.tab==="qr"?drawQr():drawCut();
+  };
+  syncH(); tg.onEvent("viewportChanged", syncH);
+  const back=tg.BackButton;
+  window.__tgSync=()=>{
+    try{ (viewerOpen()||S.tab!=="cut") ? back.show() : back.hide(); }catch(e){}
+  };
+  try{ back.onClick(()=>{
+    if(viewerOpen()){ el("vclose").click(); return; }
+    if(!el("saveMenu").hidden){ closeSaveMenu(); return; }
+    setTab("cut");
+  }); }catch(e){}
+  window.__tgSync();
+  const ch=document.querySelector(".tgl");
+  if(ch) ch.addEventListener("click",e=>{
+    e.preventDefault();
+    try{ tg.openTelegramLink("https://t.me/ProstoAyli"); }
+    catch(_){ location.href="https://t.me/ProstoAyli"; }
+  });
+  const buzz=s=>{ try{ tg.HapticFeedback.impactOccurred(s||"light"); }catch(e){} };
+  ["paste","toArt","tune","dl","copy","copyChip","png","tabCut","tabArt","tabQr","tabTr","trPaste","trGo","trClear","trOut","trOrig","tAuto","tWand","tErase","tRestore","tUndo","askPerson","askThing","barNum","vback","vclose","smCopy","smShare","smFile"]
+   .forEach(id=>{ const n=document.getElementById(id);
+     if(n) n.addEventListener("click",()=>buzz(id==="tAuto"||id==="copy"?"medium":"light")); });
+})();
+
 </script>
 </body>
 </html>
