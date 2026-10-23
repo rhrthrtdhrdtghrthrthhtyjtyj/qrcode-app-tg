@@ -23,7 +23,9 @@ body{background:var(--ink);color:var(--paper);font-family:var(--ui);font-size:15
 .top{flex:0 0 auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 0;
   border-bottom:1px solid var(--edge)}
 .head{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.mark{font-size:16px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0}
+.mark{font-size:16px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0;
+  min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:380px){ .mark{letter-spacing:.1em;font-size:15px} }
 .mark span{color:var(--safelight)}
 .headside{display:flex;align-items:center;gap:8px;flex:0 0 auto}
 .tgl{display:flex;align-items:center;justify-content:center;width:34px;height:34px;
@@ -31,10 +33,15 @@ body{background:var(--ink);color:var(--paper);font-family:var(--ui);font-size:15
   transition:color .15s,border-color .15s,background .15s}
 .tgl:hover{background:#20211f;border-color:#2AABEE}
 .tgl:focus-visible{outline:2px solid var(--safelight);outline-offset:2px}
-.lang{display:flex;border:1px solid var(--edge);border-radius:3px;overflow:hidden;flex:0 0 auto}
-.lang button{background:#191211;color:var(--muted);border:0;font-family:var(--ui);
-  font-size:11px;letter-spacing:.1em;padding:8px 11px;min-height:34px;cursor:pointer}
-.lang button[aria-pressed=true]{background:var(--safelight);color:#1A1109;font-weight:700}
+.langsel{position:relative;display:flex;align-items:center;gap:5px;height:34px;padding:0 11px;
+  flex:0 0 auto;border:1px solid var(--safelight);border-radius:3px;background:var(--safelight);
+  color:#1A1109;font-family:var(--ui);font-size:11px;font-weight:700;letter-spacing:.1em;cursor:pointer}
+.langsel select{position:absolute;inset:0;width:100%;height:100%;min-height:0;padding:0;border:0;
+  opacity:0;cursor:pointer;font-size:16px}
+.langsel:focus-within{outline:2px solid var(--paper);outline-offset:2px}
+.langbeta{font-size:10px;letter-spacing:0;margin-left:-2px}
+.langbeta[hidden]{display:none}
+.langarr{font-size:9px;opacity:.7}
 .status{font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:.04em;line-height:1.5;
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .status.bad{color:#FF7A5C}
@@ -193,10 +200,11 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
           <path fill="currentColor" d="M228.6 4.9 10.9 90.6c-9.3 3.7-9 13.2.3 16.3l55.4 17.6 21.4 65.7c2.2 6.2 6.9 7.7 11.4 3.7l30.9-28.3 57 42c6.6 3.7 12.4.9 14.1-6.6L239.4 16c2.1-9-4-13.9-10.8-11.1ZM86.5 118.6l111-70.3c4.2-2.6 8.1-1.2 5 1.7l-91.4 83.3-3.6 39.7-21-54.4Z"/>
         </svg>
       </a>
-      <div class="lang" role="group" aria-label="Language">
-        <button id="ru" aria-pressed="true">RU</button>
-        <button id="en" aria-pressed="false">EN</button>
-      </div>
+      <label class="langsel" title="Язык · Language">
+        <span id="langCode">RU</span><sup class="langbeta" id="langBeta" hidden>β</sup>
+        <span class="langarr" aria-hidden="true">▾</span>
+        <select id="langSel" aria-label="Язык · Language"></select>
+      </label>
     </div>
   </div>
   <div class="status" id="status"></div>
@@ -631,7 +639,8 @@ ru:{
   inframe:"внутри Telegram файлы не скачиваются. Задержи палец на картинке → «Сохранить в Фото»",
   noshare:e=>"отправка недоступна: "+e,
   resetdone:"настройки сброшены",
-  sfx_cut:"-bez-fona", sfx_art:"-tekst"
+  sfx_cut:"-bez-fona", sfx_art:"-tekst",
+  beta:"бета"
 },
 en:{
   mark:["Dark","room"], title:"Darkroom — cut out and turn to characters", htmlLang:"en",
@@ -775,10 +784,465 @@ en:{
   inframe:"Telegram blocks downloads. Press and hold the image → Save to Photos",
   noshare:e=>"sharing unavailable: "+e,
   resetdone:"settings reset",
-  sfx_cut:"-no-bg", sfx_art:"-text"
-}};
-let L=(navigator.language||"").toLowerCase().indexOf("ru")===0?"ru":"en";
-const t=k=>T[L][k];
+  sfx_cut:"-no-bg", sfx_art:"-text",
+  beta:"beta"
+},
+pl:{
+  mark:["Ciem","nia"], title:"Ciemnia — wytnij i zamień w znaki", htmlLang:"pl",
+  ready:"wyślij zdjęcie — wytnę osobę i zamienię ją w znaki",
+  tab_cut:"Wytnij", tab_art:"Znaki", tab_qr:"Kod QR", tab_tr:"Tłumacz",
+  tr_paste:"Wklej", tr_go:"Przetłumacz",
+  tr_src:"Tekst", tr_res:"Tłumaczenie · dotknij, aby skopiować",
+  tr_ph:"Napisz lub wklej tekst — przetłumaczę od razu",
+  tr_empty:"tu pojawi się tłumaczenie",
+  tr_from:"Z jakiego języka", tr_to1:"Tłumaczenie 1", tr_to2:"Tłumaczenie 2",
+  tr_sep:"Separator między tłumaczeniami", tr_eng:"Usługa tłumaczenia",
+  eng_google:"Google — bez klucza", eng_mm:"MyMemory — bez klucza",
+  lang_auto:"Wykryj", lang_none:"— brak",
+  tr_tip:"Działa prosto ze strony: bez serwera, kluczy i rejestracji. "+
+         "Jeśli wybrany tłumacz nie odpowie, spróbuję drugiego. "+
+         "MyMemory pozwala na ok. 5000 znaków dziennie.",
+  tr_hello:"napisz lub wklej tekst — przetłumaczę od razu na dwa języki",
+  tr_working:"tłumaczę…",
+  tr_done:e=>"przetłumaczono · "+e,
+  tr_done_fb:(e,f)=>"przetłumaczono przez "+e+" — "+f+" nie dał rady",
+  tr_orig:"Oryginał", tr_sep_blank:"pusto",
+  eng_deepl:"DeepL — przez własny Worker",
+  tr_deepl:"Adres Workera dla DeepL",
+  tr_deepl_tip:"DeepL odrzuca zapytania wysyłane prosto ze strony (403), a klucza nie wolno trzymać "+
+               "na stronie — każdy mógłby go zabrać. Dlatego potrzebny jest pośrednik: darmowy "+
+               "Cloudflare Worker, który trzyma klucz w sekrecie. Kod jest w pliku deepl-worker.js. "+
+               "Języki, których DeepL nie zna, tłumaczy Google.",
+  tr_nodeepl:"DeepL nie jest skonfigurowany — przetłumaczono przez Google. Wpisz adres Workera w ustawieniach",
+  tr_fail:"tłumacze nie odpowiedzieli — sprawdź internet i spróbuj ponownie",
+  tr_need:"najpierw napisz tekst",
+  tr_long:"za długo — do 5000 znaków naraz",
+  tr_copied:"skopiowano — wklej w Telegramie",
+  tr_pastefail:"schowek niedostępny — przytrzymaj pole i wybierz „Wklej”",
+  qr_ph:"Link, tekst lub numer…",
+  lbl_qr:"Link lub tekst", lbl_bar:"Numer lub kod",
+  ph_bar:"Numer: 227202250076539133…",
+  code_kind:"Typ kodu",
+  kind_qr:"Kod QR", kind_bar:"Kod kreskowy (Code 128)",
+  bar_done:n=>"kod kreskowy gotowy · pasków: "+n,
+  bars_done:n=>"gotowe kody kreskowe: "+n+" — jeden pod drugim, jak na paragonie",
+  bar_hint:"kilka numerów oddziel spacjami — dostaniesz kilka kodów",
+  scan_btn:"Odczytaj ze zdjęcia",
+  cam_scan:"Zeskanuj aparatem",
+  code_size:"Rozmiar kodu", sz_s:"Mały", sz_m:"Zwykły", sz_l:"Duży",
+  barnum:"Numer pod kodem",
+  scanning:"szukam kodu na zdjęciu…",
+  scan_step:(k,n)=>"szukam QR na zdjęciu… "+k+" z "+n,
+  scan_ok:n=>"znalezione kody kreskowe: "+n+" — numery wpisane",
+  scan_qr:n=>"QR odczytany — w środku znaków: "+n+", kod złożony od nowa",
+  scan_none:"nie rozpoznano kodu. Zrób zdjęcie bliżej, prosto i bez odblasków — cały kod musi być w kadrze",
+  bar_ascii:"kod kreskowy przyjmuje tylko litery łacińskie bez ogonków, cyfry i znaki — Code 128 nie zna cyrylicy ani polskich liter",
+  bar_long:"za długie na kod kreskowy — stanie się nieczytelny. Do ok. 40 znaków",
+  qr_make:"Utwórz", qr_lvl:"Odporność na błędy",
+  qr_l:"L — minimalna", qr_m:"M — zwykła", qr_q:"Q — wysoka", qr_h:"H — maksymalna",
+  qr_style:"Wygląd", qr_img:"Obraz", qr_blocks:"Tekst z bloków",
+  qr_done:(v,n)=>"QR gotowy · wersja "+v+" · "+n+"×"+n+" modułów",
+  qr_long:"tekst za długi nawet dla największego QR (2953 bajty)",
+  qr_empty:"wpisz tekst lub link",
+  qr_blockstip:"Bloki █ i spacje tworzą prawdziwy, skanowalny QR z tekstu. "+
+               "Wklejaj tylko czcionką o stałej szerokości: w Telegramie jako blok kodu, na Steamie w [code].",
+  paste:"Wklej", gallery:"Galeria", settings:"Ustawienia", camera:"Aparat",
+  toart:"Na znaki →", copy:"Kopiuj", download:"Pobierz", share:"Udostępnij",
+  save_what:"Jak zapisać?",
+  bg:"Tło", bg_none:"Przezroczyste", bg_white:"Białe", bg_dark:"Ciemne", bg_blur:"Rozmyty oryginał",
+  soft:"Miękkość krawędzi", edge:"Dokładność wycięcia", redo:"Przelicz modelem",
+  autocut:"Usuń tło",
+  fallback_only:"tło usunięte od krawędzi (bez modelu). Dokładniej — Różdżką",
+  ask_cut:"Usunąć tło?",
+  cut_yes:"Usuń tło", cut_skip:"Nie trzeba",
+  kept:(w,hh)=>"zdjęcie wczytane w całości · "+w+"×"+hh+" px — możesz od razu przejść do „Znaków”",
+  ask_what:"Co wycinamy?",
+  subj_person:"Osoba", subj_thing:"Przedmiot",
+  thing_done:"tło usunięte od krawędzi — kolory podobne do ramki stały się przezroczyste. "+
+             "Dokładność: „Podobieństwo koloru” i Różdżka",
+  thing_fail:"nie udało się oddzielić przedmiotu — tło jest zbyt pstrokate. Spróbuj Różdżką na tle",
+  tool:"Narzędzie", t_none:"Tylko podgląd", t_wand:"Różdżka", t_erase:"Gumka", t_restore:"Przywróć",
+  tol:"Podobieństwo koloru", brush:"Rozmiar pędzla", undo:"Cofnij", clearmask:"Cały obraz",
+  manual:"Model nie jest konieczny. Różdżka jednym dotknięciem usuwa tło o podobnym kolorze, "+
+         "Gumka ściera ręcznie, Przywróć oddaje starte. Wszystko offline.",
+  wanded:n=>"usunięto punktów: "+n,
+  nothing:"nie ma czego cofać",
+  maskfull:"maska zresetowana — cały obraz",
+  mode:"Tryb", m_chars:"Znaki", m_emoji:"Mozaika z emoji", m_brl:"Braille — siatka kropek",
+  detail:"Szczegółowość", charset:"Zestaw znaków", darklight:"Od ciemnego do jasnego",
+  contrast:"Kontrast", bright:"Jasność", scale:"Skala", fit:"do szerokości",
+  quality:"Rozmiar pliku PNG",
+  target:"Gdzie wklejasz tekst",
+  lheight:"Wysokość wiersza",
+  lhtip:"W oknie komentarza wiersze mają odstępy, a na obrazku stykają się. "+
+        "Ten suwak rozciąga obrazek w pionie, żeby na Steamie się nie spłaszczał. "+
+        "Po wyborze serwisu wartość ustawia się sama, potem możesz dopasować na oko.",
+  g_none:"Bez limitu", g_steam:"Steam — 1000 znaków",
+  g_tg:"Telegram — 4096", g_vk:"VK — 4000",
+  fitted:(c,n,lim)=>"szerokość dobrana: "+c+" zn. · "+n+" z "+lim+" znaków",
+  tip_steam:"Na Steama tekst kopiuje się razem ze znacznikiem [code] — bez niego czcionka jest "+
+            "proporcjonalna i obrazek się rozjeżdża. Szerokość trzyma się do 40 znaków — dłuższe "+
+            "wiersze okno komentarza zawija i obrazek składa się na pół.",
+  tip_tg:"Do Telegrama tekst trafia w potrójne odwrotne apostrofy — wychodzi blok kodu o stałej "+
+         "szerokości. Szerokość trzyma się do 32 znaków, żeby na telefonie wiersze się nie zawijały — "+
+         "zawinięcie składa obrazek na pół.",
+  tip_vk:"VK w ogóle nie ma czcionki o stałej szerokości, więc każdy obrazek z tekstu się tam rozjedzie. "+
+         "Pewniej wysłać obraz — przycisk „Pobierz”.",
+  invert:"Odwróć", color:"Kolor", filepng:"Plik PNG", filetxt:"Plik .txt",
+  reset:"Resetuj", done:"Gotowe", closeimg:"Zamknij",
+  holdtip:"Przytrzymaj palec na obrazku → „Zapisz w Zdjęciach”",
+  holdtip2:"Albo „Udostępnij” w ustawieniach — wyśle obrazek prosto do czatu",
+  s_punct:"Znaki  @#&$%()[];:,.", s_classic:"Klasyczny  @%#*+=-:.",
+  s_detail:"Szczegółowy  70 znaków", s_blocks:"Bloki  █▓▒░",
+  s_binary:"Binarny  10", s_braille:"Braille  ⣿⣧⣇⠇",
+  s_custom:"Własny zestaw…",
+  tipcut:"Pewna droga bez internetu: w „Zdjęciach” przytrzymaj palec na osobie → „Kopiuj obiekt”, "+
+         "wróć tutaj i naciśnij „Wklej”. Zwykłe zdjęcie też się nada — wtedy tło usunie model, "+
+         "trzeba go pobrać raz.",
+  tipemoji:"Na Androidzie emoji wyglądają inaczej — tekstowa mozaika się tam rozsypie. "+
+           "Wysyłaj jako obraz: jest narysowany emoji z twojego iPhone'a i u wszystkich wygląda tak samo.",
+  sample:"przykład",
+  reading:(n,k)=>"czytam "+n+" · "+k+" KB",
+  alphaok:(w,h,p)=>"tło już wycięte · "+w+"×"+h+" px · obiekt "+p+"%",
+  segload:"wczytuję model, potrzebny internet…",
+  working:"liczę…",
+  segok:(w,h,p)=>"tło usunięte · "+w+"×"+h+" px · obiekt "+p+"%",
+  segnone_fb:"nie znaleziono osoby — usunąłem tło od krawędzi. Popraw Różdżką albo suwakiem „Dokładność”",
+  segfail_frame:"podgląd blokuje zewnętrzne skrypty. Pobierz plik i otwórz go w przeglądarce — "+
+                "tam model się wczyta",
+  segfail_file:"plik otwarty bezpośrednio (file://), przeglądarka nie wpuszcza modelu. "+
+               "W folderze z plikiem uruchom: python -m http.server 8000 — i otwórz localhost:8000",
+  segfail_net:"nie mogę połączyć się z cdn.jsdelivr.net. Wygląda na to, że sieć blokuje adres — "+
+              "pomoże VPN albo umieszczenie strony na Netlify",
+  segfail_ios:"model się nie wczytał. Prościej wyciąć na iPhonie: „Zdjęcia” → przytrzymaj palec "+
+              "na osobie → „Kopiuj obiekt” → tutaj „Wklej”",
+  arted:(n,w,h)=>n+" · "+w+"×"+h+" znaków",
+  needphoto:"najpierw wyślij zdjęcie",
+  nofile:"nie otrzymano pliku", noread:"nie udało się odczytać pliku",
+  nodecode:"przeglądarka nie obsługuje tego formatu",
+  noimage:"w schowku nie ma obrazu — najpierw skopiuj obiekt w „Zdjęciach”",
+  pastefail:"przeglądarka nie dała dostępu do schowka — spróbuj „Galerii”",
+  fail:e=>"błąd: "+e,
+  copied:n=>"skopiowano — wierszy: "+n,
+  emojicopy:"skopiowano, ale na Androidzie będzie wyglądać inaczej — pewniej jako obraz",
+  nocopy:"schowek zablokowany — zapisz jako plik",
+  pngsize:(w,h,kb)=>"PNG "+w+"×"+h+" px · "+kb+" KB",
+  saved_dl:"zapisano w folderze „Pobrane”", saved_picked:"zapisano w wybranym folderze",
+  inframe:"w Telegramie pliki się nie pobierają. Przytrzymaj palec na obrazku → „Zapisz w Zdjęciach”",
+  noshare:e=>"udostępnianie niedostępne: "+e,
+  resetdone:"ustawienia zresetowane",
+  sfx_cut:"-bez-tla", sfx_art:"-tekst",
+  beta:"beta",
+  beta_note:"polski interfejs to wersja beta — niektóre zwroty mogą brzmieć niezgrabnie"
+},
+de:{
+  mark:["Dunkel","kammer"], title:"Dunkelkammer — freistellen und in Zeichen verwandeln", htmlLang:"de",
+  ready:"schick ein Foto — ich stelle die Person frei und verwandle sie in Zeichen",
+  tab_cut:"Freistellen", tab_art:"Zeichen", tab_qr:"QR-Code", tab_tr:"Übersetzen",
+  tr_paste:"Einfügen", tr_go:"Übersetzen",
+  tr_src:"Text", tr_res:"Übersetzung · tippen zum Kopieren",
+  tr_ph:"Text schreiben oder einfügen — ich übersetze sofort",
+  tr_empty:"hier erscheint die Übersetzung",
+  tr_from:"Aus welcher Sprache", tr_to1:"Übersetzung 1", tr_to2:"Übersetzung 2",
+  tr_sep:"Trenner zwischen den Übersetzungen", tr_eng:"Übersetzungsdienst",
+  eng_google:"Google — ohne Schlüssel", eng_mm:"MyMemory — ohne Schlüssel",
+  lang_auto:"Automatisch", lang_none:"— keine",
+  tr_tip:"Läuft direkt auf der Seite: ohne Server, Schlüssel oder Anmeldung. "+
+         "Wenn der gewählte Dienst nicht antwortet, versuche ich den anderen. "+
+         "MyMemory erlaubt etwa 5000 Zeichen pro Tag.",
+  tr_hello:"schreib oder füg Text ein — ich übersetze gleich in zwei Sprachen",
+  tr_working:"übersetze…",
+  tr_done:e=>"übersetzt · "+e,
+  tr_done_fb:(e,f)=>"übersetzt mit "+e+" — "+f+" hat es nicht geschafft",
+  tr_orig:"Original", tr_sep_blank:"leer",
+  eng_deepl:"DeepL — über eigenen Worker",
+  tr_deepl:"Worker-Adresse für DeepL",
+  tr_deepl_tip:"DeepL lehnt Anfragen direkt von einer Webseite ab (403), und der Schlüssel darf "+
+               "nicht in der Seite stehen — jeder könnte ihn mitnehmen. Deshalb braucht es einen "+
+               "Vermittler: einen kostenlosen Cloudflare Worker, der den Schlüssel geheim hält. "+
+               "Der Code steht in deepl-worker.js. Sprachen, die DeepL nicht kann, übersetzt Google.",
+  tr_nodeepl:"DeepL ist nicht eingerichtet — mit Google übersetzt. Trag die Worker-Adresse in den Optionen ein",
+  tr_fail:"die Übersetzer haben nicht geantwortet — prüf die Verbindung und versuch es noch mal",
+  tr_need:"schreib zuerst einen Text",
+  tr_long:"zu lang — bis zu 5000 Zeichen auf einmal",
+  tr_copied:"kopiert — füg es in Telegram ein",
+  tr_pastefail:"Zwischenablage nicht verfügbar — halte das Feld gedrückt und wähle „Einfügen“",
+  qr_ph:"Link, Text oder Nummer…",
+  lbl_qr:"Link oder Text", lbl_bar:"Nummer oder Code",
+  ph_bar:"Nummer: 227202250076539133…",
+  code_kind:"Code-Typ",
+  kind_qr:"QR-Code", kind_bar:"Strichcode (Code 128)",
+  bar_done:n=>"Strichcode fertig · "+n+" Striche",
+  bars_done:n=>n+" Strichcodes fertig — untereinander, wie auf dem Beleg",
+  bar_hint:"mehrere Nummern mit Leerzeichen trennen — dann gibt es mehrere Codes",
+  scan_btn:"Aus Foto lesen",
+  cam_scan:"Mit Kamera scannen",
+  code_size:"Code-Größe", sz_s:"Klein", sz_m:"Normal", sz_l:"Groß",
+  barnum:"Nummer darunter",
+  scanning:"suche einen Code im Foto…",
+  scan_step:(k,n)=>"suche QR im Foto… "+k+" von "+n,
+  scan_ok:n=>"Strichcodes gefunden: "+n+" — Nummern eingetragen",
+  scan_qr:n=>"QR gelesen — "+n+" Zeichen drin, Code neu erstellt",
+  scan_none:"kein Code erkannt. Näher, gerade und ohne Spiegelung fotografieren — der ganze Code muss ins Bild",
+  bar_ascii:"Strichcodes nehmen nur lateinische Buchstaben ohne Umlaute, Ziffern und Zeichen — Code 128 kennt kein Kyrillisch",
+  bar_long:"zu lang für einen Strichcode — er wird unlesbar. Bis ca. 40 Zeichen",
+  qr_make:"Erstellen", qr_lvl:"Fehlertoleranz",
+  qr_l:"L — minimal", qr_m:"M — normal", qr_q:"Q — hoch", qr_h:"H — maximal",
+  qr_style:"Aussehen", qr_img:"Bild", qr_blocks:"Text aus Blöcken",
+  qr_done:(v,n)=>"QR fertig · Version "+v+" · "+n+"×"+n+" Module",
+  qr_long:"Text zu lang, selbst für den größten QR (2953 Bytes)",
+  qr_empty:"gib einen Text oder Link ein",
+  qr_blockstip:"Blöcke █ und Leerzeichen ergeben einen echten, scanbaren QR aus Text. "+
+               "Nur in Festbreitenschrift einfügen: in Telegram als Codeblock, auf Steam in [code].",
+  paste:"Einfügen", gallery:"Galerie", settings:"Optionen", camera:"Kamera",
+  toart:"Zu Zeichen →", copy:"Kopieren", download:"Speichern", share:"Teilen",
+  save_what:"Wie speichern?",
+  bg:"Hintergrund", bg_none:"Transparent", bg_white:"Weiß", bg_dark:"Dunkel", bg_blur:"Unscharfes Original",
+  soft:"Kantenweichheit", edge:"Schnittschärfe", redo:"Mit Modell neu berechnen",
+  autocut:"Hintergrund entfernen",
+  fallback_only:"Hintergrund von den Rändern entfernt (ohne Modell). Genauer — mit dem Zauberstab",
+  ask_cut:"Hintergrund entfernen?",
+  cut_yes:"Entfernen", cut_skip:"Nicht nötig",
+  kept:(w,hh)=>"Foto komplett geladen · "+w+"×"+hh+" px — direkt weiter zu „Zeichen“",
+  ask_what:"Was schneiden wir aus?",
+  subj_person:"Person", subj_thing:"Gegenstand",
+  thing_done:"Hintergrund von den Rändern entfernt — randähnliche Farben wurden transparent. "+
+             "Feinarbeit: „Farbähnlichkeit“ und Zauberstab",
+  thing_fail:"der Gegenstand ließ sich nicht trennen — der Hintergrund ist zu bunt. Versuch es mit dem Zauberstab",
+  tool:"Werkzeug", t_none:"Nur ansehen", t_wand:"Zauberstab", t_erase:"Radierer", t_restore:"Zurückholen",
+  tol:"Farbähnlichkeit", brush:"Pinselgröße", undo:"Rückgängig", clearmask:"Ganzes Bild",
+  manual:"Das Modell ist nicht nötig. Der Zauberstab entfernt ähnlich gefärbten Hintergrund mit "+
+         "einem Tippen, der Radierer wischt von Hand, Zurückholen bringt Gelöschtes zurück. Alles offline.",
+  wanded:n=>"entfernt: "+n+" Pixel",
+  nothing:"nichts rückgängig zu machen",
+  maskfull:"Maske zurückgesetzt — ganzes Bild",
+  mode:"Modus", m_chars:"Zeichen", m_emoji:"Emoji-Mosaik", m_brl:"Braille — Punktraster",
+  detail:"Detail", charset:"Zeichensatz", darklight:"Von dunkel nach hell",
+  contrast:"Kontrast", bright:"Helligkeit", scale:"Maßstab", fit:"an Breite",
+  quality:"PNG-Dateigröße",
+  target:"Wohin kommt der Text",
+  lheight:"Zeilenhöhe",
+  lhtip:"Im Kommentarfeld haben Zeilen Abstand, im Bild nicht. Dieser Regler streckt das Bild in "+
+        "der Höhe, damit es auf Steam nicht gestaucht wird. Bei der Wahl der Plattform stellt sich "+
+        "der Wert selbst ein, danach nach Augenmaß anpassen.",
+  g_none:"Ohne Limit", g_steam:"Steam — 1000 Zeichen",
+  g_tg:"Telegram — 4096", g_vk:"VK — 4000",
+  fitted:(c,n,lim)=>"Breite angepasst: "+c+" Zeichen breit · "+n+" von "+lim+" Zeichen",
+  tip_steam:"Für Steam wird der Text samt [code]-Tag kopiert — ohne ihn ist die Schrift proportional "+
+            "und das Bild zerfällt. Die Breite bleibt bei höchstens 40 Zeichen — längere Zeilen bricht "+
+            "das Kommentarfeld um und das Bild klappt in der Mitte.",
+  tip_tg:"Für Telegram wird der Text in dreifache Backticks gesetzt — das ergibt einen Codeblock in "+
+         "Festbreitenschrift. Die Breite bleibt bei höchstens 32 Zeichen, damit am Handy nichts "+
+         "umbricht — ein Umbruch klappt das Bild in der Mitte.",
+  tip_vk:"VK hat gar keine Festbreitenschrift, dort zerfällt jedes Textbild. "+
+         "Sicherer als Bild senden — Knopf „Speichern“.",
+  invert:"Umkehren", color:"Farbe", filepng:"PNG-Datei", filetxt:".txt-Datei",
+  reset:"Zurücksetzen", done:"Fertig", closeimg:"Schließen",
+  holdtip:"Finger auf dem Bild halten → „In Fotos sichern“",
+  holdtip2:"Oder „Teilen“ in den Optionen — schickt das Bild direkt in einen Chat",
+  s_punct:"Satzzeichen  @#&$%()[];:,.", s_classic:"Klassisch  @%#*+=-:.",
+  s_detail:"Detailliert  70 Zeichen", s_blocks:"Blöcke  █▓▒░",
+  s_binary:"Binär  10", s_braille:"Braille  ⣿⣧⣇⠇",
+  s_custom:"Eigener Satz…",
+  tipcut:"Sicherer Weg ohne Internet: In „Fotos“ den Finger auf der Person halten → „Motiv kopieren“, "+
+         "hierher zurück und „Einfügen“ tippen. Ein normales Foto geht auch — dann entfernt das Modell "+
+         "den Hintergrund, es wird einmal geladen.",
+  tipemoji:"Auf Android sehen Emoji anders aus — das Text-Mosaik zerfällt dort. Schick lieber das Bild: "+
+           "Es ist mit den Emoji deines iPhones gezeichnet und sieht überall gleich aus.",
+  sample:"Beispiel",
+  reading:(n,k)=>"lese "+n+" · "+k+" KB",
+  alphaok:(w,h,p)=>"Hintergrund schon entfernt · "+w+"×"+h+" px · Motiv "+p+" %",
+  segload:"lade das Modell, Internet nötig…",
+  working:"rechne…",
+  segok:(w,h,p)=>"Hintergrund entfernt · "+w+"×"+h+" px · Motiv "+p+" %",
+  segnone_fb:"keine Person gefunden — Hintergrund von den Rändern entfernt. "+
+             "Mit Zauberstab oder Regler „Schnittschärfe“ nachbessern",
+  segfail_frame:"die Vorschau blockiert fremde Skripte. Lade die Datei herunter und öffne sie im "+
+                "Browser — dort lädt das Modell",
+  segfail_file:"Datei direkt geöffnet (file://), der Browser lässt das Modell nicht zu. Im Ordner der "+
+               "Datei ausführen: python -m http.server 8000 — dann localhost:8000 öffnen",
+  segfail_net:"cdn.jsdelivr.net nicht erreichbar. Das Netz scheint die Adresse zu sperren — "+
+              "ein VPN oder die Seite auf Netlify hilft",
+  segfail_ios:"Modell nicht geladen. Einfacher am iPhone: „Fotos“ → Finger auf der Person halten → "+
+              "„Motiv kopieren“ → hier „Einfügen“",
+  arted:(n,w,h)=>n+" · "+w+"×"+h+" Zeichen",
+  needphoto:"schick zuerst ein Foto",
+  nofile:"keine Datei erhalten", noread:"Datei konnte nicht gelesen werden",
+  nodecode:"Format wird vom Browser nicht unterstützt",
+  noimage:"kein Bild in der Zwischenablage — zuerst das Motiv in „Fotos“ kopieren",
+  pastefail:"der Browser verweigert die Zwischenablage — versuch „Galerie“",
+  fail:e=>"Fehler: "+e,
+  copied:n=>"kopiert — "+n+" Zeilen",
+  emojicopy:"kopiert, aber auf Android sieht es anders aus — als Bild ist sicherer",
+  nocopy:"Zwischenablage gesperrt — als Datei speichern",
+  pngsize:(w,h,kb)=>"PNG "+w+"×"+h+" px · "+kb+" KB",
+  saved_dl:"im Ordner „Downloads“ gespeichert", saved_picked:"im gewählten Ordner gespeichert",
+  inframe:"in Telegram werden keine Dateien heruntergeladen. Finger auf dem Bild halten → „In Fotos sichern“",
+  noshare:e=>"Teilen nicht verfügbar: "+e,
+  resetdone:"Einstellungen zurückgesetzt",
+  sfx_cut:"-ohne-hg", sfx_art:"-text",
+  beta:"Beta",
+  beta_note:"die deutsche Oberfläche ist eine Beta — manche Formulierungen können holpern"
+},
+fr:{
+  mark:["Chambre ","noire"], title:"Chambre noire — détourer et transformer en caractères", htmlLang:"fr",
+  ready:"envoie une photo — je détoure la personne et la transforme en caractères",
+  tab_cut:"Détourer", tab_art:"Caractères", tab_qr:"Code QR", tab_tr:"Traduire",
+  tr_paste:"Coller", tr_go:"Traduire",
+  tr_src:"Texte", tr_res:"Traduction · touche pour copier",
+  tr_ph:"Écris ou colle un texte — je traduis tout de suite",
+  tr_empty:"la traduction apparaîtra ici",
+  tr_from:"Depuis quelle langue", tr_to1:"Traduction 1", tr_to2:"Traduction 2",
+  tr_sep:"Séparateur entre les traductions", tr_eng:"Service de traduction",
+  eng_google:"Google — sans clé", eng_mm:"MyMemory — sans clé",
+  lang_auto:"Détecter", lang_none:"— aucune",
+  tr_tip:"Fonctionne directement dans la page : sans serveur, clé ni inscription. "+
+         "Si le service choisi ne répond pas, j'essaie l'autre. "+
+         "MyMemory permet environ 5000 caractères par jour.",
+  tr_hello:"écris ou colle un texte — je le traduis tout de suite en deux langues",
+  tr_working:"traduction…",
+  tr_done:e=>"traduit · "+e,
+  tr_done_fb:(e,f)=>"traduit via "+e+" — "+f+" n'a pas réussi",
+  tr_orig:"Original", tr_sep_blank:"vide",
+  eng_deepl:"DeepL — via ton propre Worker",
+  tr_deepl:"Adresse du Worker pour DeepL",
+  tr_deepl_tip:"DeepL refuse les requêtes envoyées directement depuis une page (403), et la clé ne doit "+
+               "pas se trouver dans le site — n'importe qui pourrait la prendre. Il faut donc un "+
+               "intermédiaire : un Cloudflare Worker gratuit qui garde la clé secrète. Le code est dans "+
+               "deepl-worker.js. Les langues que DeepL ne connaît pas passent par Google.",
+  tr_nodeepl:"DeepL n'est pas configuré — traduit avec Google. Ajoute l'adresse du Worker dans les réglages",
+  tr_fail:"les traducteurs n'ont pas répondu — vérifie la connexion et réessaie",
+  tr_need:"écris d'abord un texte",
+  tr_long:"trop long — jusqu'à 5000 caractères à la fois",
+  tr_copied:"copié — colle-le dans Telegram",
+  tr_pastefail:"presse-papiers indisponible — maintiens le champ appuyé puis « Coller »",
+  qr_ph:"Lien, texte ou numéro…",
+  lbl_qr:"Lien ou texte", lbl_bar:"Numéro ou code",
+  ph_bar:"Numéro : 227202250076539133…",
+  code_kind:"Type de code",
+  kind_qr:"Code QR", kind_bar:"Code-barres (Code 128)",
+  bar_done:n=>"code-barres prêt · "+n+" barres",
+  bars_done:n=>n+" codes-barres prêts — l'un sous l'autre, comme sur un ticket",
+  bar_hint:"sépare plusieurs numéros par des espaces — tu obtiendras plusieurs codes",
+  scan_btn:"Lire depuis une photo",
+  cam_scan:"Scanner avec l'appareil",
+  code_size:"Taille du code", sz_s:"Petit", sz_m:"Normal", sz_l:"Grand",
+  barnum:"Numéro dessous",
+  scanning:"je cherche un code sur la photo…",
+  scan_step:(k,n)=>"je cherche un QR… "+k+" sur "+n,
+  scan_ok:n=>"codes-barres trouvés : "+n+" — numéros remplis",
+  scan_qr:n=>"QR lu — "+n+" caractères dedans, code recréé",
+  scan_none:"aucun code reconnu. Photographie plus près, bien en face et sans reflet — le code entier doit être dans le cadre",
+  bar_ascii:"les codes-barres n'acceptent que les lettres latines sans accents, les chiffres et les symboles — "+
+            "Code 128 ne connaît pas le cyrillique",
+  bar_long:"trop long pour un code-barres — il deviendrait illisible. Jusqu'à ~40 caractères",
+  qr_make:"Créer", qr_lvl:"Tolérance aux erreurs",
+  qr_l:"L — minimale", qr_m:"M — normale", qr_q:"Q — élevée", qr_h:"H — maximale",
+  qr_style:"Aspect", qr_img:"Image", qr_blocks:"Texte en blocs",
+  qr_done:(v,n)=>"QR prêt · version "+v+" · "+n+"×"+n+" modules",
+  qr_long:"texte trop long, même pour le plus grand QR (2953 octets)",
+  qr_empty:"saisis un texte ou un lien",
+  qr_blockstip:"Les blocs █ et les espaces forment un vrai QR scannable en texte. "+
+               "À coller uniquement en police à chasse fixe : bloc de code dans Telegram, [code] sur Steam.",
+  paste:"Coller", gallery:"Galerie", settings:"Réglages", camera:"Appareil",
+  toart:"En caractères →", copy:"Copier", download:"Enregistrer", share:"Partager",
+  save_what:"Comment enregistrer ?",
+  bg:"Fond", bg_none:"Transparent", bg_white:"Blanc", bg_dark:"Sombre", bg_blur:"Original flouté",
+  soft:"Douceur du bord", edge:"Netteté du détourage", redo:"Recalculer avec le modèle",
+  autocut:"Retirer le fond",
+  fallback_only:"fond retiré depuis les bords (sans modèle). Plus précis — avec la Baguette",
+  ask_cut:"Retirer le fond ?",
+  cut_yes:"Retirer", cut_skip:"Pas besoin",
+  kept:(w,hh)=>"photo chargée telle quelle · "+w+"×"+hh+" px — passe directement à « Caractères »",
+  ask_what:"Que détoure-t-on ?",
+  subj_person:"Personne", subj_thing:"Objet",
+  thing_done:"fond retiré depuis les bords — les couleurs proches du cadre sont devenues transparentes. "+
+             "Réglage fin : « Similarité des couleurs » et la Baguette",
+  thing_fail:"impossible de séparer l'objet — le fond est trop bariolé. Essaie la Baguette sur le fond",
+  tool:"Outil", t_none:"Voir seulement", t_wand:"Baguette", t_erase:"Gomme", t_restore:"Restaurer",
+  tol:"Similarité des couleurs", brush:"Taille du pinceau", undo:"Annuler", clearmask:"Image entière",
+  manual:"Le modèle n'est pas obligatoire. La Baguette retire en une touche le fond de couleur proche, "+
+         "la Gomme efface à la main, Restaurer fait revenir ce qui a été effacé. Tout hors ligne.",
+  wanded:n=>"retiré : "+n+" pixels",
+  nothing:"rien à annuler",
+  maskfull:"masque réinitialisé — image entière",
+  mode:"Mode", m_chars:"Caractères", m_emoji:"Mosaïque d'emoji", m_brl:"Braille — grille de points",
+  detail:"Détail", charset:"Jeu de caractères", darklight:"Du sombre au clair",
+  contrast:"Contraste", bright:"Luminosité", scale:"Échelle", fit:"à la largeur",
+  quality:"Taille du fichier PNG",
+  target:"Où va le texte",
+  lheight:"Hauteur de ligne",
+  lhtip:"Dans une zone de commentaire les lignes sont espacées, sur l'image elles se touchent. "+
+        "Ce curseur étire l'image en hauteur pour qu'elle ne soit pas écrasée sur Steam. En choisissant "+
+        "la plateforme, la valeur se règle seule ; ajuste ensuite à l'œil.",
+  g_none:"Sans limite", g_steam:"Steam — 1000 caractères",
+  g_tg:"Telegram — 4096", g_vk:"VK — 4000",
+  fitted:(c,n,lim)=>"largeur ajustée : "+c+" car. · "+n+" sur "+lim+" caractères",
+  tip_steam:"Pour Steam, le texte est copié avec la balise [code] — sans elle, la police est proportionnelle "+
+            "et le dessin se déforme. La largeur reste à 40 caractères maximum — au-delà, la zone de "+
+            "commentaire coupe les lignes et le dessin se plie en deux.",
+  tip_tg:"Pour Telegram, le texte est entouré de trois accents graves — cela donne un bloc de code à "+
+         "chasse fixe. La largeur reste à 32 caractères maximum pour que les lignes ne se coupent pas sur "+
+         "téléphone — une coupure plie le dessin en deux.",
+  tip_vk:"VK n'a aucune police à chasse fixe, tout dessin en texte s'y déforme. "+
+         "Plus sûr d'envoyer l'image — bouton « Enregistrer ».",
+  invert:"Inverser", color:"Couleur", filepng:"Fichier PNG", filetxt:"Fichier .txt",
+  reset:"Réinitialiser", done:"Terminé", closeimg:"Fermer",
+  holdtip:"Maintiens le doigt sur l'image → « Enregistrer dans Photos »",
+  holdtip2:"Ou « Partager » dans les réglages — envoie l'image directement dans un chat",
+  s_punct:"Ponctuation  @#&$%()[];:,.", s_classic:"Classique  @%#*+=-:.",
+  s_detail:"Détaillé  70 caractères", s_blocks:"Blocs  █▓▒░",
+  s_binary:"Binaire  10", s_braille:"Braille  ⣿⣧⣇⠇",
+  s_custom:"Jeu personnalisé…",
+  tipcut:"Méthode sûre sans internet : dans « Photos », maintiens le doigt sur la personne → "+
+         "« Copier le sujet », reviens ici et touche « Coller ». Une photo normale marche aussi — "+
+         "le modèle retire alors le fond, il se télécharge une fois.",
+  tipemoji:"Sur Android, les emoji sont différents — la mosaïque en texte s'y défait. Envoie plutôt "+
+           "l'image : elle est dessinée avec les emoji de ton iPhone et s'affiche pareil partout.",
+  sample:"exemple",
+  reading:(n,k)=>"lecture de "+n+" · "+k+" Ko",
+  alphaok:(w,h,p)=>"fond déjà retiré · "+w+"×"+h+" px · sujet "+p+" %",
+  segload:"chargement du modèle, internet nécessaire…",
+  working:"calcul…",
+  segok:(w,h,p)=>"fond retiré · "+w+"×"+h+" px · sujet "+p+" %",
+  segnone_fb:"aucune personne trouvée — fond retiré depuis les bords. Ajuste avec la Baguette ou « Netteté du détourage »",
+  segfail_frame:"l'aperçu bloque les scripts externes. Télécharge le fichier et ouvre-le dans un "+
+                "navigateur — le modèle s'y chargera",
+  segfail_file:"fichier ouvert directement (file://), le navigateur refuse le modèle. Dans le dossier du "+
+               "fichier, lance : python -m http.server 8000 — puis ouvre localhost:8000",
+  segfail_net:"impossible de joindre cdn.jsdelivr.net. Le réseau semble bloquer l'adresse — "+
+              "un VPN ou héberger le site sur Netlify aide",
+  segfail_ios:"le modèle ne s'est pas chargé. Plus simple sur iPhone : « Photos » → maintiens le doigt "+
+              "sur la personne → « Copier le sujet » → ici « Coller »",
+  arted:(n,w,h)=>n+" · "+w+"×"+h+" caractères",
+  needphoto:"envoie d'abord une photo",
+  nofile:"aucun fichier reçu", noread:"impossible de lire le fichier",
+  nodecode:"format non pris en charge par le navigateur",
+  noimage:"pas d'image dans le presse-papiers — copie d'abord le sujet dans « Photos »",
+  pastefail:"le navigateur refuse l'accès au presse-papiers — essaie « Galerie »",
+  fail:e=>"échec : "+e,
+  copied:n=>"copié — "+n+" lignes",
+  emojicopy:"copié, mais Android l'affichera autrement — l'image est plus sûre",
+  nocopy:"presse-papiers bloqué — enregistre un fichier",
+  pngsize:(w,h,kb)=>"PNG "+w+"×"+h+" px · "+kb+" Ko",
+  saved_dl:"enregistré dans « Téléchargements »", saved_picked:"enregistré dans le dossier choisi",
+  inframe:"Telegram bloque les téléchargements. Maintiens le doigt sur l'image → « Enregistrer dans Photos »",
+  noshare:e=>"partage indisponible : "+e,
+  resetdone:"réglages réinitialisés",
+  sfx_cut:"-sans-fond", sfx_art:"-texte",
+  beta:"bêta",
+  beta_note:"l'interface en français est en bêta — certaines tournures peuvent être maladroites"
+}
+};
+/* язык интерфейса: сохранённый выбор → язык устройства → английский */
+const UI_LANGS=[["ru","RU","Русский",0],["en","EN","English",0],
+                ["pl","PL","Polski",1],["de","DE","Deutsch",1],["fr","FR","Français",1]];
+const pickLang=s=>{ s=String(s||"").toLowerCase();
+  for(const r of UI_LANGS) if(s.indexOf(r[0])===0) return r[0]; return null; };
+let LANG_SAVED=null;
+try{ LANG_SAVED=pickLang(localStorage.getItem("proyav.lang")); }catch(_){}
+let L=LANG_SAVED||pickLang(navigator.language)||"en";
+const t=k=>{ const d=T[L]; return (d && k in d) ? d[k] : T.en[k]; };
 const el=id=>document.getElementById(id);
 
 /* ══════════════════════ состояние ══════════════════════ */
@@ -1225,13 +1689,26 @@ function applyLang(){
   el("hint").textContent=t("holdtip");
   if(el("hint2")) el("hint2").textContent=t("holdtip2");
   el("zoomVal").textContent=S.zoom?S.zoom+"px":t("fit");
-  el("ru").setAttribute("aria-pressed",String(L==="ru"));
-  el("en").setAttribute("aria-pressed",String(L==="en"));
+  const cur=UI_LANGS.find(r=>r[0]===L)||UI_LANGS[1];
+  el("langCode").textContent=cur[1];
+  el("langBeta").hidden=!cur[3];
+  const ls=el("langSel"); ls.innerHTML="";
+  UI_LANGS.forEach(r=>{
+    const o=document.createElement("option"); o.value=r[0];
+    o.textContent=r[2]+(r[3]?" ("+t("beta")+")":"");
+    ls.appendChild(o);
+  });
+  ls.value=L;
   if(S.isSample)S.name=t("sample");
   if(lastStatus) say(lastStatus.key,lastStatus.args,lastStatus.kind);
 }
-el("ru").addEventListener("click",()=>{L="ru";applyLang();});
-el("en").addEventListener("click",()=>{L="en";applyLang();});
+el("langSel").addEventListener("change",e=>{
+  L=pickLang(e.target.value)||"en";
+  LANG_SAVED=L;
+  try{ localStorage.setItem("proyav.lang",L); }catch(_){}
+  applyLang();
+  if((UI_LANGS.find(r=>r[0]===L)||[])[3]) say("beta_note");   // честно предупреждаем про бету
+});
 
 function setTab(tab){
   S.tab=tab;
@@ -2070,7 +2547,14 @@ try{
 function saveTr(){ try{ localStorage.setItem(TR_KEY,JSON.stringify(S.tr)); }catch(_){} }
 
 function fillLangs(){
-  const name=c=>{ const r=TR_LANGS.find(x=>x[0]===c); return r?(L==="ru"?r[1]:r[2]):c; };
+  let dn=null;
+  if(L!=="ru"&&L!=="en"){ try{ dn=new Intl.DisplayNames([L],{type:"language"}); }catch(_){ dn=null; } }
+  const name=c=>{
+    const r=TR_LANGS.find(x=>x[0]===c); if(!r) return c;
+    if(L==="ru") return r[1];
+    if(dn){ try{ const n=dn.of(c); if(n&&n!==c) return n; }catch(_){} }
+    return r[2];
+  };
   const fill=(id,extra,val,def)=>{
     const s=el(id); s.innerHTML="";
     const add=(v,txt)=>{ const o=document.createElement("option"); o.value=v; o.textContent=txt; s.appendChild(o); };
@@ -2776,7 +3260,7 @@ say("ready");
   try{ tg.disableVerticalSwipes(); }catch(e){}
   try{ tg.setHeaderColor("#16110F"); tg.setBackgroundColor("#16110F"); }catch(e){}
   const lc=(tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code)||"";
-  if(lc){ L = lc.indexOf("ru")===0 ? "ru" : "en"; applyLang(); }
+  if(lc && !LANG_SAVED){ L = pickLang(lc)||"en"; applyLang(); }   // ручной выбор языка важнее профиля
   const syncH=()=>{
     const px=tg.viewportStableHeight||tg.viewportHeight||window.innerHeight;
     document.documentElement.style.setProperty("--app-h", px+"px");
