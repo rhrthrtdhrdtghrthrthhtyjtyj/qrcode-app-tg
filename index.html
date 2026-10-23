@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#16110F">
 <title>Проявочная</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{
   --ink:#16110F; --tray:#221A16; --edge:#3A2A22;
@@ -18,7 +17,7 @@
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
 body{background:var(--ink);color:var(--paper);font-family:var(--ui);font-size:15px;
-  display:flex;flex-direction:column;height:var(--app-h,100dvh)}
+  display:flex;flex-direction:column;height:100dvh}
 
 .top{flex:0 0 auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 0;
   border-bottom:1px solid var(--edge)}
@@ -40,11 +39,31 @@ body{background:var(--ink);color:var(--paper);font-family:var(--ui);font-size:15
 .status.bad{color:#FF7A5C}
 .status.good{color:var(--safelight)}
 
-.tabs{display:flex;gap:22px;margin-top:10px}
-.tabs button{background:none;border:0;padding:10px 0;cursor:pointer;
+.tabs{display:flex;gap:22px;margin-top:10px;overflow-x:auto;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:0 0 auto;white-space:nowrap;background:none;border:0;padding:10px 0;cursor:pointer;
   font-family:var(--ui);font-size:12px;letter-spacing:.12em;text-transform:uppercase;
   color:var(--muted);border-bottom:2px solid transparent}
 .tabs button[aria-selected=true]{color:var(--paper);border-bottom-color:var(--safelight)}
+@media (max-width:420px){ .tabs{gap:15px} .tabs button{letter-spacing:.07em} }
+
+/* вкладка «Перевод» */
+.trp{width:100%;max-width:640px;display:flex;flex-direction:column;gap:10px}
+.trp[hidden]{display:none}
+.trp-lbl{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:11px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.trp-eng{letter-spacing:.04em;text-transform:none;text-align:right}
+.trp textarea{width:100%;min-height:118px;resize:vertical;background:#191211;color:var(--paper);
+  border:1px solid var(--edge);border-radius:3px;padding:12px;font-family:var(--ui);
+  font-size:16px;line-height:1.5}
+.trp-x{flex:0 0 auto;min-width:40px;min-height:32px;background:#191211;color:var(--muted);
+  border:1px solid var(--edge);border-radius:3px;font-family:var(--ui);font-size:16px;cursor:pointer}
+.trp-out{width:100%;min-height:118px;background:var(--paper);color:#14100E;border-radius:3px;
+  padding:14px;font-family:var(--ui);font-size:16px;line-height:1.55;white-space:pre-wrap;
+  word-break:break-word;cursor:pointer;transition:opacity .15s}
+.trp-out:empty::before{content:attr(data-empty);color:#9A8878}
+.trp-out.busy{opacity:.5}
 
 .tools{display:flex;gap:6px;padding:0 0 10px;flex-wrap:wrap}
 .tools[hidden]{display:none}
@@ -91,7 +110,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,label:focus-visibl
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--tray);
   border-top:1px solid var(--edge);border-radius:14px 14px 0 0;
   padding:8px 18px calc(22px + var(--bar));transform:translateY(102%);
-  transition:transform .25s cubic-bezier(.2,.8,.3,1);max-height:80vh;overflow:auto}
+  transition:transform .25s cubic-bezier(.2,.8,.3,1);max-height:86dvh;overflow:auto}
 .sheet.on{transform:translateY(0)}
 .grip{width:42px;height:4px;border-radius:2px;background:#4E3A2E;margin:6px auto 12px}
 .mini{position:sticky;top:0;z-index:2;background:var(--tray);
@@ -111,7 +130,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,label:focus-visibl
 .fld[hidden],.chip[hidden]{display:none}
 input[type=range]{width:100%;height:34px;accent-color:var(--safelight);background:transparent}
 select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(--paper);
-  border:1px solid var(--edge);border-radius:3px;padding:0 12px;font-family:var(--ui);font-size:15px}
+  border:1px solid var(--edge);border-radius:3px;padding:0 12px;font-family:var(--ui);font-size:16px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{flex:1 1 30%;min-height:46px;border:1px solid var(--edge);background:#191211;color:var(--muted);
   border-radius:3px;font-family:var(--ui);font-size:11px;letter-spacing:.05em;
@@ -178,6 +197,7 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
     <button id="tabCut" role="tab" aria-selected="true" data-t="tab_cut"></button>
     <button id="tabArt" role="tab" aria-selected="false" data-t="tab_art"></button>
     <button id="tabQr" role="tab" aria-selected="false" data-t="tab_qr"></button>
+    <button id="tabTr" role="tab" aria-selected="false" data-t="tab_tr"></button>
   </div>
   <div class="tools" id="tools">
     <button class="tbtn auto" id="tAuto" data-t="autocut"></button>
@@ -190,12 +210,21 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 
 <div class="stage" id="stage">
   <div class="board" id="board"><canvas id="cv"></canvas></div>
+  <div class="trp" id="trPane" hidden>
+    <div class="trp-lbl"><span data-t="tr_src"></span>
+      <button class="trp-x" id="trClear" aria-label="Clear">×</button></div>
+    <textarea id="trIn" rows="4" data-t-ph="tr_ph"></textarea>
+    <div class="trp-lbl"><span data-t="tr_res"></span><span class="trp-eng" id="trEng"></span></div>
+    <div class="trp-out" id="trOut" role="button" tabindex="0" data-empty=""></div>
+  </div>
 </div>
 
 <div class="bar">
   <button id="paste" class="hot" data-t="paste"></button>
+  <button id="trPaste" hidden data-t="tr_paste"></button>
   <label for="fLib" tabindex="0" data-t="gallery"></label>
   <button id="tune" data-t="settings"></button>
+  <button id="trGo" class="hot" hidden data-t="tr_go"></button>
   <button id="toArt" class="amber" disabled data-t="toart"></button>
   <button id="copy" hidden data-t="copy"></button>
   <button id="dl" class="amber" hidden disabled data-t="download"></button>
@@ -252,6 +281,32 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
   <div class="fld" data-grp="cut">
     <div class="row-lbl"><span data-t="brush"></span><b id="brushVal">28</b></div>
     <input type="range" id="brush" min="6" max="90" step="2" value="28">
+  </div>
+
+  <!-- вкладка «Перевод» -->
+  <div class="fld" data-grp="tr">
+    <div class="row-lbl"><span data-t="tr_from"></span></div>
+    <select id="trFrom"></select>
+  </div>
+  <div class="fld" data-grp="tr">
+    <div class="row-lbl"><span data-t="tr_to1"></span></div>
+    <select id="trTo1"></select>
+  </div>
+  <div class="fld" data-grp="tr">
+    <div class="row-lbl"><span data-t="tr_to2"></span></div>
+    <select id="trTo2"></select>
+  </div>
+  <div class="fld" data-grp="tr">
+    <div class="row-lbl"><span data-t="tr_sep"></span></div>
+    <input type="text" id="trSep" value="===" spellcheck="false" autocapitalize="off">
+  </div>
+  <div class="fld" data-grp="tr">
+    <div class="row-lbl"><span data-t="tr_eng"></span></div>
+    <select id="trEngine">
+      <option value="google" data-t="eng_google"></option>
+      <option value="mymemory" data-t="eng_mm"></option>
+    </select>
+    <p class="tip" id="tipTr"></p>
   </div>
 
   <!-- вкладка «QR-код» -->
@@ -414,7 +469,27 @@ const T={
 ru:{
   mark:["Прояво","чная"], title:"Проявочная — вырезать и в символы", htmlLang:"ru",
   ready:"пришли фото — вырежу человека и переведу в символы",
-  tab_cut:"Вырезать", tab_art:"Символы", tab_qr:"QR-код",
+  tab_cut:"Вырезать", tab_art:"Символы", tab_qr:"QR-код", tab_tr:"Перевод",
+  tr_paste:"Вставить", tr_go:"Перевести",
+  tr_src:"Текст", tr_res:"Перевод · нажми, чтобы скопировать",
+  tr_ph:"Напиши или вставь текст — переведу сам",
+  tr_empty:"здесь появится перевод",
+  tr_from:"С какого языка", tr_to1:"Перевод 1", tr_to2:"Перевод 2",
+  tr_sep:"Разделитель между переводами", tr_eng:"Переводчик",
+  eng_google:"Google — без ключа", eng_mm:"MyMemory — без ключа",
+  lang_auto:"Определить сам", lang_none:"— не нужен",
+  tr_tip:"Работает прямо со страницы: без сервера, ключей и регистрации. "+
+         "Если выбранный переводчик не ответит, сам попробую второй. "+
+         "У MyMemory лимит около 5000 знаков в день.",
+  tr_hello:"напиши или вставь текст — переведу сразу на два языка",
+  tr_working:"перевожу…",
+  tr_done:e=>"переведено · "+e,
+  tr_done_fb:(e,f)=>"переведено через "+e+" — "+f+" не ответил",
+  tr_fail:"переводчики не ответили — проверь интернет и попробуй ещё раз",
+  tr_need:"сначала напиши текст",
+  tr_long:"слишком длинно — до 5000 знаков за раз",
+  tr_copied:"скопировано — вставляй в Telegram",
+  tr_pastefail:"буфер недоступен — зажми поле и выбери «Вставить»",
   qr_ph:"Ссылка, текст или номер…",
   lbl_qr:"Ссылка или текст", lbl_bar:"Номер или код",
   ph_bar:"Номер: 227202250076539133…",
@@ -531,7 +606,27 @@ ru:{
 en:{
   mark:["Dark","room"], title:"Darkroom — cut out and turn to characters", htmlLang:"en",
   ready:"send a photo — I will cut out the person and turn it into characters",
-  tab_cut:"Cut out", tab_art:"Characters", tab_qr:"QR code",
+  tab_cut:"Cut out", tab_art:"Characters", tab_qr:"QR code", tab_tr:"Translate",
+  tr_paste:"Paste", tr_go:"Translate",
+  tr_src:"Text", tr_res:"Translation · tap to copy",
+  tr_ph:"Type or paste text — I translate as you go",
+  tr_empty:"the translation appears here",
+  tr_from:"From", tr_to1:"Translation 1", tr_to2:"Translation 2",
+  tr_sep:"Separator between translations", tr_eng:"Translator",
+  eng_google:"Google — no key", eng_mm:"MyMemory — no key",
+  lang_auto:"Detect", lang_none:"— none",
+  tr_tip:"Runs right in the page: no server, keys or sign-up. "+
+         "If the chosen translator does not answer, I try the other one. "+
+         "MyMemory allows about 5000 characters a day.",
+  tr_hello:"type or paste text — I translate into two languages at once",
+  tr_working:"translating…",
+  tr_done:e=>"translated · "+e,
+  tr_done_fb:(e,f)=>"translated via "+e+" — "+f+" did not answer",
+  tr_fail:"translators did not answer — check the connection and try again",
+  tr_need:"type some text first",
+  tr_long:"too long — up to 5000 characters at a time",
+  tr_copied:"copied — paste it into Telegram",
+  tr_pastefail:"clipboard unavailable — press and hold the field, then Paste",
   qr_ph:"Link, text or number…",
   lbl_qr:"Link or text", lbl_bar:"Number or code",
   ph_bar:"Number: 227202250076539133…",
@@ -1078,6 +1173,9 @@ function applyLang(){
   document.querySelectorAll("[data-t]").forEach(n=>{n.textContent=t(n.dataset.t);});
   document.querySelectorAll("[data-t-ph]").forEach(n=>{n.placeholder=t(n.dataset.tPh);});
   const tq=el("tipQrBlocks"); if(tq) tq.textContent=t("qr_blockstip");
+  fillLangs();
+  el("trOut").dataset.empty=t("tr_empty");
+  el("tipTr").textContent=t("tr_tip");
   const tb=el("tipBar"); if(tb) tb.textContent=t("bar_hint");
   if(el("qrLbl")) kindUI();
   if(el("camLbl")) el("camLbl").textContent=t(S.tab==="qr"?"cam_scan":"camera");
@@ -1102,22 +1200,31 @@ function setTab(tab){
   el("tabCut").setAttribute("aria-selected",String(tab==="cut"));
   el("tabArt").setAttribute("aria-selected",String(tab==="art"));
   el("tabQr").setAttribute("aria-selected",String(tab==="qr"));
+  el("tabTr").setAttribute("aria-selected",String(tab==="tr"));
   el("paste").hidden = tab!=="cut";
-  document.querySelector('label[for="fLib"]').hidden = tab==="qr";
+  document.querySelector('label[for="fLib"]').hidden = tab==="qr"||tab==="tr";
   el("toArt").hidden = tab!=="cut";
   el("copy").hidden  = tab==="cut";              // на QR копирует блоки
-  el("dl").hidden    = false;
+  el("copy").classList.toggle("amber", tab==="tr");
+  el("dl").hidden    = tab==="tr";
+  el("trPaste").hidden = tab!=="tr";
+  el("trGo").hidden    = tab!=="tr";
   document.querySelectorAll("[data-grp]").forEach(n=>{ n.hidden = n.dataset.grp!==tab; });
   el("tipCut").hidden = tab!=="cut";
   el("tools").hidden = tab!=="cut";
   hideAsk(); closeSaveMenu();
-  el("board").hidden=false;
+  el("board").hidden = tab==="tr";
+  el("trPane").hidden = tab!=="tr";
   sheetUI();
   if(tab==="art") buildArt();
   else if(tab==="qr"){
     drawQr();
     if(S.qr) say("qr_done",[S.qr.version,S.qr.size],"good");
     else el("tune").click();
+  }
+  else if(tab==="tr"){
+    renderTr();
+    if(!S.trOut) say("tr_hello");
   }
   else drawCut();
   if(window.__tgSync) window.__tgSync();
@@ -1135,6 +1242,9 @@ function sheetUI(){
   el("color").hidden  = S.tab!=="art" || emoji || brl;
   el("txt").hidden    = S.tab!=="art";
   el("copyChip").hidden = S.tab==="cut";
+  const tr = S.tab==="tr";                    // для перевода картинки и камера не нужны
+  el("camLbl").hidden = tr; el("png").hidden = tr; el("shareChip").hidden = tr;
+  el("quality").closest(".fld").hidden = tr;
   el("camLbl").textContent = t(S.tab==="qr"?"cam_scan":"camera");
   el("tipEmoji").hidden = !emoji;
 }
@@ -1411,6 +1521,7 @@ function drawMini(){
   const box=el("miniBox"), sh=document.getElementById("sheet");
   if(!sh||!sh.classList.contains("on")){ if(box) box.hidden=true; return; }
   const m=el("mini"), fr=el("miniFrame");
+  if(S.tab==="tr"){ box.hidden=true; return; }
   try{
     if(S.tab==="qr"){
       if(S.bars){ paintBars(m,2,1,false); }
@@ -1896,6 +2007,208 @@ el("qrStyle").addEventListener("change",()=>{
   drawQr();
 });
 
+
+/* ══════════════════ вкладка «Перевод» ══════════════════
+   Без сервера: оба переводчика принимают запросы прямо со страницы.
+   DeepL так не умеет — его API отвечает браузеру 403, ключ нужно прятать на сервере. */
+const TR_LANGS=[
+  ["en","английский","English"],["pl","польский","Polish"],["ru","русский","Russian"],
+  ["uk","украинский","Ukrainian"],["be","белорусский","Belarusian"],["kk","казахский","Kazakh"],
+  ["uz","узбекский","Uzbek"],["de","немецкий","German"],["fr","французский","French"],
+  ["es","испанский","Spanish"],["it","итальянский","Italian"],["pt","португальский","Portuguese"],
+  ["cs","чешский","Czech"],["tr","турецкий","Turkish"],["zh-CN","китайский","Chinese"],
+  ["ja","японский","Japanese"],["ko","корейский","Korean"],["ar","арабский","Arabic"],
+  ["ka","грузинский","Georgian"],["hy","армянский","Armenian"]
+];
+const TR_DEF={from:"auto",to1:"en",to2:"pl",sep:"===",eng:"google"};
+const TR_KEY="proyav.tr";
+S.tr=Object.assign({},TR_DEF);
+S.trOut="";
+try{
+  const s=JSON.parse(localStorage.getItem(TR_KEY)||"null");
+  if(s&&typeof s==="object") for(const k in TR_DEF) if(typeof s[k]==="string") S.tr[k]=s[k];
+}catch(_){}
+function saveTr(){ try{ localStorage.setItem(TR_KEY,JSON.stringify(S.tr)); }catch(_){} }
+
+function fillLangs(){
+  const name=c=>{ const r=TR_LANGS.find(x=>x[0]===c); return r?(L==="ru"?r[1]:r[2]):c; };
+  const fill=(id,extra,val,def)=>{
+    const s=el(id); s.innerHTML="";
+    const add=(v,txt)=>{ const o=document.createElement("option"); o.value=v; o.textContent=txt; s.appendChild(o); };
+    if(extra) add(extra[0],extra[1]);
+    TR_LANGS.forEach(r=>add(r[0],name(r[0])));
+    s.value=val; if(s.value!==val) s.value=def;
+    return s.value;
+  };
+  S.tr.from=fill("trFrom",["auto",t("lang_auto")],S.tr.from,TR_DEF.from);
+  S.tr.to1 =fill("trTo1",null,S.tr.to1,TR_DEF.to1);
+  S.tr.to2 =fill("trTo2",["none",t("lang_none")],S.tr.to2,TR_DEF.to2);
+  el("trSep").value=S.tr.sep;
+  el("trEngine").value=S.tr.eng; if(el("trEngine").value!==S.tr.eng){ S.tr.eng=TR_DEF.eng; el("trEngine").value=S.tr.eng; }
+}
+
+function fetchJSON(url,ms){
+  const ctl=(typeof AbortController!=="undefined")?new AbortController():null;
+  const tm=setTimeout(()=>{ if(ctl) ctl.abort(); },ms||9000);
+  return fetch(url,ctl?{signal:ctl.signal}:{})
+    .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+    .finally(()=>clearTimeout(tm));
+}
+function decodeEntities(s){ const x=document.createElement("textarea"); x.innerHTML=s; return x.value; }
+function guessLang(q){ return /[а-яёіїєґўқғүұһ]/i.test(q)?"ru":"en"; }
+
+async function trGoogle(q,sl,tl){
+  const u="https://translate.googleapis.com/translate_a/single?client=gtx&dt=t"+
+          "&sl="+encodeURIComponent(sl)+"&tl="+encodeURIComponent(tl)+"&q="+encodeURIComponent(q);
+  const j=await fetchJSON(u);
+  if(!Array.isArray(j)||!Array.isArray(j[0])) throw new Error("Google: format");
+  return j[0].map(s=>(s&&typeof s[0]==="string")?s[0]:"").join("");
+}
+async function trMyMemory(q,sl,tl){
+  if(sl==="auto") sl=guessLang(q);
+  if(sl===tl) return q;
+  const u="https://api.mymemory.translated.net/get?q="+encodeURIComponent(q)+
+          "&langpair="+encodeURIComponent(sl+"|"+tl);
+  const j=await fetchJSON(u);
+  const st=Number(j&&j.responseStatus);
+  const tx=j&&j.responseData&&j.responseData.translatedText;
+  if(st!==200||typeof tx!=="string") throw new Error((j&&j.responseDetails)||("MyMemory "+st));
+  if(/MYMEMORY WARNING|QUERY LENGTH LIMIT|INVALID LANGUAGE/i.test(tx)) throw new Error(tx);
+  return decodeEntities(tx);
+}
+const ENG={
+  google:  {name:"Google",   fn:trGoogle,   fits:s=>encodeURIComponent(s).length<=4500},
+  mymemory:{name:"MyMemory", fn:trMyMemory, fits:s=>new TextEncoder().encode(s).length<=480}
+};
+
+/* Длинный текст режем под лимит переводчика: сначала по строкам,
+   потом по предложениям, в крайнем случае по словам. j — чем склеить обратно. */
+function splitForLimit(text,fits){
+  if(fits(text)) return [{s:text,j:""}];
+  const res=[]; let cur=null;
+  const flush=()=>{ if(cur!==null){ res.push({s:cur,j:"\n"}); cur=null; } };
+  for(const line of text.split("\n")){
+    const cand=cur===null?line:cur+"\n"+line;
+    if(fits(cand)){ cur=cand; continue; }
+    flush();
+    if(fits(line)){ cur=line; continue; }
+    const parts=line.match(/[^.!?…]+[.!?…]+["»”)]*\s*|[^.!?…]+$/g)||[line];
+    let c2="";
+    const put=(x,j)=>{ if(x) res.push({s:x,j}); };
+    for(const part of parts){
+      if(fits(c2+part)){ c2+=part; continue; }
+      put(c2," "); c2="";
+      if(fits(part)){ c2=part; continue; }
+      for(const w of part.split(/(\s+)/)){
+        if(fits(c2+w)){ c2+=w; continue; }
+        put(c2," "); c2="";
+        let rest=w;
+        while(rest && !fits(rest)){            // слово-монстр без пробелов
+          let n=rest.length; while(n>1 && !fits(rest.slice(0,n))) n=Math.floor(n*0.8);
+          put(rest.slice(0,n),""); rest=rest.slice(n);
+        }
+        c2=rest;
+      }
+    }
+    if(c2) res.push({s:c2,j:"\n"});
+  }
+  flush();
+  if(res.length) res[res.length-1].j="";
+  return res;
+}
+async function viaEngine(key,text,sl,tl){
+  const E=ENG[key]; let out="";
+  for(const p of splitForLimit(text,E.fits)){
+    out += (p.s.trim() ? (await E.fn(p.s,sl,tl)).replace(/\s+$/,"") : p.s) + p.j;
+  }
+  return out;
+}
+async function translateAll(text){
+  const tr=S.tr;
+  const order=tr.eng==="mymemory"?["mymemory","google"]:["google","mymemory"];
+  const targets=[tr.to1].concat(tr.to2&&tr.to2!=="none"&&tr.to2!==tr.to1?[tr.to2]:[]);
+  const used=new Set(); let failed=null;
+  const one=async tl=>{
+    let last=null;
+    for(const k of order){
+      try{ const r=await viaEngine(k,text,tr.from,tl); used.add(k); return r; }
+      catch(e){ last=e; if(k===order[0]) failed=ENG[k].name; }
+    }
+    throw last||new Error("fail");
+  };
+  const res=await Promise.all(targets.map(one));
+  return {res, used:[...used].map(k=>ENG[k].name), failed};
+}
+
+let trSeq=0, trTimer=null, trLast="";
+function renderTr(){
+  el("trOut").textContent=S.trOut||"";
+  if(S.tab==="tr") el("copy").disabled=!S.trOut;
+}
+async function runTranslate(force){
+  const text=el("trIn").value.replace(/\s+$/,"");
+  if(!text.trim()){
+    trSeq++; trLast=""; S.trOut=""; renderTr(); el("trEng").textContent="";
+    el("trOut").classList.remove("busy");
+    if(force) say("tr_need",null,"bad"); else say("tr_hello");
+    return;
+  }
+  if(text.length>5000){ say("tr_long",null,"bad"); return; }
+  const key=text+"\u0000"+JSON.stringify(S.tr);
+  if(!force && key===trLast) return;
+  trLast=key;
+  const my=++trSeq;
+  el("trOut").classList.add("busy"); say("tr_working");
+  try{
+    const r=await translateAll(text);
+    if(my!==trSeq) return;                    // пока ждали, текст уже поменялся
+    const sep=(S.tr.sep||"").trim();
+    S.trOut=r.res.join(sep?"\n"+sep+"\n":"\n\n");
+    renderTr();
+    el("trEng").textContent=r.used.join(" + ");
+    if(r.failed && r.used.indexOf(r.failed)<0) say("tr_done_fb",[r.used.join(" + "),r.failed],"good");
+    else say("tr_done",[r.used.join(" + ")],"good");
+  }catch(e){
+    if(my!==trSeq) return;
+    trLast="";
+    S.trOut=""; renderTr(); el("trEng").textContent="";   // не оставляем перевод прошлого текста
+    say("tr_fail",null,"bad");
+  }finally{
+    if(my===trSeq) el("trOut").classList.remove("busy");
+  }
+}
+function trSoon(){ clearTimeout(trTimer); trTimer=setTimeout(()=>runTranslate(false),900); }
+function trNow(){ clearTimeout(trTimer); runTranslate(true); }
+
+el("trIn").addEventListener("input",trSoon);
+el("trIn").addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); trNow(); }
+});
+el("trGo").addEventListener("click",trNow);
+el("trClear").addEventListener("click",()=>{ el("trIn").value=""; runTranslate(false); el("trIn").focus(); });
+el("trOut").addEventListener("click",()=>{ if(S.trOut) el("copy").click(); });
+el("trOut").addEventListener("keydown",e=>{
+  if((e.key==="Enter"||e.key===" ")&&S.trOut){ e.preventDefault(); el("copy").click(); }
+});
+el("trPaste").addEventListener("click",async()=>{
+  try{
+    if(!navigator.clipboard||!navigator.clipboard.readText) throw new Error("no api");
+    const s=await navigator.clipboard.readText();
+    if(!s) throw new Error("empty");
+    el("trIn").value=s; trNow();
+  }catch(_){ el("trIn").focus(); say("tr_pastefail",null,"bad"); }
+});
+const trSet=(id,k)=>el(id).addEventListener("change",()=>{
+  S.tr[k]=el(id).value; saveTr(); trLast="";
+  if(el("trIn").value.trim()) runTranslate(false);
+});
+trSet("trFrom","from"); trSet("trTo1","to1"); trSet("trTo2","to2"); trSet("trEngine","eng");
+el("trSep").addEventListener("input",()=>{
+  S.tr.sep=el("trSep").value; saveTr();
+  if(S.trOut){ trLast=""; trSoon(); }
+});
+el("tabTr").addEventListener("click",()=>setTab("tr"));
+
 /* ══════════════════════ настройки ══════════════════════ */
 const sheet=el("sheet"),scrim=el("scrim");
 el("tune").addEventListener("click",()=>{
@@ -2082,6 +2395,8 @@ el("reset").addEventListener("click",()=>{
   el("lh").value=S.lh; el("lhVal").textContent=S.lh.toFixed(2);
   el("invert").setAttribute("aria-pressed","false");
   el("color").setAttribute("aria-pressed","false");
+  S.tr=Object.assign({},TR_DEF); saveTr(); fillLangs(); trLast="";
+  if(S.tab==="tr" && el("trIn").value.trim()) runTranslate(false);
   sheetUI();
   S.tab==="art"?buildArt():drawCut();
   say("resetdone",null,"good");
@@ -2191,6 +2506,7 @@ el("fScan").addEventListener("change",e=>{
 
 /* ══════════════════════ вывод ══════════════════════ */
 const text=()=>{
+  if(S.tab==="tr") return S.trOut||"";
   if(S.tab==="qr" && S.bars){          // у штрих-кода копируем сами числа
     return S.bars.map(b=>b.txt).join("\n");
   }
@@ -2296,6 +2612,7 @@ async function save(blob,ext,size){
 }
 /* есть ли что сохранять на текущей вкладке */
 function hasOutput(){
+  if(S.tab==="tr") return !!S.trOut;
   if(S.tab==="qr") return !!(S.qr||S.bars);
   if(S.tab==="art") return !!S.rows.length;
   return !!S.img;
@@ -2342,7 +2659,10 @@ el("shareChip").addEventListener("click",async()=>{
   }catch(e){ if(e.name!=="AbortError")say("noshare",[e.message],"bad"); }
 });
 el("copy").addEventListener("click",async()=>{
-  const done=()=> (S.tab!=="qr" && S.mode==="emoji") ? say("emojicopy",null,"bad") : say("copied",[text().split("\n").length],"good");
+  if(!text()){ say(S.tab==="tr"?"tr_need":"needphoto",null,"bad"); return; }
+  const done=()=> S.tab==="tr" ? say("tr_copied",null,"good")
+    : (S.tab==="art" && S.mode==="emoji") ? say("emojicopy",null,"bad")
+    : say("copied",[text().split("\n").length],"good");
   try{ await navigator.clipboard.writeText(text()); done(); }
   catch(e){
     const ta=document.createElement("textarea");ta.value=text();
@@ -2358,44 +2678,6 @@ el("copy").addEventListener("click",async()=>{
 applyLang();
 setTab("cut");
 say("ready");
-
-/* ══════════════════════ Telegram Mini App ══════════════════════ */
-(function(){
-  const tg = window.Telegram && window.Telegram.WebApp;
-  if(!tg) return;
-  tg.ready(); tg.expand();
-  try{ tg.disableVerticalSwipes(); }catch(e){}
-  try{ tg.setHeaderColor("#16110F"); tg.setBackgroundColor("#16110F"); }catch(e){}
-  const lc=(tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.language_code)||"";
-  if(lc){ L = lc.indexOf("ru")===0 ? "ru" : "en"; applyLang(); }
-  const syncH=()=>{
-    const px=tg.viewportStableHeight||tg.viewportHeight||window.innerHeight;
-    document.documentElement.style.setProperty("--app-h", px+"px");
-    S.tab==="art"?drawArt():S.tab==="qr"?drawQr():drawCut();
-  };
-  syncH(); tg.onEvent("viewportChanged", syncH);
-  const back=tg.BackButton;
-  window.__tgSync=()=>{
-    try{ (viewerOpen()||S.tab!=="cut") ? back.show() : back.hide(); }catch(e){}
-  };
-  try{ back.onClick(()=>{
-    if(viewerOpen()){ el("vclose").click(); return; }
-    if(!el("saveMenu").hidden){ closeSaveMenu(); return; }
-    setTab("cut");
-  }); }catch(e){}
-  window.__tgSync();
-  const ch=document.querySelector(".tgl");
-  if(ch) ch.addEventListener("click",e=>{
-    e.preventDefault();
-    try{ tg.openTelegramLink("https://t.me/ProstoAyli"); }
-    catch(_){ location.href="https://t.me/ProstoAyli"; }
-  });
-  const buzz=s=>{ try{ tg.HapticFeedback.impactOccurred(s||"light"); }catch(e){} };
-  ["paste","toArt","tune","dl","copy","copyChip","png","tabCut","tabArt","tabQr","tAuto","tWand","tErase","tRestore","tUndo","askPerson","askThing","barNum","vback","vclose","smCopy","smShare","smFile"]
-   .forEach(id=>{ const n=document.getElementById(id);
-     if(n) n.addEventListener("click",()=>buzz(id==="tAuto"?"medium":"light")); });
-})();
-
 </script>
 </body>
 </html>
