@@ -189,6 +189,417 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 .vclose{min-height:50px;padding:0 26px;border-radius:3px;border:1px solid var(--edge);
   background:#191211;color:var(--paper);font-family:var(--ui);font-size:12px;
   letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+
+/* ══════════ инструкция: шторка с анимацией, как в Telegram ══════════ */
+.ghelp{color:var(--safelight);font:700 17px/1 var(--ui);cursor:pointer;padding:0}
+.ghelp:hover{border-color:var(--safelight);background:#241a12}
+@media (max-width:340px){ .headside{gap:6px} .tgl{width:32px} .langsel{padding:0 8px} }
+
+.guide{position:fixed;inset:0;z-index:30;display:flex;align-items:flex-end;justify-content:center;
+  background:rgba(8,6,5,.62);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+  opacity:0;transition:opacity .3s}
+.guide[hidden]{display:none}
+.guide.on{opacity:1}
+.gcard{position:relative;width:100%;max-width:460px;max-height:calc(var(--app-h,100dvh) - 10px);
+  overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;
+  background:var(--tray);border:1px solid var(--edge);border-bottom:0;border-radius:20px 20px 0 0;
+  padding:0 0 calc(14px + var(--bar));transform:translateY(105%);
+  transition:transform .48s cubic-bezier(.22,1,.36,1);box-shadow:0 -12px 40px rgba(0,0,0,.45)}
+.guide.on .gcard{transform:none}
+.gcard.pull{transition:none}
+@media (min-width:560px) and (min-height:760px){
+  .guide{align-items:center}
+  .gcard{border-radius:20px;border-bottom:1px solid var(--edge);padding-bottom:16px}
+}
+.ggrab{padding:8px 0 6px;touch-action:none;cursor:grab}
+.ggrab .grip{margin:0 auto}
+.ghead{display:flex;align-items:center;gap:8px;padding:2px 12px 12px 16px}
+.gsecs{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0;
+  -webkit-overflow-scrolling:touch}
+.gsecs.more{-webkit-mask:linear-gradient(90deg,#000 82%,transparent);mask:linear-gradient(90deg,#000 82%,transparent)}
+.gsecs::-webkit-scrollbar{display:none}
+.gsecs button{flex:0 0 auto;height:32px;padding:0 9px;border-radius:16px;border:1px solid var(--edge);
+  background:#191211;color:var(--muted);font:10px var(--ui);letter-spacing:.03em;text-transform:uppercase;
+  cursor:pointer;white-space:nowrap;transition:background .25s,color .25s,border-color .25s}
+.gsecs button b{color:var(--safelight);margin-right:4px}
+.gsecs button[aria-selected=true]{background:var(--safelight);border-color:var(--safelight);color:#1A1109;font-weight:700}
+.gsecs button[aria-selected=true] b{color:#1A1109}
+.gcard:focus{outline:none}
+.gx{flex:0 0 auto;width:32px;height:32px;border-radius:50%;border:1px solid var(--edge);background:#191211;
+  color:var(--paper);font:18px/1 var(--ui);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.gview{overflow:hidden;touch-action:pan-y;-webkit-user-select:none;user-select:none}
+.gview.swap .gslide.on{animation:gswap .45s cubic-bezier(.22,1,.36,1)}
+@keyframes gswap{from{opacity:0;transform:translateX(28px)}}
+.gtrack{display:flex;transition:transform .5s cubic-bezier(.22,1,.36,1);will-change:transform}
+.gtrack.drag{transition:none}
+.gslide{flex:0 0 100%;min-width:0}
+.gtt{margin:16px 20px 6px;font:700 17px/1.3 var(--ui);color:var(--paper)}
+.gtx{margin:0 20px;font-size:13px;line-height:1.6;color:#D3C5B3}
+.gslide.on .gtt,.gslide.on .gtx{animation:gtxt .55s cubic-bezier(.22,1,.36,1) both}
+.gslide.on .gtx{animation-delay:.07s}
+@keyframes gtxt{from{opacity:0;transform:translateY(10px)}}
+.gdots{display:flex;justify-content:center;align-items:center;gap:6px;padding:16px 0 14px}
+.gdots i{width:7px;height:7px;border-radius:4px;background:#4E3A2E;cursor:pointer;
+  transition:width .4s cubic-bezier(.22,1,.36,1),background .3s}
+.gdots i.on{width:22px;background:var(--safelight)}
+.gbtns{display:flex;padding:0 16px}
+.gback{flex:0 0 52px;width:52px;height:52px;margin-right:8px;border-radius:12px;border:1px solid var(--edge);
+  background:#191211;color:var(--paper);font:20px/1 var(--ui);cursor:pointer;overflow:hidden;
+  transition:flex-basis .35s cubic-bezier(.22,1,.36,1),margin .35s,opacity .25s,border-width .35s}
+.gback.off{flex-basis:0;margin-right:0;opacity:0;border-width:0;pointer-events:none}
+.gnext{position:relative;overflow:hidden;flex:1;height:52px;border-radius:12px;border:0;background:var(--safelight);
+  color:#1A1109;font:700 14px var(--ui);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.gnext.last::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+  animation:gshine 2.4s ease-in-out .4s infinite}
+@keyframes gshine{0%{left:-60%}55%,100%{left:130%}}
+.gnext:active,.gback:active,.gx:active{transform:scale(.96)}
+
+/* сцена: 300×196, всё внутри в пикселях */
+.gsc{position:relative;height:196px;margin:0 14px;border-radius:14px;overflow:hidden;border:1px solid var(--edge);
+  background:radial-gradient(120% 95% at 50% 0%,#3B2919 0%,#211814 58%,#181210 100%)}
+.gin{position:absolute;top:0;left:50%;width:300px;height:196px;margin-left:-150px;transform-origin:50% 0}
+@media (max-height:720px){ .gsc{height:164px} .gin{transform:scale(.837)} }
+@media (max-height:600px){ .gsc{height:134px} .gin{transform:scale(.684)} .gtt{margin-top:12px} .gdots{padding:12px 0 10px} }
+.ga{position:absolute}
+.gm-b{display:flex;align-items:center;justify-content:center;height:26px;padding:0 4px;border-radius:3px;
+  border:1px solid var(--edge);background:#191211;color:var(--paper);font:8px/1 var(--ui);letter-spacing:.04em;
+  text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.gm-b.hot{background:var(--oxblood);border-color:var(--oxblood)}
+.gm-b.amb{background:var(--safelight);border-color:var(--safelight);color:#1A1109;font-weight:700}
+.gm-row{display:flex;gap:6px;left:10px;width:280px}
+.gm-row>.gm-b{flex:1 1 0}
+.gm-pill{position:absolute;left:50%;top:0;transform:translateX(-50%);white-space:nowrap;font:8px/1 var(--ui);
+  letter-spacing:.1em;text-transform:uppercase;color:var(--paper);background:var(--tray);
+  border:1px solid var(--edge);border-radius:3px;padding:5px 9px}
+.gm-lbl{font:7.5px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.gm-in{display:flex;align-items:center;height:28px;padding:0 8px;border:1px solid var(--edge);border-radius:3px;
+  background:#191211;color:var(--paper);font:11px/1 var(--ui);white-space:pre;overflow:hidden}
+.gm-ty{display:inline-block;white-space:pre}
+.gm-caret{position:absolute;left:8px;top:7px;width:1.5px;height:14px;background:var(--safelight);font-size:11px}
+.gm-paper{background:var(--paper);color:#14100E;border-radius:3px;font:9px/1.55 var(--ui);padding:6px 8px;white-space:pre-line}
+.gm-flag{display:inline-block;vertical-align:-1px;width:13px;height:9px;border-radius:1px;overflow:hidden;
+  box-shadow:0 0 0 .5px rgba(0,0,0,.35)}
+.gm-flag svg{display:block;width:100%;height:100%}
+.gm-art{background:var(--paper);color:#14100E;border-radius:3px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center}
+.gm-art pre{margin:0;font:7px/1 var(--ui);letter-spacing:0;white-space:pre}
+.gm-qr{background:#fff;border-radius:3px;line-height:0}
+.gm-qr svg{display:block;width:100%;height:100%}
+.gm-chat{border-radius:9px;overflow:hidden;background:linear-gradient(160deg,#122131,#0E1621 60%)}
+.gm-inb{position:absolute;left:8px;top:8px;width:58px;height:20px;border-radius:10px 10px 10px 3px;background:#182533}
+.gm-inb::before,.gm-inb::after{content:"";position:absolute;left:7px;height:3px;border-radius:2px;background:#4E6478}
+.gm-inb::before{top:6px;width:40px}.gm-inb::after{top:12px;width:26px}
+.gm-bub{position:absolute;right:8px;background:#2B5278;color:#fff;border-radius:11px 11px 3px 11px;
+  padding:5px 8px 13px;font:7.5px/1.45 var(--ui);white-space:pre-line;transform-origin:100% 100%;
+  box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.gm-time{position:absolute;right:6px;bottom:3px;font:6px/1 var(--ui);color:#7DA8D3}
+.gm-tap{width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;opacity:0;pointer-events:none;
+  background:rgba(237,230,216,.32);border:2px solid rgba(255,250,240,.92);box-shadow:0 2px 8px rgba(0,0,0,.4);z-index:5}
+.gm-tap::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid var(--safelight);opacity:0}
+.gslide.on .gm-tap{animation:gtap var(--P) var(--d,0s) infinite backwards}
+.gslide.on .gm-tap::after{animation:gring var(--P) var(--d,0s) infinite backwards}
+@keyframes gtap{0%{opacity:0;transform:scale(1.7)}4%{opacity:1;transform:scale(1)}7%{transform:scale(.78)}
+  10%{opacity:1;transform:scale(1)}16%,100%{opacity:0;transform:scale(1)}}
+@keyframes gring{0%,6%{opacity:0;transform:scale(.7)}8%{opacity:1;transform:scale(.9)}20%,100%{opacity:0;transform:scale(2.6)}}
+
+/* «фото»: шахматка, фон, человечек */
+.gm-ph{overflow:hidden;border-radius:4px;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.gm-chk,.gm-bg,.gm-man{position:absolute;inset:0;width:100%;height:100%}
+.gm-chk{background-color:#4A3A30;background-image:
+  linear-gradient(45deg,#3A2C24 25%,transparent 25%,transparent 75%,#3A2C24 75%),
+  linear-gradient(45deg,#3A2C24 25%,transparent 25%,transparent 75%,#3A2C24 75%);
+  background-size:12px 12px;background-position:0 0,6px 6px}
+.gm-bg{background:linear-gradient(#7FA6C8 0%,#B9C2C2 50%,#D8C9A6 63%,#7C8B4E 63%,#5E6B3A 100%)}
+.gm-bg::after{content:"";position:absolute;left:14%;top:12%;width:15%;aspect-ratio:1;border-radius:50%;
+  background:#FFE09A;box-shadow:0 0 14px 4px rgba(255,224,154,.6)}
+.gm-spark{font:12px/1 var(--ui);color:var(--safelight);opacity:0;text-shadow:0 0 6px rgba(255,176,32,.9)}
+
+/* ── Вырезать 1: «Галерея» → фото прилетает ── */
+.s-cut1{--P:4.4s}
+.c1-board{left:80px;top:12px;width:140px;height:104px;border:1px dashed #5A4334;border-radius:6px}
+.c1-board::after{content:"+";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:#5A4334;font:300 30px/1 var(--ui)}
+.c1-ph{left:85px;top:17px;width:130px;height:94px}
+.c1-bar{top:150px}
+.gslide.on .c1-ph{animation:c1ph var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes c1ph{0%,24%{opacity:0;transform:translateY(90px) scale(.4)}42%{opacity:1;transform:translateY(-4px) scale(1.04)}
+  50%,88%{opacity:1;transform:none}96%,100%{opacity:0;transform:none}}
+.gslide.on .c1-g{animation:c1g var(--P) infinite}
+@keyframes c1g{0%,9%{background:#191211;transform:none}11%,16%{background:#3A2A22;transform:scale(.94)}22%,100%{background:#191211;transform:none}}
+
+/* ── Вырезать 2: вопрос → «Человек» → фон уходит ── */
+.s-cut2{--P:5.4s}
+.c2-ph{left:80px;top:8px;width:140px;height:104px}
+.c2-scan{left:80px;top:8px;width:140px;height:2px;background:var(--safelight);opacity:0;
+  box-shadow:0 0 10px 3px rgba(255,176,32,.75);z-index:3}
+.c2-ask{left:0;top:118px;width:300px;height:72px}
+.c2-ask .gm-row{position:absolute;top:30px}
+.c2-a2{opacity:0}
+.gslide.on .c2-ph .gm-bg{animation:c2bg var(--P) linear infinite}
+@keyframes c2bg{0%,44%{clip-path:inset(0 0 0 0);opacity:1}68%,92%{clip-path:inset(100% 0 0 0);opacity:1}
+  93%{clip-path:inset(0 0 0 0);opacity:0}100%{clip-path:inset(0 0 0 0);opacity:1}}
+.gslide.on .c2-scan{animation:c2scan var(--P) linear infinite}
+@keyframes c2scan{0%,43%{opacity:0;transform:translateY(0)}45%{opacity:1;transform:translateY(0)}
+  68%{opacity:1;transform:translateY(102px)}71%,100%{opacity:0;transform:translateY(102px)}}
+.gslide.on .c2-a1{animation:c2a1 var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes c2a1{0%{opacity:0;transform:translateY(12px)}5%,21%{opacity:1;transform:none}26%,100%{opacity:0;transform:translateY(-6px)}}
+.gslide.on .c2-a2{animation:c2a2 var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes c2a2{0%,23%{opacity:0;transform:translateY(12px)}28%,40%{opacity:1;transform:none}45%,100%{opacity:0;transform:translateY(-6px)}}
+.gslide.on .c2-sp{animation:c2sp var(--P) var(--d,0s) infinite backwards}
+@keyframes c2sp{0%,67%{opacity:0;transform:scale(.3) rotate(0)}73%{opacity:1;transform:scale(1.25) rotate(45deg)}
+  84%,100%{opacity:0;transform:scale(.6) rotate(90deg)}}
+
+/* ── Вырезать 3: Палочка убирает остаток фона ── */
+.s-cut3{--P:4.6s}
+.c3-ph{left:80px;top:8px;width:140px;height:104px}
+.c3-blob{position:absolute;left:12px;top:44px;width:38px;height:32px;border-radius:46% 54% 50% 42%;
+  background:linear-gradient(#A3B6C4,#CFC6AE);box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+.c3-row{top:150px}
+.gslide.on .c3-blob{animation:c3blob var(--P) infinite}
+@keyframes c3blob{0%,42%{opacity:1;transform:none;filter:none}46%{opacity:1;transform:scale(1.14);filter:brightness(1.8)}
+  56%,90%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:none;filter:none}}
+.gslide.on .c3-w{animation:c3w var(--P) infinite}
+@keyframes c3w{0%,9%,96%,100%{background:#191211;color:var(--paper);border-color:var(--edge)}
+  12%,92%{background:var(--safelight);color:#1A1109;border-color:var(--safelight)}}
+.gslide.on .c3-sp{animation:c3sp var(--P) var(--d,0s) infinite backwards}
+@keyframes c3sp{0%,45%{opacity:0;transform:translate(0,0) scale(.4)}50%{opacity:1;transform:translate(0,-4px) scale(1.1)}
+  64%,100%{opacity:0;transform:translate(0,-14px) scale(.6)}}
+
+/* ── Вырезать 4: Скачать → меню → PNG улетает ── */
+.s-cut4{--P:5.2s}
+.c4-ph{left:105px;top:6px;width:90px;height:66px}
+.c4-dl{left:256px;top:8px;width:26px;height:26px;border-radius:50%;border:1px solid var(--edge);background:#191211;
+  color:var(--muted);font:13px/24px var(--ui);text-align:center}
+.c4-dl b{position:absolute;inset:-1px;border-radius:50%;background:var(--safelight);color:#1A1109;
+  font:700 13px/26px var(--ui);opacity:0}
+.c4-menu{left:0;top:80px;width:300px;height:56px}
+.c4-menu .gm-row{position:absolute;top:24px}
+.c4-file{left:138px;top:22px;width:24px;height:30px;border-radius:3px 9px 3px 3px;background:var(--paper);opacity:0;
+  box-shadow:0 3px 10px rgba(0,0,0,.5);z-index:4}
+.c4-file b{position:absolute;left:0;right:0;bottom:4px;text-align:center;font:700 6px/1 var(--ui);color:var(--oxblood)}
+.c4-bar{top:156px}
+.gslide.on .c4-menu{animation:c4m var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes c4m{0%,12%{opacity:0;transform:translateY(14px) scale(.96)}20%,60%{opacity:1;transform:none}68%,100%{opacity:0;transform:translateY(8px)}}
+.gslide.on .c4-file{animation:c4f var(--P) cubic-bezier(.4,0,.2,1) infinite}
+@keyframes c4f{0%,47%{opacity:0;transform:translate(0,0) scale(.3)}53%{opacity:1;transform:translate(0,0) scale(1.1)}
+  58%{opacity:1;transform:translate(0,0) scale(1)}70%{opacity:1;transform:translate(118px,-12px) scale(.55)}
+  74%,100%{opacity:0;transform:translate(118px,-12px) scale(.3)}}
+.gslide.on .c4-dl b{animation:c4d var(--P) infinite}
+.gslide.on .c4-dl{animation:c4dl var(--P) infinite}
+@keyframes c4d{0%,70%{opacity:0}74%,92%{opacity:1}97%,100%{opacity:0}}
+@keyframes c4dl{0%,70%,100%{transform:none}74%{transform:scale(1.3)}80%{transform:none}}
+
+/* ── Символы 1: вкладка переключилась, фото → знаки ── */
+.s-art1{--P:5s}
+.a1-tabs{left:10px;top:12px;width:280px;display:flex;gap:12px;overflow:hidden}
+.a1-tabs span{flex:0 0 auto;font:7.5px/1 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  padding:0 0 5px;border-bottom:2px solid transparent;white-space:nowrap}
+.a1-tabs .a1-t1{color:var(--paper);border-bottom-color:var(--safelight)}
+.a1-ph{left:18px;top:36px;width:112px;height:84px}
+.a1-arr{left:136px;top:64px;color:var(--safelight);font:700 18px/1 var(--ui)}
+.a1-art{left:162px;top:32px;width:124px;height:92px}
+.a1-bar{top:152px}
+.gslide.on .a1-t0{animation:a1t0 var(--P) infinite}
+.gslide.on .a1-t1{animation:a1t1 var(--P) infinite}
+@keyframes a1t0{0%,16%,96%,100%{color:var(--paper);border-bottom-color:var(--safelight)}22%,92%{color:var(--muted);border-bottom-color:transparent}}
+@keyframes a1t1{0%,16%,96%,100%{color:var(--muted);border-bottom-color:transparent}22%,92%{color:var(--paper);border-bottom-color:var(--safelight)}}
+.gslide.on .a1-art{animation:a1c var(--P) infinite}
+@keyframes a1c{0%,18%{opacity:0;transform:scale(.9)}26%,92%{opacity:1;transform:none}98%,100%{opacity:0}}
+.gslide.on .a1-art pre{animation:a1a var(--P) steps(12,end) infinite}
+@keyframes a1a{0%,24%{clip-path:inset(0 0 100% 0)}60%,100%{clip-path:inset(0 0 0 0)}}
+.gslide.on .a1-arr{animation:a1r var(--P) infinite}
+@keyframes a1r{0%,18%{opacity:0;transform:translateX(-6px)}26%,92%{opacity:1;transform:none}98%,100%{opacity:0}}
+
+/* ── Символы 2: символы → эмодзи → Брайль ── */
+.s-art2{--P:6s}
+.a2-art{left:75px;top:8px;width:150px;height:112px}
+.a2-art pre{position:absolute}
+.a2-art .a2-l2{font:9.5px/1.04 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;opacity:0}
+.a2-art .a2-l3{font-size:7.6px;line-height:1;opacity:0}
+.a2-row{top:130px}
+.a2-dl{left:10px;top:172px}
+.a2-track{left:110px;top:175px;width:176px;height:3px;border-radius:2px;background:#4E3A2E}
+.a2-thumb{left:170px;top:169px;width:14px;height:14px;border-radius:50%;background:var(--safelight);box-shadow:0 0 0 3px rgba(255,176,32,.2)}
+.a2-row .a2-c1{background:var(--safelight);border-color:var(--safelight);color:#1A1109;font-weight:700}
+.gslide.on .a2-l1{animation:a2l1 var(--P) infinite}
+.gslide.on .a2-l2{animation:a2l2 var(--P) infinite}
+.gslide.on .a2-l3{animation:a2l3 var(--P) infinite}
+@keyframes a2l1{0%,28%{opacity:1;transform:none}33%,95%{opacity:0;transform:scale(.94)}100%{opacity:1;transform:none}}
+@keyframes a2l2{0%,28%{opacity:0;transform:scale(.94)}33%,61%{opacity:1;transform:none}66%,100%{opacity:0;transform:scale(.94)}}
+@keyframes a2l3{0%,61%{opacity:0;transform:scale(.94)}66%,95%{opacity:1;transform:none}100%{opacity:0;transform:scale(.94)}}
+.gslide.on .a2-c1{animation:a2c1 var(--P) infinite}
+.gslide.on .a2-c2{animation:a2c2 var(--P) infinite}
+.gslide.on .a2-c3{animation:a2c3 var(--P) infinite}
+@keyframes a2c1{0%,28%,97%,100%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}
+  31%,95%{background:#191211;border-color:var(--edge);color:var(--paper)}}
+@keyframes a2c2{0%,28%,64%,100%{background:#191211;border-color:var(--edge);color:var(--paper)}
+  31%,61%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}}
+@keyframes a2c3{0%,61%,97%,100%{background:#191211;border-color:var(--edge);color:var(--paper)}
+  64%,95%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}}
+.gslide.on .a2-thumb{animation:a2th var(--P) ease-in-out infinite}
+@keyframes a2th{0%,8%{transform:translateX(-50px)}40%{transform:translateX(70px)}70%{transform:translateX(10px)}100%{transform:translateX(-50px)}}
+
+/* ── Символы 3: Telegram → Копировать → в чат ── */
+.s-art3{--P:5.6s}
+.a3-lbl{left:10px;top:6px}
+.a3-row{top:18px}
+.a3-art{left:14px;top:56px;width:120px;height:90px}
+.a3-art pre{font-size:6.2px}
+.a3-chat{left:146px;top:56px;width:142px;height:132px}
+.a3-bub{bottom:22px;padding:5px 6px 12px}
+.a3-bub pre{margin:0;font:3.9px/1 var(--ui);background:#22466B;border-radius:3px;padding:3px}
+.a3-chat .gm-inbar,.t3-input{position:absolute;left:0;right:0;bottom:0;height:17px;background:#17212B}
+.a3-fly{left:44px;top:72px;width:60px;height:58px;border-radius:3px;background:var(--paper);opacity:0;z-index:4}
+.a3-bar{left:14px;width:120px;top:156px}
+.gslide.on .a3-tg{animation:a3tg var(--P) infinite}
+@keyframes a3tg{0%,8%,96%,100%{background:#191211;border-color:var(--edge);color:var(--paper)}
+  11%,93%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}}
+.gslide.on .a3-art pre{animation:a3w var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes a3w{0%,10%,100%{transform:scaleX(1.12)}18%,96%{transform:none}}
+.gslide.on .a3-fly{animation:a3f var(--P) cubic-bezier(.4,0,.2,1) infinite}
+@keyframes a3f{0%,33%{opacity:0;transform:none}36%{opacity:.85;transform:none}
+  47%{opacity:0;transform:translate(178px,46px) scale(.4)}100%{opacity:0;transform:translate(178px,46px) scale(.4)}}
+.gslide.on .a3-bub{animation:a3b var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes a3b{0%,44%{opacity:0;transform:translateY(16px) scale(.55)}53%{opacity:1;transform:translateY(-2px) scale(1.05)}
+  58%,93%{opacity:1;transform:none}99%,100%{opacity:0;transform:none}}
+
+/* ── QR 1: печатаю ссылку → QR проявляется ── */
+.s-qr1{--P:5.2s}
+.q1-lbl{left:20px;top:8px}
+.q1-in{left:20px;top:20px;width:260px}
+.q1-qr{left:106px;top:58px;width:88px;height:88px;padding:0}
+.q1-bar{left:100px;width:190px;top:160px}
+.gslide.on .q1-ty{animation:q1ty var(--P) steps(15,end) infinite}
+@keyframes q1ty{0%,5%{clip-path:inset(0 100% 0 0)}33%,100%{clip-path:inset(0 0 0 0)}}
+.gslide.on .q1-caret{animation:q1c var(--P) steps(15,end) infinite,gblink .9s steps(1) infinite}
+@keyframes q1c{0%,5%{transform:translateX(0)}33%,100%{transform:translateX(15ch)}}
+@keyframes gblink{50%{opacity:0}}
+.q1-caret{transform:translateX(15ch)}
+.gslide.on .q1-qr{animation:q1q var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes q1q{0%,34%{opacity:0;filter:blur(7px) sepia(1);transform:scale(.9)}58%,92%{opacity:1;filter:none;transform:none}
+  98%,100%{opacity:0;filter:none;transform:none}}
+
+/* ── QR 2: билет → рамка → чистый QR ── */
+.s-qr2{--P:5.8s}
+.q2-tk{left:22px;top:20px;width:152px;height:100px;border-radius:5px;background:var(--paper);transform:rotate(-5deg);
+  box-shadow:0 8px 20px rgba(0,0,0,.5)}
+.q2-tk>i{position:absolute;left:10px;height:5px;border-radius:2px;background:#C9BCA8}
+.q2-hd{top:0!important;left:0!important;right:0;height:14px!important;width:auto;border-radius:5px 5px 0 0!important;background:var(--oxblood)!important}
+.q2-small{position:absolute;left:96px;top:30px;width:46px;height:46px}
+.q2-vf{position:absolute;left:90px;top:24px;width:58px;height:58px;opacity:0}
+.q2-vf i{position:absolute;width:12px;height:12px;border:2.5px solid var(--safelight)}
+.q2-vf i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}
+.q2-vf i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+.q2-vf i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}
+.q2-vf i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+.q2-las{position:absolute;left:3px;right:3px;top:4px;height:2px;background:#FF5A3C;box-shadow:0 0 8px 2px rgba(255,90,60,.8);opacity:0}
+.q2-qr{left:198px;top:24px;width:88px;height:88px}
+.q2-ok{left:210px;top:122px;padding:4px 9px;border-radius:12px;background:var(--safelight);color:#1A1109;font:700 8px/1 var(--ui);letter-spacing:.06em}
+.q2-bar{left:50px;width:200px;top:160px}
+.gslide.on .q2-tk{animation:q2t var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes q2t{0%,6%{opacity:0;transform:translateY(24px) rotate(-12deg)}16%,92%{opacity:1;transform:rotate(-5deg)}98%,100%{opacity:0;transform:rotate(-5deg)}}
+.gslide.on .q2-vf{animation:q2v var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes q2v{0%,18%{opacity:0;transform:scale(1.9)}30%,53%{opacity:1;transform:none}58%,100%{opacity:0;transform:scale(.9)}}
+.gslide.on .q2-las{animation:q2l var(--P) ease-in-out infinite}
+@keyframes q2l{0%,31%{opacity:0;top:4px}33%{opacity:1;top:4px}42%{opacity:1;top:51px}51%{opacity:1;top:4px}53%,100%{opacity:0;top:4px}}
+.gslide.on .q2-qr{animation:q2q var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes q2q{0%,54%{opacity:0;transform:translate(-80px,14px) scale(.45) rotate(-5deg)}66%{opacity:1;transform:scale(1.07)}
+  72%,92%{opacity:1;transform:none}98%,100%{opacity:0;transform:none}}
+.gslide.on .q2-ok{animation:q2o var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes q2o{0%,60%{opacity:0;transform:translateY(8px) scale(.8)}67%,92%{opacity:1;transform:none}98%,100%{opacity:0}}
+
+/* ── QR 3: штрих-коды печатаются ── */
+.s-qr3{--P:5.6s}
+.q3-lbl{left:20px;top:6px}
+.q3-sel{left:20px;top:18px;width:260px;height:24px;font-size:9px;justify-content:space-between}
+.q3-sel i{font-style:normal;color:var(--muted)}
+.q3-in{left:20px;top:48px;width:260px;height:24px;font-size:9.5px}
+.q3-paper{left:24px;top:80px;width:252px;height:110px;background:var(--paper);border-radius:3px;
+  -webkit-mask:linear-gradient(#000 92%,transparent);mask:linear-gradient(#000 92%,transparent)}
+.q3-b{position:absolute;left:14px;right:14px;height:44px}
+.q3-b1{top:8px}.q3-b2{top:58px}
+.q3-b svg{display:block;width:100%;height:30px}
+.q3-b span{display:block;text-align:center;font:7px/12px var(--ui);color:#14100E;letter-spacing:.12em}
+.gslide.on .q3-ty{animation:q3ty var(--P) steps(21,end) infinite}
+@keyframes q3ty{0%,4%{clip-path:inset(0 100% 0 0)}30%,100%{clip-path:inset(0 0 0 0)}}
+.gslide.on .q3-b1{animation:q3b1 var(--P) linear infinite}
+.gslide.on .q3-b2{animation:q3b2 var(--P) linear infinite}
+@keyframes q3b1{0%,30%{clip-path:inset(0 100% 0 0)}46%,100%{clip-path:inset(0 0 0 0)}}
+@keyframes q3b2{0%,48%{clip-path:inset(0 100% 0 0)}64%,100%{clip-path:inset(0 0 0 0)}}
+
+/* ── Перевод 1: «Вставить» → текст → перевод ── */
+.s-tr1{--P:4.8s}
+.t1-lbl{left:16px;top:8px}
+.t1-x{left:262px;top:2px;width:22px;height:16px;border:1px solid var(--edge);border-radius:3px;color:var(--muted);
+  font:11px/14px var(--ui);text-align:center}
+.t1-ta{left:16px;top:22px;width:268px;height:56px;align-items:flex-start;padding-top:8px;font-size:10.5px}
+.t1-out{left:16px;top:86px;width:268px;height:58px;line-height:1.45}
+.t1-bar{top:152px}
+.t1-bar .gm-b{font-size:7px}
+.gslide.on .t1-ty{animation:t1ty var(--P) steps(var(--n),end) infinite}
+@keyframes t1ty{0%,15%{clip-path:inset(0 100% 0 0)}38%,100%{clip-path:inset(0 0 0 0)}}
+.gslide.on .t1-out{animation:t1o var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes t1o{0%,46%{opacity:0;transform:translateY(8px)}56%,92%{opacity:1;transform:none}98%,100%{opacity:0}}
+
+/* ── Перевод 2: два перевода, разделитель меняется кнопкой ── */
+.s-tr2{--P:5.2s}
+.t2-src{left:16px;top:6px;font:9.5px/1 var(--ui);color:#B8A895;white-space:nowrap}
+.t2-chips{left:16px;top:21px;display:flex;gap:6px}
+.t2-chips .gm-b{width:40px;font-size:9px}
+.t2-chips .t2-o{width:86px;font-size:7.5px}
+.t2-c1{background:var(--safelight);border-color:var(--safelight);color:#1A1109;font-weight:700}
+.t2-out{left:16px;top:56px;width:268px;height:84px;font-size:10px;line-height:1.7}
+.t2-r2{position:relative;height:1.7em}
+.t2-r2 span{position:absolute;left:0;top:0}
+.t2-s2{opacity:0}
+.gslide.on .t2-r1{animation:t2r1 var(--P) cubic-bezier(.22,1,.36,1) infinite}
+.gslide.on .t2-r2{animation:t2r2 var(--P) infinite}
+.gslide.on .t2-r3{animation:t2r3 var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes t2r1{0%,6%{opacity:0;transform:translateX(-10px)}15%,93%{opacity:1;transform:none}99%,100%{opacity:0}}
+@keyframes t2r2{0%,15%{opacity:0}21%,93%{opacity:1}99%,100%{opacity:0}}
+@keyframes t2r3{0%,21%{opacity:0;transform:translateX(-10px)}30%,93%{opacity:1;transform:none}99%,100%{opacity:0}}
+.gslide.on .t2-s1{animation:t2s1 var(--P) infinite}
+.gslide.on .t2-s2{animation:t2s2 var(--P) infinite}
+@keyframes t2s1{0%,58%{opacity:1}61%,79%{opacity:0}82%,100%{opacity:1}}
+@keyframes t2s2{0%,58%{opacity:0}61%,79%{opacity:1}82%,100%{opacity:0}}
+.gslide.on .t2-c1{animation:t2c1 var(--P) infinite}
+.gslide.on .t2-c3{animation:t2c3 var(--P) infinite}
+@keyframes t2c1{0%,58%,82%,100%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}
+  61%,79%{background:#191211;border-color:var(--edge);color:var(--paper)}}
+@keyframes t2c3{0%,58%,82%,100%{background:#191211;border-color:var(--edge);color:var(--paper)}
+  61%,79%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}}
+
+/* ── Перевод 3: нажал на перевод → вставил в чат → отправил ── */
+.s-tr3{--P:6s}
+.t3-out{left:16px;top:6px;width:268px;height:58px;font-size:8.5px;line-height:1.5}
+.t3-toast{left:50%;top:72px;transform:translateX(-50%);white-space:nowrap;padding:5px 11px;border-radius:12px;
+  background:rgba(12,9,8,.88);border:1px solid var(--edge);color:var(--paper);font:7.5px/1 var(--ui);opacity:0;z-index:4}
+.t3-chat{left:16px;top:94px;width:268px;height:92px}
+.t3-bub{bottom:23px;font-size:7.5px}
+.t3-input{display:flex;align-items:center;padding:0 22px 0 8px;font:7px/1 var(--ui);color:#A8B6C4;white-space:nowrap;overflow:hidden}
+.t3-intext{opacity:0}
+.t3-send{position:absolute;right:5px;top:3px;width:11px;height:11px;border-radius:50%;background:#5EA2E3}
+.t3-send::after{content:"";position:absolute;left:3.5px;top:3px;border-left:5px solid #fff;border-top:2.5px solid transparent;border-bottom:2.5px solid transparent}
+.gslide.on .t3-out{animation:t3o var(--P) infinite}
+@keyframes t3o{0%,6%,30%,100%{box-shadow:0 0 0 0 rgba(255,176,32,0)}9%,18%{box-shadow:0 0 0 3px var(--safelight)}}
+.gslide.on .t3-toast{animation:t3t var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes t3t{0%,8%{opacity:0;transform:translate(-50%,8px)}12%,30%{opacity:1;transform:translate(-50%,0)}
+  36%,100%{opacity:0;transform:translate(-50%,-4px)}}
+.gslide.on .t3-chat{animation:t3c var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes t3c{0%,30%{opacity:0;transform:translateY(26px)}40%,94%{opacity:1;transform:none}100%{opacity:0;transform:none}}
+.gslide.on .t3-intext{animation:t3i var(--P) infinite}
+@keyframes t3i{0%,42%{opacity:0}45%,50%{opacity:1}51%,100%{opacity:0}}
+.gslide.on .t3-bub{animation:t3b var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes t3b{0%,50%{opacity:0;transform:translateY(12px) scale(.6)}58%{opacity:1;transform:translateY(-2px) scale(1.05)}
+  63%,94%{opacity:1;transform:none}100%{opacity:0;transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+  .gin *,.gin *::after,.gnext.last::after{animation:none!important}
+  .gtrack,.gcard,.guide{transition-duration:.01s!important}
+  .gslide.on .gtt,.gslide.on .gtx,.gview.swap .gslide.on{animation:none}
+}
+.t2-out{white-space:normal}
 </style>
 </head>
 <body>
@@ -197,6 +608,7 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
   <div class="head">
     <h1 class="mark" id="mark"></h1>
     <div class="headside">
+      <button type="button" class="tgl ghelp" id="help" aria-label="Инструкция" title="Инструкция">?</button>
       <a class="tgl" href="https://t.me/ProstoAyli" target="_blank" rel="noopener"
          aria-label="Telegram: Просто Айли" title="Просто Айли">
         <svg viewBox="0 0 240 240" width="18" height="18" aria-hidden="true">
@@ -490,6 +902,22 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
   <div class="vwrap"><img id="vimg" alt=""></div>
   <p class="hint" id="hint"></p>
   <p class="hint" id="hint2"></p>
+</div>
+
+<div class="guide" id="guide" hidden role="dialog" aria-modal="true">
+  <div class="gcard" id="gCard" tabindex="-1">
+    <div class="ggrab" id="gGrab"><div class="grip"></div></div>
+    <div class="ghead">
+      <div class="gsecs" id="gSecs" role="tablist"></div>
+      <button type="button" class="gx" id="gClose" aria-label="Закрыть">×</button>
+    </div>
+    <div class="gview" id="gView"><div class="gtrack" id="gTrack"></div></div>
+    <div class="gdots" id="gDots"></div>
+    <div class="gbtns">
+      <button type="button" class="gback off" id="gBack" aria-label="Назад">←</button>
+      <button type="button" class="gnext" id="gNext"></button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1730,6 +2158,7 @@ function applyLang(){
   ls.value=L;
   if(S.isSample)S.name=t("sample");
   if(lastStatus) say(lastStatus.key,lastStatus.args,lastStatus.kind);
+  if(typeof guideLang==="function") guideLang();
 }
 el("langSel").addEventListener("change",e=>{
   L=pickLang(e.target.value)||"en";
@@ -1771,6 +2200,7 @@ function setTab(tab){
     if(!S.trOut) say("tr_hello");
   }
   else drawCut();
+  guideAuto(tab);
   if(window.__tgSync) window.__tgSync();
 }
 el("tabQr").addEventListener("click",()=>setTab("qr"));
@@ -3287,6 +3717,272 @@ el("copy").addEventListener("click",async()=>{
 });
 
 /* ══════════════════════ старт ══════════════════════ */
+/* ══════════════════════ инструкция ══════════════════════
+   Шторка снизу, как в Telegram: живая мини-сцена, заголовок, пара строк, точки, большая кнопка.
+   Сама открывается один раз на каждой вкладке, потом — по кнопке «?». */
+const GT={"ru":{"help":"Инструкция","next":"Дальше","done":"Понятно","back":"Назад","close":"Закрыть","modes":["Символы","Эмодзи","Брайль"],"vk":"ВК","sample":["Привет! Как дела?",["en","Hi! How are you?"],["pl","Cześć! Jak się masz?"]],"cut":[["Пришли фото","Нажми «Галерея» и выбери снимок. На айфоне ещё быстрее: в «Фото» задержи палец на человеке → «Скопировать объект» → здесь «Вставить»."],["Фон уберётся сам","На вопрос «Убрать фон?» нажми «Убрать фон», потом выбери «Человек» или «Предмет». Вместо фона появится прозрачная шахматка."],["Подправь, если надо","«Палочка» убирает кусок фона одним касанием, «Ластик» стирает пальцем, «Вернуть» возвращает стёртое. Ошибся — «Отменить»."],["Сохрани","«Скачать» → «Копировать», «Поделиться» или «Файл PNG» с прозрачным фоном. А «В символы →» превратит вырезанное в рисунок из знаков."]],"art":[["Фото станет текстом","После вырезания нажми «В символы →» или выбери снимок через «Галерея». Рисунок из знаков соберётся сам."],["Настрой вид","В «Настройки» — символы, эмодзи-мозаика или Брайль, а ещё детализация, контраст и яркость. Меняется сразу."],["Вставь в чат","В «Куда вставлять текст» выбери Steam, Telegram или ВКонтакте — ширина подстроится сама. Потом «Копировать» и вставь в чат. Или «Скачать» картинкой."]],"qr":[["Впиши ссылку или текст","Настройки откроются сами: впиши в поле «Ссылка или текст» — QR соберётся сразу. Нажми «Готово», потом «Скачать»."],["Прочитай код с фото","«Прочитать с фото» — выбери снимок билета или чека. Найду QR, покажу, что внутри, и соберу его заново — ровным и чётким."],["Штрих-код тоже можно","В «Тип кода» выбери «Штрих-код». Несколько номеров через пробел — получишь несколько кодов один под другим, как на чеке."]],"tr":[["Напиши или вставь","Пиши в поле или нажми «Вставить» — возьму текст из буфера. Перевожу сам, кнопку жать не нужно."],["Сразу два перевода","Английский и польский через ═══ — языки меняются в «Настройки». Кнопки над переводом меняют разделитель, «Оригинал» добавит твой текст."],["Нажми — и в Telegram","Нажми на перевод или «Копировать», открой чат и вставь. Разделитель ═══ Telegram не испортит."]]},"en":{"help":"Guide","next":"Next","done":"Got it","back":"Back","close":"Close","modes":["Characters","Emoji","Braille"],"vk":"VK","sample":["Hi! How are you?",["pl","Cześć! Jak się masz?"],["de","Hallo! Wie geht's?"]],"cut":[["Send a photo","Tap “Gallery” and pick a picture. On iPhone it’s even faster: in Photos, hold your finger on the person → “Copy Subject” → here, “Paste”."],["The background goes by itself","When asked “Remove the background?”, tap “Remove it”, then pick “Person” or “Object”. A transparent checkerboard replaces the background."],["Touch up if needed","The “Wand” removes a patch of background in one tap, the “Eraser” wipes by finger, “Restore” brings it back. Slipped — “Undo”."],["Save it","“Download” → “Copy”, “Share” or “Save PNG” with a transparent background. And “To characters →” turns the cut-out into a picture made of text."]],"art":[["A photo becomes text","After cutting out, tap “To characters →”, or pick a picture with “Gallery”. The text picture builds itself."],["Choose the look","In “Settings”: characters, emoji mosaic or Braille, plus detail, contrast and brightness. Changes show instantly."],["Paste it into a chat","In “Where the text goes” pick Steam, Telegram or VK — the width adjusts itself. Then “Copy” and paste. Or “Download” it as an image."]],"qr":[["Type a link or text","Settings open by themselves: type into “Link or text” and the QR appears right away. Tap “Done”, then “Download”."],["Read a code from a photo","“Read from photo” — pick a photo of a ticket or receipt. I’ll find the QR, show what’s inside and rebuild it clean and sharp."],["Barcodes too","In “Code type” pick “Barcode”. Several numbers separated by spaces give several codes, one under another, like on a receipt."]],"tr":[["Type or paste","Type in the box or tap “Paste” to take text from the clipboard. It translates by itself — no button needed."],["Two translations at once","Two languages at once, separated by ═══ — choose them in “Settings”. The buttons above the result change the separator, “Original” adds your text."],["Tap — and into Telegram","Tap the translation or “Copy”, open a chat and paste. Telegram won’t break the ═══ separator."]]},"pl":{"help":"Instrukcja","next":"Dalej","done":"Jasne","back":"Wstecz","close":"Zamknij","modes":["Znaki","Emoji","Braille"],"vk":"VK","sample":["Cześć! Jak się masz?",["en","Hi! How are you?"],["de","Hallo! Wie geht's?"]],"cut":[["Wyślij zdjęcie","Stuknij „Galeria” i wybierz zdjęcie. Na iPhonie jeszcze szybciej: w „Zdjęciach” przytrzymaj palec na osobie → „Kopiuj obiekt” → tutaj „Wklej”."],["Tło zniknie samo","Na pytanie „Usunąć tło?” stuknij „Usuń tło”, potem wybierz „Osoba” lub „Przedmiot”. Zamiast tła pojawi się przezroczysta szachownica."],["Popraw, jeśli trzeba","„Różdżka” usuwa kawałek tła jednym stuknięciem, „Gumka” ściera palcem, „Przywróć” oddaje starte. Pomyłka — „Cofnij”."],["Zapisz","„Pobierz” → „Kopiuj”, „Udostępnij” albo „Plik PNG” z przezroczystym tłem. A „Na znaki →” zamieni wycięty obraz w rysunek ze znaków."]],"art":[["Zdjęcie staje się tekstem","Po wycięciu stuknij „Na znaki →” albo wybierz zdjęcie przez „Galeria”. Rysunek ze znaków zbuduje się sam."],["Dobierz wygląd","W „Ustawienia”: znaki, mozaika z emoji albo Braille, do tego szczegółowość, kontrast i jasność. Zmienia się od razu."],["Wklej na czat","W „Gdzie wklejasz tekst” wybierz Steam, Telegram albo VK — szerokość dopasuje się sama. Potem „Kopiuj” i wklej. Albo „Pobierz” jako obrazek."]],"qr":[["Wpisz link lub tekst","Ustawienia otworzą się same: wpisz w pole „Link lub tekst” — kod QR pojawi się od razu. Stuknij „Gotowe”, potem „Pobierz”."],["Odczytaj kod ze zdjęcia","„Odczytaj ze zdjęcia” — wybierz zdjęcie biletu lub paragonu. Znajdę QR, pokażę, co w nim jest, i zbuduję go od nowa — równy i wyraźny."],["Kod kreskowy też","W „Typ kodu” wybierz „Kod kreskowy”. Kilka numerów oddzielonych spacją da kilka kodów, jeden pod drugim, jak na paragonie."]],"tr":[["Napisz lub wklej","Pisz w polu albo stuknij „Wklej” — wezmę tekst ze schowka. Tłumaczę sam, przycisk nie jest potrzebny."],["Dwa tłumaczenia naraz","Dwa języki naraz, oddzielone ═══ — wybierzesz je w „Ustawienia”. Przyciski nad tłumaczeniem zmieniają separator, „Oryginał” dodaje twój tekst."],["Stuknij — i do Telegrama","Stuknij tłumaczenie albo „Kopiuj”, otwórz czat i wklej. Telegram nie zepsuje separatora ═══."]]},"de":{"help":"Anleitung","next":"Weiter","done":"Alles klar","back":"Zurück","close":"Schließen","modes":["Zeichen","Emoji","Braille"],"vk":"VK","sample":["Hallo! Wie geht's?",["en","Hi! How are you?"],["pl","Cześć! Jak się masz?"]],"cut":[["Schick ein Foto","Tippe auf „Galerie“ und wähle ein Bild. Auf dem iPhone geht’s noch schneller: in „Fotos“ den Finger auf der Person halten → „Motiv kopieren“ → hier „Einfügen“."],["Der Hintergrund verschwindet","Bei „Hintergrund entfernen?“ auf „Entfernen“ tippen, dann „Person“ oder „Gegenstand“ wählen. Statt des Hintergrunds erscheint ein transparentes Schachbrett."],["Nachbessern, wenn nötig","Der „Zauberstab“ entfernt ein Stück Hintergrund mit einem Tipp, der „Radierer“ wischt mit dem Finger, „Zurückholen“ bringt es zurück. Vertippt — „Rückgängig“."],["Speichern","„Speichern“ → „Kopieren“, „Teilen“ oder „PNG-Datei“ mit transparentem Hintergrund. Und „Zu Zeichen →“ macht aus dem Ausschnitt ein Bild aus Zeichen."]],"art":[["Aus dem Foto wird Text","Nach dem Freistellen auf „Zu Zeichen →“ tippen oder ein Bild über „Galerie“ wählen. Das Zeichenbild entsteht von selbst."],["Look einstellen","In „Optionen“: Zeichen, Emoji-Mosaik oder Braille, dazu Detail, Kontrast und Helligkeit. Ändert sich sofort."],["In den Chat einfügen","Unter „Wohin kommt der Text“ Steam, Telegram oder VK wählen — die Breite passt sich an. Dann „Kopieren“ und einfügen. Oder als Bild „Speichern“."]],"qr":[["Link oder Text eingeben","Die Optionen öffnen sich von selbst: ins Feld „Link oder Text“ tippen — der QR-Code erscheint sofort. „Fertig“, dann „Speichern“."],["Code aus einem Foto lesen","„Aus Foto lesen“ — Foto eines Tickets oder Belegs wählen. Ich finde den QR, zeige den Inhalt und baue ihn sauber und scharf neu."],["Auch Strichcodes","Unter „Code-Typ“ „Strichcode“ wählen. Mehrere Nummern mit Leerzeichen ergeben mehrere Codes untereinander, wie auf einem Beleg."]],"tr":[["Schreiben oder einfügen","Ins Feld schreiben oder „Einfügen“ tippen — ich nehme den Text aus der Zwischenablage. Übersetzt wird automatisch."],["Zwei Übersetzungen auf einmal","Zwei Sprachen auf einmal, getrennt durch ═══ — welche, stellst du in „Optionen“ ein. Die Knöpfe über dem Ergebnis ändern den Trenner, „Original“ fügt deinen Text hinzu."],["Tippen — und ab in Telegram","Auf die Übersetzung oder „Kopieren“ tippen, Chat öffnen, einfügen. Den Trenner ═══ lässt Telegram in Ruhe."]]},"fr":{"help":"Guide","next":"Suivant","done":"Compris","back":"Retour","close":"Fermer","modes":["Caractères","Emoji","Braille"],"vk":"VK","sample":["Salut ! Ça va ?",["en","Hi! How are you?"],["pl","Cześć! Jak się masz?"]],"cut":[["Envoie une photo","Touche « Galerie » et choisis une image. Sur iPhone, c’est encore plus rapide : dans « Photos », garde le doigt sur la personne → « Copier le sujet » → ici, « Coller »."],["Le fond part tout seul","À la question « Retirer le fond ? », touche « Retirer », puis choisis « Personne » ou « Objet ». Un damier transparent remplace le fond."],["Retouche si besoin","La « Baguette » enlève un morceau de fond d’une touche, la « Gomme » efface au doigt, « Restaurer » le remet. Une erreur — « Annuler »."],["Enregistre","« Enregistrer » → « Copier », « Partager » ou « Fichier PNG » à fond transparent. Et « En caractères → » transforme le détourage en dessin de caractères."]],"art":[["La photo devient texte","Après le détourage, touche « En caractères → » ou choisis une image via « Galerie ». Le dessin en caractères se construit tout seul."],["Choisis le style","Dans « Réglages » : caractères, mosaïque d’emoji ou braille, plus détail, contraste et luminosité. Le résultat change aussitôt."],["Colle-le dans un chat","Dans « Où va le texte », choisis Steam, Telegram ou VK — la largeur s’adapte. Puis « Copier » et colle. Ou « Enregistrer » en image."]],"qr":[["Tape un lien ou un texte","Les réglages s’ouvrent tout seuls : tape dans « Lien ou texte » et le QR apparaît aussitôt. Touche « Terminé », puis « Enregistrer »."],["Lis un code sur une photo","« Lire depuis une photo » — choisis la photo d’un billet ou d’un ticket. Je trouve le QR, montre son contenu et le reconstruis net et propre."],["Les codes-barres aussi","Dans « Type de code », choisis « Code-barres ». Plusieurs numéros séparés par des espaces donnent plusieurs codes, l’un sous l’autre, comme sur un ticket."]],"tr":[["Écris ou colle","Écris dans le champ ou touche « Coller » pour prendre le texte du presse-papiers. La traduction se fait toute seule."],["Deux traductions d’un coup","Deux langues d’un coup, séparées par ═══ — choisis-les dans « Réglages ». Les boutons au-dessus du résultat changent le séparateur, « Original » ajoute ton texte."],["Touche — et dans Telegram","Touche la traduction ou « Copier », ouvre un chat et colle. Telegram ne cassera pas le séparateur ═══."]]}};
+const GART={"chars":["        ..","     :*%%%%*-","    =%@@@@@@%*","   .%%%%%%%%%%-","   .%++*==**=%-","   .*+=======*:","     -==+++==.","      :====:","    :+**++*#+-.","  :*###########-"," :##############-"," *###############."],"brl":["⠀⠀⠀⠀⠀⠀⠀⠀⢀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀","⠀⠀⠀⠀⠀⣠⣴⣾⣿⣿⣿⣶⣄⠀⠀⠀⠀⠀⠀","⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⣿⣶⠀⠀⠀⠀⠀","⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀","⠀⠀⠀⢐⣿⣿⣾⣿⣾⣾⣿⣿⣾⣿⡇⠀⠀⠀⠀","⠀⠀⠀⠐⢿⣿⣾⣾⣾⣾⣾⣾⣾⡿⠃⠀⠀⠀⠀","⠀⠀⠀⠀⠀⢸⣾⣾⣾⣾⣾⣾⡾⠀⠀⠀⠀⠀⠀","⠀⠀⠀⠀⠀⠀⠘⢺⣾⣾⣾⠚⠀⠀⠀⠀⠀⠀⠀","⠀⠀⠀⠀⣠⣴⣾⣿⣿⣿⣿⣿⣶⣄⠀⠀⠀⠀⠀","⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀","⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀","⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀"],"emo":["⬜⬜⬜⬜🟨🟨⬜⬜⬜⬜","⬜⬜⬜🟧⬛⬛🟧⬜⬜⬜","⬜⬜⬜🟫🟫🟫🟫⬜⬜⬜","⬜⬜⬜🟧🟧🟧🟫⬜⬜⬜","⬜⬜⬜⬜🟧🟧⬜⬜⬜⬜","⬜⬜⬜🟨🟧🟧🟨⬜⬜⬜","⬜⬜🟨🟫⬛⬛⬛🟨⬜⬜","⬜⬜🟫⬛⬛⬛⬛🟫⬜⬜"]};
+const gt=k=>{ const d=GT[L]||GT.en; return (k in d)?d[k]:GT.en[k]; };
+const GUIDE_KEY="proyav.guide", GUIDE_SECS=["cut","art","qr","tr"];
+const guideSeen=new Set();
+try{ String(localStorage.getItem(GUIDE_KEY)||"").split(",").forEach(s=>{ if(GUIDE_SECS.indexOf(s)>=0) guideSeen.add(s); }); }catch(_){}
+function guideMark(s){ guideSeen.add(s); try{ localStorage.setItem(GUIDE_KEY,[...guideSeen].join(",")); }catch(_){} }
+const G={open:false,sec:"cut",i:0,n:0,drag:null,pull:null,timer:0,auto:false,uid:0};
+const gbuzz=k=>{ try{ if(window.__tgBuzz) window.__tgBuzz(k); }catch(_){} };
+const gesc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ── детали сцен ── */
+const gB=(label,cls)=>`<span class="gm-b ${cls||""}">${gesc(label)}</span>`;
+const gTap=(x,y,d)=>`<i class="ga gm-tap" style="left:${x}px;top:${y}px;--d:${d}s"></i>`;
+const gSpark=(x,y,d,cls)=>`<i class="ga gm-spark ${cls}" style="left:${x}px;top:${y}px;--d:${d}s">✦</i>`;
+const G_MAN='<svg class="gm-man" viewBox="0 0 120 90" aria-hidden="true">'+
+  '<ellipse cx="60" cy="96" rx="36" ry="37" fill="#C4512E"/>'+
+  '<rect x="52" y="50" width="16" height="16" fill="#D89B74"/>'+
+  '<ellipse cx="60" cy="36" rx="19" ry="23" fill="#E8B48C"/>'+
+  '<path d="M39 38Q38 10 60 10Q82 10 81 38L77 37Q76 22 60 21Q44 22 43 37Z" fill="#3A2418"/>'+
+  '<circle cx="53" cy="37" r="2" fill="#3A2418"/><circle cx="67" cy="37" r="2" fill="#3A2418"/>'+
+  '<path d="M54 47Q60 51 66 47" stroke="#8C4A33" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+const gPhoto=(cls,cut,extra)=>`<div class="ga gm-ph ${cls}"><div class="gm-chk"></div>${cut?"":'<div class="gm-bg"></div>'}${extra||""}${G_MAN}</div>`;
+const gFlag=c=>{ const u=++G.uid; return `<span class="gm-flag">${(FLAG_SVG[c]||"").replace(/uk([ST])/g,"uk$1g"+u)}</span>`; };
+const gArt=k=>gesc(GART[k].join("\n"));
+let gQrSvg="";
+function gQr(){                                   // настоящий QR — его можно отсканировать прямо с инструкции
+  if(gQrSvg) return gQrSvg;
+  let q=null; try{ q=QR.encode("t.me/ProstoAyli","M"); }catch(_){ q=null; }
+  if(!q) return "";
+  const n=q.size,Z=2,W=n+2*Z; let d="";
+  for(let y=0;y<n;y++){ let x=0; while(x<n){ if(q.grid[y][x]){ const s=x; while(x<n&&q.grid[y][x]) x++; d+=`M${s+Z} ${y+Z}h${x-s}v1h${s-x}z`; } else x++; } }
+  return gQrSvg=`<svg viewBox="0 0 ${W} ${W}" shape-rendering="crispEdges" aria-hidden="true"><rect width="${W}" height="${W}" fill="#fff"/><path d="${d}" fill="#14100E"/></svg>`;
+}
+function gBar(num){                               // и настоящий Code 128
+  let r=null; try{ r=code128(num); }catch(_){ r=null; }
+  if(!r||!r.bits) return "";
+  const b=r.bits,W=b.length+20; let d="";
+  for(let x=0;x<b.length;){ if(b[x]==="1"){ const s=x; while(x<b.length&&b[x]==="1") x++; d+=`M${s+10} 0h${x-s}v1h${s-x}z`; } else x++; }
+  return `<svg viewBox="0 0 ${W} 1" preserveAspectRatio="none" shape-rendering="crispEdges" aria-hidden="true"><rect width="${W}" height="1" fill="#fff"/><path d="${d}" fill="#14100E"/></svg>`;
+}
+
+/* ── сцены: 300×196, по одной на шаг ── */
+const GSCN={
+ cut:[
+  ()=>`<div class="ga c1-board"></div>${gPhoto("c1-ph",false)}
+    <div class="ga gm-row c1-bar">${gB(t("paste"),"hot")}${gB(t("gallery"),"c1-g")}${gB(t("settings"))}</div>
+    ${gTap(150,163,0.3)}`,
+  ()=>`${gPhoto("c2-ph",false)}<i class="ga c2-scan"></i>
+    ${gSpark(92,26,0,"c2-sp")}${gSpark(200,40,0.12,"c2-sp")}${gSpark(150,2,0.24,"c2-sp")}
+    <div class="ga c2-ask c2-a1"><span class="gm-pill">${gesc(t("ask_cut"))}</span>
+      <div class="gm-row">${gB(t("cut_yes"),"amb")}${gB(t("cut_skip"))}</div></div>
+    <div class="ga c2-ask c2-a2"><span class="gm-pill">${gesc(t("ask_what"))}</span>
+      <div class="gm-row">${gB(t("subj_person"),"amb")}${gB(t("subj_thing"))}</div></div>
+    ${gTap(78,162,0.55)}${gTap(78,162,1.8)}`,
+  ()=>`${gPhoto("c3-ph",true,'<i class="c3-blob"></i>')}
+    ${gSpark(100,52,0,"c3-sp")}${gSpark(118,60,0.1,"c3-sp")}${gSpark(108,72,0.2,"c3-sp")}
+    <div class="ga gm-row c3-row">${gB(t("t_wand"),"c3-w")}${gB(t("t_erase"))}${gB(t("t_restore"))}${gB(t("undo"))}</div>
+    ${gTap(43,163,0.3)}${gTap(112,69,1.85)}`,
+  ()=>`${gPhoto("c4-ph",true)}<span class="ga c4-dl">↓<b>✓</b></span>
+    <div class="ga c4-menu"><span class="gm-pill">${gesc(t("save_what"))}</span>
+      <div class="gm-row">${gB(t("copy"))}${gB(t("share"))}${gB(t("filepng"),"amb")}</div></div>
+    <span class="ga c4-file"><b>PNG</b></span>
+    <div class="ga gm-row c4-bar">${gB(t("toart"),"amb")}${gB(t("download"),"amb")}</div>
+    ${gTap(221,170,0.3)}${gTap(245,117,2.2)}`],
+ art:[
+  ()=>`<div class="ga a1-tabs">${GUIDE_SECS.map((s,k)=>`<span class="a1-t${k}">${gesc(t("tab_"+s))}</span>`).join("")}</div>
+    ${gPhoto("a1-ph",true)}<span class="ga a1-arr">→</span>
+    <div class="ga gm-art a1-art"><pre>${gArt("chars")}</pre></div>
+    <div class="ga gm-row a1-bar">${gB(t("toart"),"amb")}</div>${gTap(150,165,0.25)}`,
+  ()=>{ const m=gt("modes"); return `<div class="ga gm-art a2-art"><pre class="a2-l1">${gArt("chars")}</pre>
+    <pre class="a2-l2">${gArt("emo")}</pre><pre class="a2-l3">${gArt("brl")}</pre></div>
+    <div class="ga gm-row a2-row">${gB(m[0],"a2-c1")}${gB(m[1],"a2-c2")}${gB(m[2],"a2-c3")}</div>
+    <span class="ga gm-lbl a2-dl">${gesc(t("detail"))}</span><i class="ga a2-track"></i><i class="ga a2-thumb"></i>
+    ${gTap(150,143,1.65)}${gTap(245,143,3.62)}${gTap(55,143,5.7)}`; },
+  ()=>`<span class="ga gm-lbl a3-lbl">${gesc(t("target"))}</span>
+    <div class="ga gm-row a3-row">${gB("Steam")}${gB("Telegram","a3-tg")}${gB(gt("vk"))}</div>
+    <div class="ga gm-art a3-art"><pre>${gArt("chars")}</pre></div><span class="ga a3-fly"></span>
+    <div class="ga gm-chat a3-chat"><i class="gm-inb"></i><div class="gm-bub a3-bub"><pre>${gArt("chars")}</pre><span class="gm-time">01:27 ✓✓</span></div><i class="gm-inbar"></i></div>
+    <div class="ga gm-row a3-bar">${gB(t("copy"),"amb")}</div>
+    ${gTap(150,31,0.3)}${gTap(74,169,1.75)}`],
+ qr:[
+  ()=>`<span class="ga gm-lbl q1-lbl">${gesc(t("lbl_qr"))}</span>
+    <div class="ga gm-in q1-in"><span class="gm-ty q1-ty">t.me/ProstoAyli</span><i class="gm-caret q1-caret"></i></div>
+    <div class="ga gm-qr q1-qr">${gQr()}</div>
+    <div class="ga gm-row q1-bar">${gB(t("done"))}${gB(t("download"),"amb")}</div>
+    ${gTap(147,173,3.35)}${gTap(244,173,4.1)}`,
+  ()=>`<div class="ga q2-tk"><i class="q2-hd"></i><i style="top:24px;width:70px"></i><i style="top:36px;width:56px"></i>
+      <i style="top:48px;width:64px"></i><i style="top:66px;width:44px"></i><i style="top:78px;width:58px"></i>
+      <div class="gm-qr q2-small">${gQr()}</div><div class="q2-vf"><i></i><i></i><i></i><i></i><b class="q2-las"></b></div></div>
+    <div class="ga gm-qr q2-qr">${gQr()}</div><span class="ga q2-ok">✓ QR</span>
+    <div class="ga gm-row q2-bar">${gB(t("scan_btn"))}</div>${gTap(150,173,0.15)}`,
+  ()=>`<span class="ga gm-lbl q3-lbl">${gesc(t("code_kind"))}</span>
+    <div class="ga gm-in q3-sel"><span>${gesc(t("kind_bar"))}</span><i>▾</i></div>
+    <div class="ga gm-in q3-in"><span class="gm-ty q3-ty">2272022500 7653913300</span></div>
+    <div class="ga q3-paper"><div class="q3-b q3-b1">${gBar("2272022500")}<span>2272022500</span></div>
+      <div class="q3-b q3-b2">${gBar("7653913300")}<span>7653913300</span></div></div>`],
+ tr:[
+  ()=>{ const s=gt("sample"); return `<span class="ga gm-lbl t1-lbl">${gesc(t("tr_src"))}</span><span class="ga t1-x">×</span>
+    <div class="ga gm-in t1-ta"><span class="gm-ty t1-ty" style="--n:${[...s[0]].length}">${gesc(s[0])}</span></div>
+    <div class="ga gm-paper t1-out">${gFlag(s[1][0])} ${gesc(s[1][1])}
+═══
+${gFlag(s[2][0])} ${gesc(s[2][1])}</div>
+    <div class="ga gm-row t1-bar">${gB(t("tr_paste"))}${gB(t("settings"))}${gB(t("tr_go"),"hot")}${gB(t("copy"),"amb")}</div>
+    ${gTap(43,165,0.2)}`; },
+  ()=>{ const s=gt("sample"); return `<span class="ga t2-src">${gesc(s[0])}</span>
+    <div class="ga t2-chips">${gB(t("tr_orig"),"t2-o")}${gB("═══","t2-c1")}${gB("═","t2-c2")}${gB("—","t2-c3")}</div>
+    <div class="ga gm-paper t2-out"><div class="t2-r1">${gFlag(s[1][0])} ${gesc(s[1][1])}</div>
+      <div class="t2-r2"><span class="t2-s1">═══</span><span class="t2-s2">—</span></div>
+      <div class="t2-r3">${gFlag(s[2][0])} ${gesc(s[2][1])}</div></div>
+    ${gTap(220,34,2.9)}${gTap(128,34,4.15)}`; },
+  ()=>{ const s=gt("sample"), txt=gesc(s[1][1])+"\n═══\n"+gesc(s[2][1]); return `<div class="ga gm-paper t3-out">${txt}</div>
+    <span class="ga t3-toast">${gesc(t("tr_copied"))}</span>
+    <div class="ga gm-chat t3-chat"><i class="gm-inb"></i><div class="gm-bub t3-bub">${txt}<span class="gm-time">01:27 ✓✓</span></div>
+      <div class="t3-input"><span class="t3-intext">${gesc(s[1][1])} ═══ …</span><i class="t3-send"></i></div></div>
+    ${gTap(150,35,0.3)}${gTap(273,177,2.95)}`; }]
+};
+
+/* ── шторка ── */
+function renderGuide(swap){
+  const steps=gt(G.sec)||[];
+  G.n=steps.length; if(G.i>=G.n) G.i=0; G.uid=0;
+  el("gSecs").innerHTML=GUIDE_SECS.map((s,k)=>
+    `<button type="button" role="tab" data-gs="${s}" aria-selected="${s===G.sec}"><b>${k+1}</b>${gesc(t("tab_"+s))}</button>`).join("");
+  el("gTrack").innerHTML=steps.map((st,k)=>
+    `<section class="gslide" aria-label="${k+1} / ${steps.length}"><div class="gsc" aria-hidden="true"><div class="gin s-${G.sec}${k+1}">${GSCN[G.sec][k]()}</div></div>`+
+    `<h2 class="gtt">${gesc(st[0])}</h2><p class="gtx">${gesc(st[1])}</p></section>`).join("");
+  el("gDots").innerHTML=steps.map((_,k)=>`<i data-gd="${k}"></i>`).join("");
+  el("guide").setAttribute("aria-label",gt("help")+" · "+t("tab_"+G.sec));
+  el("gClose").setAttribute("aria-label",gt("close"));
+  el("gBack").setAttribute("aria-label",gt("back"));
+  const v=el("gView"); v.classList.remove("swap"); if(swap){ void v.offsetWidth; v.classList.add("swap"); }
+  guideGo(G.i,true);
+  const a=el("gSecs").querySelector('[aria-selected="true"]'), box=el("gSecs");
+  if(a) box.scrollLeft=Math.max(0,a.offsetLeft-box.clientWidth/2+a.offsetWidth/2);
+  gSecsFade();
+}
+function gSecsFade(){                            // пилюли не влезли — край тает, видно, что можно листать
+  const b=el("gSecs"); b.classList.toggle("more", b.scrollWidth-b.clientWidth-b.scrollLeft>4);
+}
+function guideGo(i,instant){
+  i=Math.max(0,Math.min(G.n-1,i));
+  const moved=i!==G.i; G.i=i;
+  const tr=el("gTrack");
+  if(instant) tr.classList.add("drag");
+  tr.style.transform="translate3d("+(-100*i)+"%,0,0)";
+  if(instant){ void tr.offsetWidth; tr.classList.remove("drag"); }
+  [...tr.children].forEach((s,k)=>{ s.classList.toggle("on",k===i); s.setAttribute("aria-hidden",String(k!==i)); });
+  [...el("gDots").children].forEach((d,k)=>d.classList.toggle("on",k===i));
+  el("gBack").classList.toggle("off",i===0);
+  const last=i===G.n-1;
+  el("gNext").textContent=last?gt("done"):gt("next");
+  el("gNext").classList.toggle("last",last);
+  if(moved&&!instant) gbuzz("select");
+}
+function guideIsOpen(){ return G.open; }
+function openGuide(sec,auto){
+  clearTimeout(G.timer);
+  G.sec=GUIDE_SECS.indexOf(sec)>=0?sec:"cut"; G.i=0; G.auto=!!auto;
+  guideMark(G.sec);
+  const g=el("guide");
+  G.open=true; g.hidden=false; el("gCard").style.transform="";
+  renderGuide(false);
+  void g.offsetWidth; g.classList.add("on");
+  setTimeout(()=>{ if(G.open) try{ el("gCard").focus({preventScroll:true}); }catch(_){} },60);
+  if(window.__tgSync) window.__tgSync();
+}
+function closeGuide(){
+  if(!G.open) return;
+  G.open=false; clearTimeout(G.timer); G.drag=null; G.pull=null;
+  const g=el("guide"); g.classList.remove("on");
+  el("gCard").classList.remove("pull"); el("gCard").style.transform="";
+  setTimeout(()=>{ if(!G.open){ g.hidden=true; el("gTrack").innerHTML=""; } },420);
+  try{ if(G.auto){ if(document.activeElement) document.activeElement.blur(); } else el("help").focus({preventScroll:true}); }catch(_){}
+  if(window.__tgSync) window.__tgSync();
+}
+function guideAuto(tab){                          // первый раз на вкладке — показать её шаги
+  if(G.open||guideSeen.has(tab)) return;
+  clearTimeout(G.timer);
+  G.timer=setTimeout(()=>{
+    if(!G.open&&S.tab===tab&&!guideSeen.has(tab)&&el("viewer").hidden) openGuide(tab,true);
+  },450);
+}
+function guideLang(){
+  const h=el("help"); if(h){ h.setAttribute("aria-label",gt("help")); h.title=gt("help"); }
+  if(G.open) renderGuide(false);
+}
+
+el("help").addEventListener("click",()=>{ gbuzz("light"); openGuide(S.tab,false); });
+el("gClose").addEventListener("click",()=>{ gbuzz("light"); closeGuide(); });
+el("gNext").addEventListener("click",()=>{
+  if(G.i>=G.n-1){ gbuzz("medium"); closeGuide(); } else guideGo(G.i+1);
+});
+el("gBack").addEventListener("click",()=>guideGo(G.i-1));
+el("gDots").addEventListener("click",e=>{ const d=e.target.closest("[data-gd]"); if(d) guideGo(+d.dataset.gd); });
+el("gSecs").addEventListener("click",e=>{
+  const b=e.target.closest("[data-gs]"); if(!b||b.dataset.gs===G.sec) return;
+  G.sec=b.dataset.gs; G.i=0; guideMark(G.sec); gbuzz("select"); renderGuide(true);
+});
+el("guide").addEventListener("click",e=>{ if(e.target===el("guide")) closeGuide(); });
+el("gSecs").addEventListener("scroll",gSecsFade,{passive:true});
+document.addEventListener("keydown",e=>{
+  if(!G.open) return;
+  if(e.key==="Escape"){ e.preventDefault(); closeGuide(); }
+  else if(e.key==="ArrowRight"){ e.preventDefault(); guideGo(G.i+1); }
+  else if(e.key==="ArrowLeft"){ e.preventDefault(); guideGo(G.i-1); }
+  else if(e.key==="Tab"){                         // фокус не уходит из шторки
+    const f=[...el("gCard").querySelectorAll("button")].filter(b=>b.offsetParent&&!b.classList.contains("off"));
+    if(!f.length) return;
+    const a=f.indexOf(document.activeElement);
+    if(e.shiftKey&&a<=0){ e.preventDefault(); f[f.length-1].focus(); }
+    else if(!e.shiftKey&&(a<0||a===f.length-1)){ e.preventDefault(); f[0].focus(); }
+  }
+});
+
+/* свайп влево-вправо — листать, с «резинкой» на краях */
+(function(){
+  const gv=el("gView"), tr=el("gTrack");
+  gv.addEventListener("pointerdown",e=>{
+    if(e.pointerType==="mouse"&&e.button!==0) return;
+    G.drag={x:e.clientX,y:e.clientY,t:performance.now(),dx:0,on:false,id:e.pointerId};
+  });
+  gv.addEventListener("pointermove",e=>{
+    const d=G.drag; if(!d||e.pointerId!==d.id) return;
+    const dx=e.clientX-d.x, dy=e.clientY-d.y;
+    if(!d.on){
+      if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)*1.2){
+        d.on=true; tr.classList.add("drag"); try{ gv.setPointerCapture(e.pointerId); }catch(_){}
+      } else if(Math.abs(dy)>12) G.drag=null;
+      return;
+    }
+    const edge=(G.i===0&&dx>0)||(G.i===G.n-1&&dx<0);
+    d.dx=dx;
+    tr.style.transform=`translate3d(calc(${-100*G.i}% + ${edge?dx/3:dx}px),0,0)`;
+  });
+  const end=()=>{
+    const d=G.drag; G.drag=null; if(!d||!d.on) return;
+    tr.classList.remove("drag");
+    const w=gv.clientWidth||300, v=d.dx/Math.max(1,performance.now()-d.t);
+    let i=G.i;
+    if(d.dx<-w*0.18||(v<-0.45&&d.dx<-24)) i++;
+    else if(d.dx>w*0.18||(v>0.45&&d.dx>24)) i--;
+    guideGo(i,false);
+  };
+  gv.addEventListener("pointerup",end); gv.addEventListener("pointercancel",end);
+  /* потянуть шторку за «ручку» вниз — закрыть */
+  const gh=el("gGrab"), card=el("gCard");
+  gh.addEventListener("pointerdown",e=>{
+    G.pull={y:e.clientY,id:e.pointerId,dy:0}; card.classList.add("pull");
+    try{ gh.setPointerCapture(e.pointerId); }catch(_){}
+  });
+  gh.addEventListener("pointermove",e=>{
+    const p=G.pull; if(!p||p.id!==e.pointerId) return;
+    p.dy=Math.max(0,e.clientY-p.y); card.style.transform=`translateY(${p.dy}px)`;
+  });
+  const pend=()=>{
+    const p=G.pull; G.pull=null; if(!p) return;
+    card.classList.remove("pull");
+    if(p.dy>80) closeGuide(); else card.style.transform="";
+  };
+  gh.addEventListener("pointerup",pend); gh.addEventListener("pointercancel",pend);
+})();
+
 applyLang();
 setTab("cut");
 say("ready");
@@ -3308,9 +4004,10 @@ say("ready");
   syncH(); tg.onEvent("viewportChanged", syncH);
   const back=tg.BackButton;
   window.__tgSync=()=>{
-    try{ (viewerOpen()||S.tab!=="cut") ? back.show() : back.hide(); }catch(e){}
+    try{ (viewerOpen()||guideIsOpen()||S.tab!=="cut") ? back.show() : back.hide(); }catch(e){}
   };
   try{ back.onClick(()=>{
+    if(guideIsOpen()){ closeGuide(); return; }
     if(viewerOpen()){ el("vclose").click(); return; }
     if(!el("saveMenu").hidden){ closeSaveMenu(); return; }
     setTab("cut");
@@ -3323,6 +4020,7 @@ say("ready");
     catch(_){ location.href="https://t.me/ProstoAyli"; }
   });
   const buzz=s=>{ try{ tg.HapticFeedback.impactOccurred(s||"light"); }catch(e){} };
+  window.__tgBuzz=k=>{ try{ k==="select" ? tg.HapticFeedback.selectionChanged() : tg.HapticFeedback.impactOccurred(k||"light"); }catch(e){} };
   ["paste","toArt","tune","dl","copy","copyChip","png","tabCut","tabArt","tabQr","tabTr","trPaste","trGo","trClear","trOut","trOrig","tAuto","tWand","tErase","tRestore","tUndo","askPerson","askThing","barNum","vback","vclose","smCopy","smShare","smFile"]
    .forEach(id=>{ const n=document.getElementById(id);
      if(n) n.addEventListener("click",()=>buzz(id==="tAuto"||id==="copy"?"medium":"light")); });
