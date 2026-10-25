@@ -733,39 +733,63 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 @keyframes t3l{0%,84%{opacity:0;transform:scale(.2)}87%{opacity:1;transform:scale(1.35)}89%,100%{opacity:1;transform:none}}
 
 
-/* ── Перевод 4: «Диалог» — моё сообщение на два языка, ответ друга на мой ── */
-.s-tr4{--P:8.4s}
-.dg-mode{left:12px;top:6px;display:flex;gap:4px}
-.dg-mode .gm-b{width:76px;height:22px}
-.dg-mode .dg-on{background:var(--safelight);border-color:var(--safelight);color:#1A1109;font-weight:700}
-.dg-log{left:12px;top:34px;width:276px;height:100px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
-.dg-m{display:flex;flex-direction:column;gap:2px;max-width:82%;overflow:hidden}
-.dg-me{align-self:flex-end;align-items:flex-end}
-.dg-fr{align-self:flex-start;align-items:flex-start;margin-top:6px;max-height:50px}
-.dg-src{font:6.5px/1.3 var(--ui);color:#B8A895;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.dg-b{padding:4px 7px;font:7.5px/1.4 var(--ui);white-space:pre-line}
-.dg-me .dg-b{background:var(--paper);color:#14100E;border-radius:8px 8px 2px 8px}
-.dg-fr .dg-b{background:#2C211C;color:var(--paper);border:1px solid var(--edge);border-radius:8px 8px 8px 2px}
-.dg-who{top:140px}
-.dg-who .gm-b{height:22px}
-.dg-who .dg-w1{background:var(--safelight);border-color:var(--safelight);color:#1A1109;font-weight:700}
-.dg-in{left:12px;top:168px;width:276px;height:22px;display:flex;gap:4px}
-.dg-paste{flex:0 0 66px;height:22px}
-.dg-field{flex:1 1 auto;min-width:0;height:22px;font-size:8.5px;padding:0 6px}
-.dg-go{flex:0 0 70px;height:22px}
-.gslide.on .dg-on{animation:dgon var(--P) infinite}
-@keyframes dgon{0%,8%,98%,100%{background:#191211;border-color:var(--edge);color:var(--paper)}10%,96%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}}
-.gslide.on .dg-ty{animation:dgty var(--P) steps(var(--n),end) infinite}
-@keyframes dgty{0%,10%{clip-path:inset(0 100% 0 0)}24%,30%{clip-path:inset(0 0 0 0)}31%,100%{clip-path:inset(0 100% 0 0)}}
-.gslide.on .dg-me{animation:dgme var(--P) cubic-bezier(.22,1,.36,1) infinite}
-@keyframes dgme{0%,31%{opacity:0;transform:translateY(8px) scale(.7)}36%{opacity:1;transform:scale(1.04)}39%,95%{opacity:1;transform:none}99%,100%{opacity:0}}
-.gslide.on .dg-fr{animation:dgfr var(--P) cubic-bezier(.22,1,.36,1) infinite}
-@keyframes dgfr{0%,53%{max-height:0;margin-top:0;opacity:0;transform:scale(.7)}59%{max-height:50px;margin-top:6px;opacity:1;transform:scale(1.04)}
-  62%,95%{max-height:50px;margin-top:6px;opacity:1;transform:none}99%,100%{max-height:50px;opacity:0}}
-.gslide.on .dg-w1{animation:dgw1 var(--P) infinite}
-.gslide.on .dg-w2{animation:dgw2 var(--P) infinite}
-@keyframes dgw1{0%,31%,56%,100%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}33%,54%{background:#191211;border-color:var(--edge);color:var(--paper)}}
-@keyframes dgw2{0%,31%,56%,100%{background:#191211;border-color:var(--edge);color:var(--paper)}33%,54%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}}
+/* ── Перевод 4: «Диалог» — я и Anna: мои слова летят к ней переведёнными, её ответ — ко мне ── */
+.s-tr4{--P:9.6s}
+.dv-line{left:74px;top:145px;width:152px;height:0;border-top:2px dashed #4E3A2E}
+.dv-node{left:136px;top:132px;width:28px;height:28px;border-radius:50%;background:var(--safelight);display:flex;
+  align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(255,176,32,.18);z-index:2}
+.dv-node svg{width:16px;height:16px}
+.dv-lbl{left:0;top:166px;width:300px;text-align:center;font:700 7px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--safelight)}
+.dv-tok{left:70px;top:140px;width:12px;height:12px;margin-left:-6px;border-radius:3px;background:var(--paper);opacity:0;z-index:3;
+  box-shadow:0 0 8px rgba(255,176,32,.7)}
+.dv-face{top:88px;width:66px;display:flex;flex-direction:column;align-items:center}
+.dv-me{left:6px}.dv-fr{left:228px}
+.dv-svg{width:64px;height:84px;display:block;overflow:visible}
+.dv-face b{font:700 7.5px/1 var(--ui);color:var(--paper);margin-top:3px;letter-spacing:.06em}
+.dv-flag{position:absolute;top:64px;right:2px}
+.dv-flag .gm-flag{width:15px;height:10px}
+.dv-heart{position:absolute;left:50px;top:8px;color:#FF5A7A;font:14px/1 var(--ui);font-style:normal;opacity:0}
+.dv-eyes,.dv-mouth{transform-box:fill-box;transform-origin:center}
+.dv-mouth{transform:scaleY(.45)}
+.dv-bub{max-width:150px;padding:5px 8px;border-radius:9px;background:var(--paper);color:#14100E;font:7.5px/1.4 var(--ui);
+  opacity:0;z-index:4;box-shadow:0 4px 10px rgba(0,0,0,.35)}
+.dv-bub::after{content:"";position:absolute;left:14px;top:100%;border:6px solid transparent;border-top-color:var(--paper);border-bottom:0}
+.dv-bub.dv-r::after{left:auto;right:14px}
+.dv-a,.dv-d{left:10px;top:54px;transform-origin:15% 100%}
+.dv-b{right:10px;top:22px;transform-origin:85% 100%}
+.dv-c{right:10px;top:54px;transform-origin:85% 100%}
+.dv-sep{display:block;color:#8A7A6A;line-height:1;margin:1px 0 2px}
+.dv-d{background:#FFE7B0}
+.dv-d::after{border-top-color:#FFE7B0}
+.dv-b{background:#FFE7B0}
+.dv-b::after{border-top-color:#FFE7B0}
+.gslide.on .dv-eyes{animation:dvblink 3.3s infinite}
+.gslide.on .dv-fr .dv-eyes{animation-delay:1.1s}
+@keyframes dvblink{0%,92%,100%{transform:none}95%{transform:scaleY(.12)}}
+.gslide.on .dv-me .dv-mouth{animation:dvtalk1 var(--P) infinite}
+.gslide.on .dv-fr .dv-mouth{animation:dvtalk2 var(--P) infinite}
+@keyframes dvtalk1{0%,4%,19%,100%{transform:scaleY(.45)}5.5%,8.5%,11.5%,14.5%,17.5%{transform:scaleY(1.25)}7%,10%,13%,16%{transform:scaleY(.5)}}
+@keyframes dvtalk2{0%,50%,63%,100%{transform:scaleY(.45)}51.5%,54.5%,57.5%,60.5%{transform:scaleY(1.25)}53%,56%,59%,62%{transform:scaleY(.5)}}
+.gslide.on .dv-a{animation:dva var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes dva{0%,3%{opacity:0;transform:scale(.4)}7%,19%{opacity:1;transform:none}24%,100%{opacity:0;transform:scale(.5) translate(60px,120px)}}
+.gslide.on .dv-t1{animation:dvt1 var(--P) linear infinite}
+@keyframes dvt1{0%,20%{opacity:0;transform:none}21%{opacity:1;transform:none}26%{opacity:1;transform:translateX(80px)}
+  33%{opacity:1;transform:translateX(158px)}34%,100%{opacity:0;transform:translateX(158px)}}
+.gslide.on .dv-t2{animation:dvt2 var(--P) linear infinite}
+@keyframes dvt2{0%,62%{opacity:0;transform:translateX(158px)}63%{opacity:1;transform:translateX(158px)}68%{opacity:1;transform:translateX(80px)}
+  75%{opacity:1;transform:none}76%,100%{opacity:0;transform:none}}
+.gslide.on .dv-node{animation:dvnode var(--P) infinite}
+@keyframes dvnode{0%,25%,30%,67%,72%,100%{transform:none}27.5%,69.5%{transform:scale(1.3) rotate(180deg)}}
+.gslide.on .dv-b{animation:dvb var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes dvb{0%,33%{opacity:0;transform:scale(.4)}37%,46%{opacity:1;transform:none}49%,100%{opacity:0;transform:scale(.9)}}
+.gslide.on .dv-c{animation:dvc var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes dvc{0%,50%{opacity:0;transform:scale(.4)}54%,61%{opacity:1;transform:none}66%,100%{opacity:0;transform:scale(.5) translate(-60px,120px)}}
+.gslide.on .dv-d{animation:dvd var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes dvd{0%,75%{opacity:0;transform:scale(.4)}79%,95%{opacity:1;transform:none}99%,100%{opacity:0;transform:none}}
+.gslide.on .dv-heart{animation:dvheart var(--P) ease-out infinite}
+.gslide.on .dv-fr .dv-heart{animation-delay:.25s}
+@keyframes dvheart{0%,82%{opacity:0;transform:translateY(6px) scale(.5)}86%{opacity:1;transform:translateY(-4px) scale(1.15)}
+  95%{opacity:0;transform:translateY(-12px) scale(1)}100%{opacity:0}}
 
 @media (prefers-reduced-motion:reduce){
   .gin *,.gin *::after,.gnext.last::after{animation:none!important}
@@ -4256,6 +4280,21 @@ const GTHX={ru:"Спасибо за переводчик, очень удобн�
   fr:"Merci pour le traducteur, trop pratique\u00a0!",pl:"Dzięki za tłumacza, bardzo wygodne!",it:"Grazie per il traduttore, comodissimo!"};
 const GDLG={ru:"Спасибо, хорошо! А ты?",en:"Thanks, fine! And you?",de:"Danke, gut! Und dir?",es:"¡Gracias, bien! ¿Y tú?",
   fr:"Merci, ça va\u00a0! Et toi\u00a0?",pl:"Dzięki, dobrze! A ty?",it:"Grazie, bene! E tu?"};
+const G_FACE_ME='<svg class="dv-svg" viewBox="0 0 64 84" aria-hidden="true">'+
+  '<path d="M6 84C8 66 20 58 32 58C44 58 56 66 58 84Z" fill="#C4512E"/><rect x="27" y="47" width="10" height="13" fill="#D89B74"/>'+
+  '<ellipse cx="32" cy="34" rx="14" ry="16" fill="#E8B48C"/>'+
+  '<path d="M18 34Q17 15 32 15Q47 15 46 34L43 33Q42 23 32 22Q22 23 21 33Z" fill="#3A2418"/>'+
+  '<circle cx="24.5" cy="40" r="2.6" fill="#E5806A" opacity=".35"/><circle cx="39.5" cy="40" r="2.6" fill="#E5806A" opacity=".35"/>'+
+  '<g class="dv-eyes"><circle cx="27" cy="35" r="1.7" fill="#2A1A10"/><circle cx="37" cy="35" r="1.7" fill="#2A1A10"/></g>'+
+  '<ellipse class="dv-mouth" cx="32" cy="43.2" rx="3.4" ry="2" fill="#6B2E1E"/></svg>';
+const G_FACE_FR='<svg class="dv-svg" viewBox="0 0 64 84" aria-hidden="true">'+
+  '<path d="M15 38Q13 13 32 12Q51 13 49 38L51 60Q45 64 41 57L41 42L23 42L23 57Q19 64 13 60Z" fill="#C8742E"/>'+
+  '<path d="M6 84C8 66 20 58 32 58C44 58 56 66 58 84Z" fill="#2A6FDB"/><rect x="27" y="47" width="10" height="13" fill="#E3AE88"/>'+
+  '<ellipse cx="32" cy="34" rx="13.5" ry="15.5" fill="#F2C9A4"/>'+
+  '<path d="M18 31Q20 16 32 16Q44 16 46 31Q39 22 32 24Q25 22 18 31Z" fill="#C8742E"/>'+
+  '<circle cx="24.5" cy="40" r="2.6" fill="#E5806A" opacity=".45"/><circle cx="39.5" cy="40" r="2.6" fill="#E5806A" opacity=".45"/>'+
+  '<g class="dv-eyes"><circle cx="27" cy="35" r="1.7" fill="#2A1A10"/><circle cx="37" cy="35" r="1.7" fill="#2A1A10"/></g>'+
+  '<ellipse class="dv-mouth" cx="32" cy="43" rx="3.2" ry="1.9" fill="#A2413A"/></svg>';
 const gPhone=cls=>`<div class="ga gm-phone ${cls}"><div class="gm-scr"><div class="gm-qr">${gQr()}</div></div></div>`;
 const gArt=k=>gesc(GART[k].join("\n"));
 let gQrSvg="";
@@ -4379,17 +4418,17 @@ ${gFlag(s[2][0][0])} ${gesc(s[2][0][1])}</div>
       <div class="t3-input"><span class="t3-intext">${gesc(s[1][1])} ═══ …</span><i class="t3-send"></i></div></div>
     ${gTap(257,165,0.25)}${gTap(90,181,3)}${gTap(46,159,4)}${gTap(281,181,4.9)}`; },
   ()=>{ const s=gt("sample"), o2=s[2][0], fr=GDLG[o2[0]]||GDLG.en, mine=GDLG[L]||GDLG.en;
-    const out=gesc(s[1][1])+"\n═══\n"+gesc(o2[1]);
-    return `<div class="ga dg-mode"><span class="gm-b">${gesc(t("dlg_tab_tr"))}</span><span class="gm-b dg-on">${gesc(t("dlg_tab"))}</span></div>
-    <div class="ga dg-log">
-      <div class="dg-m dg-me"><span class="dg-src">${gesc(t("dlg_me_lbl"))} · ${gesc(s[0])}</span><div class="dg-b">${out}</div></div>
-      <div class="dg-m dg-fr"><span class="dg-src">${gesc(t("dlg_fr_lbl"))} · ${gesc(fr)}</span><div class="dg-b">${gesc(mine)}</div></div>
-    </div>
-    <div class="ga gm-row dg-who">${gB(t("dlg_me"),"dg-w1")}${gB(t("dlg_friend"),"dg-w2")}</div>
-    <div class="ga dg-in"><span class="gm-b dg-paste">${gesc(t("tr_paste"))}</span>
-      <div class="gm-in dg-field"><span class="gm-ty dg-ty" style="--n:${[...s[0]].length}">${gesc(s[0])}</span></div>
-      <span class="gm-b hot dg-go">${gesc(t("tr_go"))}</span></div>
-    ${gTap(130,17,0.2)}${gTap(253,179,2.04)}${gTap(45,179,3.81)}`; }]
+    const me=TR_LANGS.some(r=>r[0]===L)?L:"en";
+    return `<i class="ga dv-line"></i>
+    <div class="ga dv-node"><svg viewBox="0 0 24 24" fill="none" stroke="#1A1109" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3M20 16H6l3 3"></path></svg></div>
+    <span class="ga dv-lbl">${gesc(t("dlg_tab"))}</span>
+    <i class="ga dv-tok dv-t1"></i><i class="ga dv-tok dv-t2"></i>
+    <div class="ga dv-face dv-me">${G_FACE_ME}<span class="dv-flag">${gFlag(me)}</span><b>${gesc(t("dlg_me_lbl"))}</b><i class="dv-heart">♥</i></div>
+    <div class="ga dv-face dv-fr">${G_FACE_FR}<span class="dv-flag">${gFlag(o2[0])}</span><b>${gesc(gt("friend"))}</b><i class="dv-heart">♥</i></div>
+    <div class="ga dv-bub dv-a">${gFlag(me)} ${gesc(s[0])}</div>
+    <div class="ga dv-bub dv-b dv-r">${gFlag(s[1][0])} ${gesc(s[1][1])}<span class="dv-sep">═══</span>${gFlag(o2[0])} ${gesc(o2[1])}</div>
+    <div class="ga dv-bub dv-c dv-r">${gFlag(o2[0])} ${gesc(fr)}</div>
+    <div class="ga dv-bub dv-d">${gFlag(me)} ${gesc(mine)}</div>`; }]
 };
 
 /* ── шторка ── */
