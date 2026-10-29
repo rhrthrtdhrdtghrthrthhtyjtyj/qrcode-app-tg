@@ -854,6 +854,95 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 .tkv-hint{margin:0;font-size:13px;line-height:1.5;color:#5A4A3E}
 .tkv-close{min-height:52px;min-width:220px;margin-top:6px;padding:0 18px;border:0;border-radius:3px;background:#16110F;color:#EDE6D8;
   font:700 12px var(--ui);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+/* ══════════ вторая пачка: общие полноэкранные окна ══════════ */
+.viewer{z-index:28}                                  /* картинка «сохрани долгим нажатием» — поверх окон */
+/* «Вырезать»: доп. действия — одна строка круглых кнопок под инструментами */
+.xrow{flex:1 1 100%;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.xrow::-webkit-scrollbar{display:none}
+.xbtn{position:relative;flex:0 0 auto;display:flex;align-items:center;gap:6px;min-height:36px;padding:0 13px 0 10px;
+  border:1px solid var(--edge);border-radius:18px;background:#191211;color:var(--paper);font:11px var(--ui);
+  letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer}
+.xbtn svg{width:15px;height:15px;color:var(--safelight);flex:0 0 auto}
+.xbtn:active{background:#2A1F1A}
+.f2v{position:fixed;left:0;right:0;top:0;height:var(--app-h,100dvh);z-index:26;background:var(--ink);color:var(--paper);
+  display:flex;flex-direction:column;gap:12px;box-sizing:border-box;overflow-y:auto;overscroll-behavior:contain;
+  padding:calc(env(safe-area-inset-top,0px) + 12px) 16px calc(14px + var(--bar))}
+.f2v[hidden]{display:none}
+.f2-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:0 0 auto}
+.f2-head b{font:700 13px var(--ui);letter-spacing:.14em;text-transform:uppercase}
+.f2-x{width:44px;height:44px;flex:0 0 auto;border:1px solid var(--edge);border-radius:3px;background:#191211;color:var(--paper);
+  font:20px/1 var(--ui);cursor:pointer}
+.f2-lbl{display:flex;justify-content:space-between;gap:8px;font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.f2-lbl b{color:var(--safelight)}
+.f2-seg{display:flex;border:1px solid var(--edge);border-radius:3px;overflow:hidden;flex:0 0 auto}
+.f2-seg button{flex:1 1 0;min-width:0;min-height:42px;border:0;background:#191211;color:var(--muted);font:11px var(--ui);
+  letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.f2-seg button+button{border-left:1px solid var(--edge)}
+.f2-seg button[aria-pressed=true]{background:var(--safelight);color:#1A1109;font-weight:700}
+.f2-tog{min-height:42px;padding:0 14px;border:1px solid var(--edge);border-radius:3px;background:#191211;color:var(--muted);
+  font:11px var(--ui);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.f2-tog[aria-pressed=true]{border-color:var(--safelight);color:var(--safelight);font-weight:700}
+.f2-btns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;flex:0 0 auto;margin-top:auto}
+.f2-btns button{min-height:52px;padding:0 8px;border:1px solid var(--edge);border-radius:3px;background:#191211;color:var(--paper);
+  font:700 11px var(--ui);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.f2-btns button.amber{background:var(--safelight);border-color:var(--safelight);color:#1A1109}
+.f2-info{margin:0;min-height:1.5em;font-size:11px;line-height:1.5;color:var(--safelight)}
+.f2-info.bad{color:#FF7A5C}
+.f2-ol{margin:0;padding-left:20px;font-size:12px;line-height:1.55;color:var(--paper)}
+.f2-ol li::marker{color:var(--safelight);font-weight:700}
+
+/* билет: сохранить картинкой */
+.tkv-save{min-height:48px;min-width:220px;padding:0 18px;border:2px solid #16110F;border-radius:3px;background:#FFFFFF;color:#16110F;
+  font:700 12px var(--ui);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+
+/* стикер */
+.stk-stage{position:relative;flex:1 1 230px;min-height:210px;border-radius:6px;background:#0E1621;
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stk-stage::before{content:"";position:absolute;inset:0;opacity:.07;
+  background-image:radial-gradient(#FFFFFF 1px,transparent 1.5px);background-size:18px 18px}
+.stk-stage canvas{position:relative;display:block;max-width:min(240px,64%);max-height:min(240px,82%);width:auto;height:auto}
+.stk-time{position:absolute;right:10px;bottom:9px;padding:2px 7px;border-radius:9px;background:rgba(0,0,0,.4);
+  color:#FFFFFF;font-size:10px}
+.stk-cap{position:absolute;left:10px;top:9px;font-size:10px;letter-spacing:.06em;color:rgba(255,255,255,.75)}
+.stk-row{display:flex;gap:8px;align-items:center}
+.stk-row .f2-seg{flex:1 1 auto}
+
+/* QR: Wi‑Fi и контакт */
+.sheet .f2-seg{margin-top:2px}
+.wf-pass{display:flex;gap:8px}
+.wf-pass input{flex:1 1 auto;min-width:0}
+.masked{-webkit-text-security:disc}
+.wf-eye{flex:0 0 auto;width:48px;min-height:48px;border:1px solid var(--edge);border-radius:3px;background:#191211;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;cursor:pointer}
+.wf-eye[aria-pressed=true]{color:var(--safelight);border-color:var(--safelight)}
+.wf-eye svg{width:20px;height:20px}
+
+/* чистое фото */
+.xbtn.dot::after{content:"";position:absolute;top:3px;right:5px;width:8px;height:8px;border-radius:50%;background:#FF7A5C;
+  box-shadow:0 0 0 2px var(--ink)}
+.cln-pic{position:relative;flex:0 0 auto;height:min(200px,26vh);border:1px solid var(--edge);border-radius:3px;background:#0F0B0A;
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cln-pic canvas{display:block;max-width:100%;max-height:100%}
+.cln-pin{position:absolute;right:8px;bottom:8px;display:flex;align-items:center;gap:5px;padding:4px 8px;border-radius:3px;
+  background:rgba(22,17,15,.9);color:#FF8A6B;font-size:10px;font-weight:700}
+.cln-pin[hidden]{display:none}
+.cln-pin svg{width:12px;height:12px}
+.cln-list{display:flex;flex-direction:column;border:1px solid var(--edge);border-radius:3px;overflow:hidden;flex:0 0 auto}
+.cln-list:empty{display:none}
+.cln-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;background:#191211}
+.cln-row+.cln-row{border-top:1px solid var(--edge)}
+.cln-row div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.cln-row span{font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.cln-row b{font-weight:400;font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+.cln-row i{flex:0 0 auto;padding:3px 6px;border:1px solid #FF8A6B;border-radius:3px;color:#FF8A6B;font-style:normal;
+  font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.cln-row.hot b{color:#FFB09C}
+.cln-more{margin:-4px 0 0;font-size:11px;color:var(--muted)}
+.cln-ok{display:flex;align-items:center;gap:8px;margin:0;padding:9px 10px;border:1px solid #3F6B3A;border-radius:3px;background:#18201A;
+  color:#A8D99C;font-size:11px}
+.cln-ok svg{width:16px;height:16px;flex:0 0 auto}
+.cln-ok[hidden],.cln-more[hidden],.f2-note[hidden]{display:none}
+.f2-note{margin:0;font-size:11px;line-height:1.55;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -890,6 +979,10 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
     <button class="tbtn" id="tErase" aria-pressed="false" data-t="t_erase"></button>
     <button class="tbtn" id="tRestore" aria-pressed="false" data-t="t_restore"></button>
     <button class="tbtn" id="tUndo" data-t="undo"></button>
+    <div class="xrow" role="group">
+      <button type="button" class="xbtn" id="tStk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h11l5 5v11H4Z"></path><path d="M15 4v5h5"></path></svg><span data-t="stk_btn"></span></button>
+      <button type="button" class="xbtn" id="tClean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s6-5.6 6-10.5a6 6 0 0 0-12 0C6 15.4 12 21 12 21Z"></path><path d="M4 4l16 16"></path></svg><span data-t="cln_btn"></span></button>
+    </div>
   </div>
 </div>
 
@@ -1044,6 +1137,44 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
       <option value="l" data-t="sz_l"></option>
     </select>
   </div>
+  <div class="fld f2q" data-grp="qr" data-q="qr">
+    <div class="row-lbl"><span data-t="qw_what"></span></div>
+    <div class="f2-seg" id="qwSeg" role="group">
+      <button type="button" data-w="text" aria-pressed="true" data-t="qw_text"></button>
+      <button type="button" data-w="wifi" aria-pressed="false" data-t="qw_wifi"></button>
+      <button type="button" data-w="contact" aria-pressed="false" data-t="qw_contact"></button>
+    </div>
+  </div>
+  <div class="fld f2q" data-grp="qr" data-q="wifi" hidden>
+    <div class="row-lbl"><label for="wfSsid" data-t="wf_ssid"></label></div>
+    <input type="text" id="wfSsid" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Dacha_5G">
+  </div>
+  <div class="fld f2q" data-grp="qr" data-q="wifi" id="wfPassFld" hidden>
+    <div class="row-lbl"><label for="wfPass" data-t="wf_pass"></label></div>
+    <div class="wf-pass"><input type="text" id="wfPass" class="masked" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <button type="button" class="wf-eye" id="wfEye" aria-pressed="false" data-t-al="wf_show"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div>
+  </div>
+  <div class="fld f2q" data-grp="qr" data-q="wifi" hidden>
+    <div class="row-lbl"><label for="wfSec" data-t="wf_sec"></label></div>
+    <select id="wfSec">
+      <option value="WPA" selected data-t="wf_wpa"></option>
+      <option value="WEP" data-t="wf_wep"></option>
+      <option value="nopass" data-t="wf_open"></option>
+    </select>
+    <p class="tip" data-t="wf_tip"></p>
+  </div>
+  <div class="fld f2q" data-grp="qr" data-q="contact" hidden>
+    <div class="row-lbl"><label for="ctName" data-t="ct_name"></label></div>
+    <input type="text" id="ctName" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="fld f2q" data-grp="qr" data-q="contact" hidden>
+    <div class="row-lbl"><label for="ctTel" data-t="ct_tel"></label></div>
+    <input type="text" id="ctTel" inputmode="tel" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="fld f2q" data-grp="qr" data-q="contact" hidden>
+    <div class="row-lbl"><label for="ctMail" data-t="ct_mail"></label></div>
+    <input type="text" id="ctMail" inputmode="email" autocomplete="off" autocapitalize="off" spellcheck="false">
+  </div>
   <div class="fld" data-grp="qr">
     <div class="row-lbl"><span id="qrLbl"></span></div>
     <input type="text" id="qrText" data-t-ph="qr_ph" autocapitalize="off" spellcheck="false">
@@ -1171,7 +1302,48 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
   <canvas id="tkvCv"></canvas>
   <p class="tkv-hint" data-t="tk_bright"></p>
   <p class="tkv-hint" data-t="tk_paper"></p>
+  <button type="button" class="tkv-save" id="tkvSave" data-t="tk_save"></button>
   <button type="button" class="tkv-close" id="tkvClose" data-t="tk_close"></button>
+</div>
+
+<div class="f2v" id="stkView" hidden role="dialog" aria-modal="true" aria-labelledby="stkTitle">
+  <div class="f2-head"><b id="stkTitle" data-t="stk_title"></b>
+    <button type="button" class="f2-x" id="stkX" data-t-al="f2_close">×</button></div>
+  <div class="stk-stage"><span class="stk-cap" data-t="stk_chat"></span><canvas id="stkCv" width="1" height="1"></canvas><span class="stk-time">12:00 ✓✓</span></div>
+  <div class="f2-lbl"><span data-t="stk_outline"></span></div>
+  <div class="stk-row">
+    <div class="f2-seg" id="stkCol" role="group">
+      <button type="button" data-c="#FFFFFF" aria-pressed="true" data-t="stk_white"></button>
+      <button type="button" data-c="#14100E" aria-pressed="false" data-t="stk_black"></button>
+      <button type="button" data-c="" aria-pressed="false" data-t="stk_none"></button>
+    </div>
+    <button type="button" class="f2-tog" id="stkSh" aria-pressed="true" data-t="stk_shadow"></button>
+  </div>
+  <label id="stkWrow"><span class="f2-lbl"><span data-t="stk_width"></span><b id="stkWv">10</b></span>
+    <input type="range" id="stkW" min="2" max="24" step="1" value="10"></label>
+  <ol class="f2-ol"><li data-t="stk_how1"></li><li data-t="stk_how2"></li><li data-t="stk_how3"></li></ol>
+  <p class="f2-info" id="stkInfo" aria-live="polite"></p>
+  <div class="f2-btns">
+    <button type="button" id="stkBot" data-t="stk_bot"></button>
+    <button type="button" class="amber" id="stkSave" data-t="stk_save"></button>
+  </div>
+</div>
+
+<div class="f2v" id="clnView" hidden role="dialog" aria-modal="true" aria-labelledby="clnTitle">
+  <div class="f2-head"><b id="clnTitle" data-t="cln_title"></b>
+    <button type="button" class="f2-x" id="clnX" data-t-al="f2_close">×</button></div>
+  <div class="cln-pic"><canvas id="clnCv" width="1" height="1"></canvas><span class="cln-pin" id="clnPin" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg><span data-t="cln_gps"></span></span></div>
+  <div class="f2-lbl"><span data-t="cln_inside"></span></div>
+  <div class="cln-list" id="clnList"></div>
+  <p class="cln-more" id="clnMore" hidden></p>
+  <p class="cln-ok" id="clnNone" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"></path></svg><span data-t="cln_none"></span></p>
+  <p class="cln-ok" id="clnAfter" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"></path></svg><span data-t="cln_after"></span></p>
+  <p class="f2-note" data-t="cln_note"></p>
+  <p class="f2-info" id="clnInfo" aria-live="polite"></p>
+  <div class="f2-btns">
+    <button type="button" id="clnClose" data-t="f2_close"></button>
+    <button type="button" class="amber" id="clnSave" data-t="cln_save"></button>
+  </div>
 </div>
 
 <div class="viewer" id="viewer" hidden>
@@ -1354,6 +1526,37 @@ ru:{
   noshare:e=>"отправка недоступна: "+e,
   resetdone:"настройки сброшены",
   sfx_cut:"-bez-fona", sfx_art:"-tekst",
+  f2_close:"Закрыть", tk_save:"Сохранить в Фото",
+  stk_btn:"Стикер", stk_title:"Стикер для Telegram", stk_outline:"Обводка",
+  stk_white:"Белая", stk_black:"Чёрная", stk_none:"Без неё", stk_width:"Толщина", stk_shadow:"Тень",
+  stk_chat:"так он будет в чате", stk_save:"Сохранить PNG", stk_bot:"Открыть @Stickers",
+  stk_how1:"Сохрани картинку", stk_how2:"В @Stickers: /newpack — новый набор, /addsticker — в готовый",
+  stk_how3:"Отправь картинку файлом: скрепка → Файл",
+  stk_need:"сначала вырежи фон — стикер делается из вырезанного",
+  stk_ok:(w,h,kb)=>"стикер "+w+"×"+h+" · "+kb+" КБ — подходит для Telegram",
+  stk_big:kb=>"стикер "+kb+" КБ — больше 512 КБ, Telegram не примет. Убери тень или сделай обводку тоньше",
+  qw_what:"Что в QR", qw_text:"Текст, ссылка", qw_wifi:"Wi‑Fi", qw_contact:"Контакт",
+  wf_ssid:"Название сети", wf_pass:"Пароль", wf_show:"Показать пароль", wf_sec:"Защита",
+  wf_wpa:"WPA / WPA2 / WPA3", wf_wep:"WEP (старая)", wf_open:"Без пароля",
+  wf_tip:"Пароль никуда не сохраняется и не отправляется. Гости наводят камеру на код — телефон подключается сам.",
+  wf_need:"впиши название сети Wi‑Fi",
+  wf_done:s=>"QR для Wi‑Fi «"+s+"» готов — наведи камеру, телефон подключится сам",
+  wf_short:"пароль короче 8 символов — у WPA так не бывает, проверь",
+  wf_card:"Наведи камеру — подключится сам",
+  ct_name:"Имя", ct_tel:"Телефон", ct_mail:"Почта",
+  ct_need:"впиши имя или телефон",
+  ct_done:s=>"QR-визитка «"+s+"» готова — камера предложит сохранить контакт",
+  ct_card:"Наведи камеру — сохранишь контакт",
+  cln_btn:"Чистое фото", cln_title:"Чистое фото", cln_inside:"Что спрятано внутри фото",
+  cln_gps:"Место", cln_exact:"точное место съёмки", cln_date:"Когда снято", cln_cam:"Телефон, камера",
+  cln_shot:"Настройки съёмки", cln_soft:"Программа", cln_drop:"уберу",
+  cln_more:n=>"и ещё служебных меток: "+n,
+  cln_none:"Меток не нашёл — фото уже чистое. Копию можно сохранить на всякий случай.",
+  cln_after:"После: 0 меток, картинка та же",
+  cln_note:"Всё делается на телефоне, фото никуда не уходит. Если отправлять фото «файлом», метки уходят вместе с ним — отправляй чистую копию.",
+  cln_save:"Сохранить чистое", cln_need:"сначала выбери фото — покажу, что в нём спрятано",
+  cln_ok:(w,h,kb)=>"чистая копия "+w+"×"+h+" · "+kb+" КБ — меток нет",
+  cln_small:(w,h)=>"фото очень большое — уменьшил до "+w+"×"+h+", иначе телефон не справится",
   dlg_tab_tr:"Перевод", dlg_tab:"Диалог", dlg_me:"Я пишу", dlg_friend:"Ответ друга",
   dlg_ph_me:"Напиши сообщение — переведу на два языка и добавлю в переписку",
   dlg_ph_fr:n=>"Вставь ответ друга — переведу на "+n,
@@ -1514,6 +1717,37 @@ en:{
   noshare:e=>"sharing unavailable: "+e,
   resetdone:"settings reset",
   sfx_cut:"-no-bg", sfx_art:"-text",
+  f2_close:"Close", tk_save:"Save to Photos",
+  stk_btn:"Sticker", stk_title:"Telegram sticker", stk_outline:"Outline",
+  stk_white:"White", stk_black:"Black", stk_none:"None", stk_width:"Thickness", stk_shadow:"Shadow",
+  stk_chat:"how it looks in a chat", stk_save:"Save PNG", stk_bot:"Open @Stickers",
+  stk_how1:"Save the picture", stk_how2:"In @Stickers: /newpack — new set, /addsticker — add to an existing one",
+  stk_how3:"Send the picture as a file: paperclip → File",
+  stk_need:"cut the background first — stickers are made from the cut-out",
+  stk_ok:(w,h,kb)=>"sticker "+w+"×"+h+" · "+kb+" KB — fits Telegram",
+  stk_big:kb=>"sticker is "+kb+" KB — over 512 KB, Telegram won't take it. Turn off the shadow or use a thinner outline",
+  qw_what:"What's in the QR", qw_text:"Text, link", qw_wifi:"Wi‑Fi", qw_contact:"Contact",
+  wf_ssid:"Network name", wf_pass:"Password", wf_show:"Show password", wf_sec:"Security",
+  wf_wpa:"WPA / WPA2 / WPA3", wf_wep:"WEP (old)", wf_open:"No password",
+  wf_tip:"The password is never saved or sent anywhere. Guests point the camera at the code and the phone connects.",
+  wf_need:"type the Wi‑Fi network name",
+  wf_done:s=>"Wi‑Fi QR for “"+s+"” is ready — point a camera at it and the phone connects",
+  wf_short:"the password is shorter than 8 characters — WPA doesn't allow that, check it",
+  wf_card:"Point your camera to connect",
+  ct_name:"Name", ct_tel:"Phone", ct_mail:"Email",
+  ct_need:"type a name or a phone number",
+  ct_done:s=>"contact QR for “"+s+"” is ready — the camera will offer to save it",
+  ct_card:"Point your camera to save the contact",
+  cln_btn:"Clean photo", cln_title:"Clean photo", cln_inside:"What's hidden inside the photo",
+  cln_gps:"Location", cln_exact:"exact spot where it was taken", cln_date:"Taken", cln_cam:"Phone, camera",
+  cln_shot:"Camera settings", cln_soft:"Software", cln_drop:"remove",
+  cln_more:n=>"plus technical tags: "+n,
+  cln_none:"No hidden tags found — the photo is already clean. You can still save a copy.",
+  cln_after:"After: 0 tags, same picture",
+  cln_note:"Everything happens on your phone, the photo goes nowhere. Sending a photo “as a file” sends the tags too — send the clean copy instead.",
+  cln_save:"Save clean copy", cln_need:"pick a photo first — I'll show what's hidden in it",
+  cln_ok:(w,h,kb)=>"clean copy "+w+"×"+h+" · "+kb+" KB — no tags",
+  cln_small:(w,h)=>"the photo is huge — scaled to "+w+"×"+h+" so the phone can handle it",
   dlg_tab_tr:"Translate", dlg_tab:"Dialog", dlg_me:"I'm writing", dlg_friend:"Friend's reply",
   dlg_ph_me:"Write a message — I translate it into two languages and add it to the conversation",
   dlg_ph_fr:n=>"Paste your friend's reply — I translate it into "+n,
@@ -1676,6 +1910,37 @@ pl:{
   noshare:e=>"udostępnianie niedostępne: "+e,
   resetdone:"ustawienia zresetowane",
   sfx_cut:"-bez-tla", sfx_art:"-tekst",
+  f2_close:"Zamknij", tk_save:"Zapisz w Zdjęciach",
+  stk_btn:"Naklejka", stk_title:"Naklejka do Telegrama", stk_outline:"Obrys",
+  stk_white:"Biały", stk_black:"Czarny", stk_none:"Bez", stk_width:"Grubość", stk_shadow:"Cień",
+  stk_chat:"tak wygląda na czacie", stk_save:"Zapisz PNG", stk_bot:"Otwórz @Stickers",
+  stk_how1:"Zapisz obrazek", stk_how2:"W @Stickers: /newpack — nowy zestaw, /addsticker — do istniejącego",
+  stk_how3:"Wyślij obrazek jako plik: spinacz → Plik",
+  stk_need:"najpierw wytnij tło — naklejkę robi się z wycinka",
+  stk_ok:(w,h,kb)=>"naklejka "+w+"×"+h+" · "+kb+" KB — pasuje do Telegrama",
+  stk_big:kb=>"naklejka ma "+kb+" KB — ponad 512 KB, Telegram jej nie przyjmie. Wyłącz cień albo zrób cieńszy obrys",
+  qw_what:"Co w kodzie QR", qw_text:"Tekst, link", qw_wifi:"Wi‑Fi", qw_contact:"Kontakt",
+  wf_ssid:"Nazwa sieci", wf_pass:"Hasło", wf_show:"Pokaż hasło", wf_sec:"Zabezpieczenia",
+  wf_wpa:"WPA / WPA2 / WPA3", wf_wep:"WEP (stare)", wf_open:"Bez hasła",
+  wf_tip:"Hasło nigdzie się nie zapisuje i nie jest wysyłane. Goście celują aparatem w kod — telefon sam się łączy.",
+  wf_need:"wpisz nazwę sieci Wi‑Fi",
+  wf_done:s=>"QR do Wi‑Fi „"+s+"” gotowy — wyceluj aparat, telefon sam się połączy",
+  wf_short:"hasło ma mniej niż 8 znaków — WPA tak nie działa, sprawdź",
+  wf_card:"Wyceluj aparat — połączy się sam",
+  ct_name:"Imię", ct_tel:"Telefon", ct_mail:"E-mail",
+  ct_need:"wpisz imię albo telefon",
+  ct_done:s=>"wizytówka QR „"+s+"” gotowa — aparat zaproponuje zapisanie kontaktu",
+  ct_card:"Wyceluj aparat — zapiszesz kontakt",
+  cln_btn:"Czyste zdjęcie", cln_title:"Czyste zdjęcie", cln_inside:"Co jest ukryte w zdjęciu",
+  cln_gps:"Miejsce", cln_exact:"dokładne miejsce zdjęcia", cln_date:"Kiedy zrobione", cln_cam:"Telefon, aparat",
+  cln_shot:"Ustawienia zdjęcia", cln_soft:"Program", cln_drop:"usunę",
+  cln_more:n=>"i znaczniki techniczne: "+n,
+  cln_none:"Nie znalazłem metadanych — zdjęcie jest już czyste. Kopię i tak można zapisać.",
+  cln_after:"Po: 0 znaczników, ten sam obraz",
+  cln_note:"Wszystko dzieje się w telefonie, zdjęcie nigdzie nie wychodzi. Wysyłając zdjęcie „jako plik”, wysyłasz też metadane — wyślij czystą kopię.",
+  cln_save:"Zapisz czystą kopię", cln_need:"najpierw wybierz zdjęcie — pokażę, co w nim ukryte",
+  cln_ok:(w,h,kb)=>"czysta kopia "+w+"×"+h+" · "+kb+" KB — bez znaczników",
+  cln_small:(w,h)=>"zdjęcie jest bardzo duże — zmniejszyłem do "+w+"×"+h+", inaczej telefon nie da rady",
   dlg_tab_tr:"Tłumacz", dlg_tab:"Dialog", dlg_me:"Piszę ja", dlg_friend:"Odpowiedź",
   dlg_ph_me:"Napisz wiadomość — przetłumaczę na dwa języki i dodam do rozmowy",
   dlg_ph_fr:n=>"Wklej odpowiedź znajomego — przetłumaczę na "+n,
@@ -1840,6 +2105,37 @@ de:{
   noshare:e=>"Teilen nicht verfügbar: "+e,
   resetdone:"Einstellungen zurückgesetzt",
   sfx_cut:"-ohne-hg", sfx_art:"-text",
+  f2_close:"Schließen", tk_save:"In Fotos sichern",
+  stk_btn:"Sticker", stk_title:"Sticker für Telegram", stk_outline:"Kontur",
+  stk_white:"Weiß", stk_black:"Schwarz", stk_none:"Ohne", stk_width:"Stärke", stk_shadow:"Schatten",
+  stk_chat:"so sieht er im Chat aus", stk_save:"PNG sichern", stk_bot:"@Stickers öffnen",
+  stk_how1:"Bild sichern", stk_how2:"In @Stickers: /newpack — neues Set, /addsticker — zu einem bestehenden",
+  stk_how3:"Bild als Datei senden: Büroklammer → Datei",
+  stk_need:"erst den Hintergrund entfernen — der Sticker entsteht aus dem Ausschnitt",
+  stk_ok:(w,h,kb)=>"Sticker "+w+"×"+h+" · "+kb+" KB — passt für Telegram",
+  stk_big:kb=>"Sticker hat "+kb+" KB — über 512 KB, Telegram nimmt ihn nicht. Schatten aus oder dünnere Kontur",
+  qw_what:"Was im QR steckt", qw_text:"Text, Link", qw_wifi:"WLAN", qw_contact:"Kontakt",
+  wf_ssid:"Netzwerkname", wf_pass:"Passwort", wf_show:"Passwort zeigen", wf_sec:"Sicherheit",
+  wf_wpa:"WPA / WPA2 / WPA3", wf_wep:"WEP (alt)", wf_open:"Ohne Passwort",
+  wf_tip:"Das Passwort wird nirgends gespeichert oder gesendet. Gäste halten die Kamera auf den Code — das Handy verbindet sich.",
+  wf_need:"gib den WLAN-Namen ein",
+  wf_done:s=>"WLAN-QR für „"+s+"“ ist fertig — Kamera draufhalten, das Handy verbindet sich",
+  wf_short:"das Passwort hat weniger als 8 Zeichen — bei WPA geht das nicht, bitte prüfen",
+  wf_card:"Kamera draufhalten — verbindet sich",
+  ct_name:"Name", ct_tel:"Telefon", ct_mail:"E-Mail",
+  ct_need:"gib einen Namen oder eine Telefonnummer ein",
+  ct_done:s=>"Kontakt-QR „"+s+"“ ist fertig — die Kamera bietet an, ihn zu speichern",
+  ct_card:"Kamera draufhalten — Kontakt speichern",
+  cln_btn:"Sauberes Foto", cln_title:"Sauberes Foto", cln_inside:"Was im Foto versteckt ist",
+  cln_gps:"Ort", cln_exact:"genauer Aufnahmeort", cln_date:"Aufgenommen", cln_cam:"Handy, Kamera",
+  cln_shot:"Aufnahmedaten", cln_soft:"Software", cln_drop:"weg damit",
+  cln_more:n=>"dazu technische Angaben: "+n,
+  cln_none:"Keine Metadaten gefunden — das Foto ist schon sauber. Eine Kopie kannst du trotzdem sichern.",
+  cln_after:"Danach: 0 Angaben, gleiches Bild",
+  cln_note:"Alles passiert auf dem Handy, das Foto geht nirgendwohin. Wer ein Foto „als Datei“ schickt, schickt die Angaben mit — schick lieber die saubere Kopie.",
+  cln_save:"Saubere Kopie sichern", cln_need:"wähle zuerst ein Foto — ich zeige, was darin steckt",
+  cln_ok:(w,h,kb)=>"saubere Kopie "+w+"×"+h+" · "+kb+" KB — keine Angaben",
+  cln_small:(w,h)=>"das Foto ist riesig — auf "+w+"×"+h+" verkleinert, sonst schafft es das Handy nicht",
   dlg_tab_tr:"Übersetzen", dlg_tab:"Dialog", dlg_me:"Ich schreibe", dlg_friend:"Antwort",
   dlg_ph_me:"Schreib eine Nachricht — ich übersetze sie in zwei Sprachen und füge sie dem Gespräch hinzu",
   dlg_ph_fr:n=>"Füg die Antwort ein — Übersetzung auf "+n,
@@ -2004,6 +2300,37 @@ fr:{
   noshare:e=>"partage indisponible : "+e,
   resetdone:"réglages réinitialisés",
   sfx_cut:"-sans-fond", sfx_art:"-texte",
+  f2_close:"Fermer", tk_save:"Enregistrer dans Photos",
+  stk_btn:"Sticker", stk_title:"Sticker Telegram", stk_outline:"Contour",
+  stk_white:"Blanc", stk_black:"Noir", stk_none:"Aucun", stk_width:"Épaisseur", stk_shadow:"Ombre",
+  stk_chat:"son rendu dans un chat", stk_save:"Enregistrer en PNG", stk_bot:"Ouvrir @Stickers",
+  stk_how1:"Enregistre l’image", stk_how2:"Dans @Stickers\u00a0: /newpack — nouveau pack, /addsticker — dans un pack existant",
+  stk_how3:"Envoie l’image en fichier\u00a0: trombone → Fichier",
+  stk_need:"découpe d’abord le fond — le sticker se fait à partir du détourage",
+  stk_ok:(w,h,kb)=>"sticker "+w+"×"+h+" · "+kb+"\u00a0Ko — convient à Telegram",
+  stk_big:kb=>"sticker de "+kb+"\u00a0Ko — plus de 512\u00a0Ko, Telegram le refusera. Retire l’ombre ou affine le contour",
+  qw_what:"Contenu du QR", qw_text:"Texte, lien", qw_wifi:"Wi‑Fi", qw_contact:"Contact",
+  wf_ssid:"Nom du réseau", wf_pass:"Mot de passe", wf_show:"Afficher le mot de passe", wf_sec:"Sécurité",
+  wf_wpa:"WPA / WPA2 / WPA3", wf_wep:"WEP (ancien)", wf_open:"Sans mot de passe",
+  wf_tip:"Le mot de passe n’est ni enregistré ni envoyé. Tes invités visent le code avec l’appareil photo et le téléphone se connecte.",
+  wf_need:"saisis le nom du réseau Wi‑Fi",
+  wf_done:s=>"QR Wi‑Fi « "+s+" » prêt — vise-le avec l’appareil photo, le téléphone se connecte",
+  wf_short:"mot de passe de moins de 8 caractères — impossible en WPA, vérifie",
+  wf_card:"Vise avec l’appareil photo pour te connecter",
+  ct_name:"Nom", ct_tel:"Téléphone", ct_mail:"E-mail",
+  ct_need:"saisis un nom ou un numéro",
+  ct_done:s=>"carte QR « "+s+" » prête — l’appareil photo proposera d’enregistrer le contact",
+  ct_card:"Vise avec l’appareil photo pour enregistrer le contact",
+  cln_btn:"Photo propre", cln_title:"Photo propre", cln_inside:"Ce que cache la photo",
+  cln_gps:"Lieu", cln_exact:"lieu exact de la prise", cln_date:"Prise le", cln_cam:"Téléphone, appareil",
+  cln_shot:"Réglages de prise", cln_soft:"Logiciel", cln_drop:"à retirer",
+  cln_more:n=>"plus des balises techniques : "+n,
+  cln_none:"Aucune métadonnée trouvée — la photo est déjà propre. Tu peux quand même enregistrer une copie.",
+  cln_after:"Après : 0 balise, même image",
+  cln_note:"Tout se passe sur ton téléphone, la photo ne part nulle part. Envoyer une photo « en fichier » envoie aussi ses balises — envoie plutôt la copie propre.",
+  cln_save:"Enregistrer la copie propre", cln_need:"choisis d’abord une photo — je te montre ce qu’elle cache",
+  cln_ok:(w,h,kb)=>"copie propre "+w+"×"+h+" · "+kb+" Ko — aucune balise",
+  cln_small:(w,h)=>"la photo est énorme — réduite à "+w+"×"+h+" pour que le téléphone suive",
   dlg_tab_tr:"Traduire", dlg_tab:"Dialogue", dlg_me:"J’écris", dlg_friend:"Sa réponse",
   dlg_ph_me:"Écris un message — je le traduis en deux langues et l’ajoute à la conversation",
   dlg_ph_fr:n=>"Colle la réponse de ton ami — je la traduis en "+n,
@@ -2165,6 +2492,37 @@ es:{
   noshare:e=>"compartir no disponible: "+e,
   resetdone:"ajustes restablecidos",
   sfx_cut:"-sin-fondo", sfx_art:"-texto",
+  f2_close:"Cerrar", tk_save:"Guardar en Fotos",
+  stk_btn:"Sticker", stk_title:"Sticker para Telegram", stk_outline:"Contorno",
+  stk_white:"Blanco", stk_black:"Negro", stk_none:"Sin", stk_width:"Grosor", stk_shadow:"Sombra",
+  stk_chat:"así se verá en el chat", stk_save:"Guardar PNG", stk_bot:"Abrir @Stickers",
+  stk_how1:"Guarda la imagen", stk_how2:"En @Stickers: /newpack — pack nuevo, /addsticker — a uno existente",
+  stk_how3:"Envía la imagen como archivo: clip → Archivo",
+  stk_need:"primero quita el fondo — el sticker se hace con el recorte",
+  stk_ok:(w,h,kb)=>"sticker "+w+"×"+h+" · "+kb+" KB — vale para Telegram",
+  stk_big:kb=>"el sticker pesa "+kb+" KB — supera 512 KB, Telegram no lo aceptará. Quita la sombra o usa un contorno más fino",
+  qw_what:"Qué lleva el QR", qw_text:"Texto, enlace", qw_wifi:"Wi‑Fi", qw_contact:"Contacto",
+  wf_ssid:"Nombre de la red", wf_pass:"Contraseña", wf_show:"Mostrar contraseña", wf_sec:"Seguridad",
+  wf_wpa:"WPA / WPA2 / WPA3", wf_wep:"WEP (antigua)", wf_open:"Sin contraseña",
+  wf_tip:"La contraseña no se guarda ni se envía a ningún sitio. Los invitados apuntan la cámara al código y el móvil se conecta.",
+  wf_need:"escribe el nombre de la red Wi‑Fi",
+  wf_done:s=>"QR de Wi‑Fi «"+s+"» listo — apunta la cámara y el móvil se conecta solo",
+  wf_short:"la contraseña tiene menos de 8 caracteres — en WPA no puede ser, revísala",
+  wf_card:"Apunta la cámara para conectarte",
+  ct_name:"Nombre", ct_tel:"Teléfono", ct_mail:"Correo",
+  ct_need:"escribe un nombre o un teléfono",
+  ct_done:s=>"tarjeta QR «"+s+"» lista — la cámara ofrecerá guardar el contacto",
+  ct_card:"Apunta la cámara para guardar el contacto",
+  cln_btn:"Foto limpia", cln_title:"Foto limpia", cln_inside:"Qué esconde la foto",
+  cln_gps:"Lugar", cln_exact:"lugar exacto de la foto", cln_date:"Cuándo se hizo", cln_cam:"Móvil, cámara",
+  cln_shot:"Ajustes de la foto", cln_soft:"Programa", cln_drop:"se quita",
+  cln_more:n=>"y etiquetas técnicas: "+n,
+  cln_none:"No encontré metadatos — la foto ya está limpia. Igual puedes guardar una copia.",
+  cln_after:"Después: 0 etiquetas, la misma imagen",
+  cln_note:"Todo pasa en tu móvil, la foto no sale a ningún sitio. Si envías una foto «como archivo», las etiquetas van con ella — envía la copia limpia.",
+  cln_save:"Guardar copia limpia", cln_need:"primero elige una foto — te enseño lo que esconde",
+  cln_ok:(w,h,kb)=>"copia limpia "+w+"×"+h+" · "+kb+" KB — sin etiquetas",
+  cln_small:(w,h)=>"la foto es enorme — la reduje a "+w+"×"+h+" para que el móvil pueda con ella",
   dlg_tab_tr:"Traducir", dlg_tab:"Diálogo", dlg_me:"Escribo yo", dlg_friend:"Su respuesta",
   dlg_ph_me:"Escribe un mensaje — lo traduzco a dos idiomas y lo añado a la conversación",
   dlg_ph_fr:n=>"Pega la respuesta de tu amigo — la traduzco al "+n,
@@ -2643,6 +3001,7 @@ function applyLang(){
   el("mark").innerHTML=m[0]+"<span>"+m[1]+"</span>";
   document.querySelectorAll("[data-t]").forEach(n=>{n.textContent=t(n.dataset.t);});
   document.querySelectorAll("[data-t-ph]").forEach(n=>{n.placeholder=t(n.dataset.tPh);});
+  document.querySelectorAll("[data-t-al]").forEach(n=>{n.setAttribute("aria-label",t(n.dataset.tAl));});
   const tq=el("tipQrBlocks"); if(tq) tq.textContent=t("qr_blockstip");
   fillLangs();
   el("trOut").dataset.empty=t("tr_empty");
@@ -4799,9 +5158,445 @@ function tkClose(){
 el("tkFull").addEventListener("click",tkOpen);
 el("tkUndo").addEventListener("click",tkRestore);
 el("tkvClose").addEventListener("click",tkClose);
-document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&tkIsOpen()){ e.preventDefault(); tkClose(); } });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&tkIsOpen()&&!viewerOpen()&&!f2IsOpen()){ e.preventDefault(); tkClose(); } });
 
 function featLang(){ dlgUI(); if(S.tkUndo) el("tkUndo").textContent=tf("tk_undo",S.tkUndo.n+1); }
+
+/* ══════════════════════ вторая пачка: общие окна и «сохранить в Фото» ══════════════════════
+   Окна (стикер и др.) лежат стопкой: «Назад» в Telegram и Esc закрывают верхнее. */
+const F2={stack:[]}, F2_CLOSE={};
+const isTouch=(()=>{ try{ return matchMedia("(pointer:coarse)").matches; }catch(_){ return false; } })();
+function f2Open(id){
+  const n=el(id); if(!n.hidden) return;
+  n.hidden=false; F2.stack.push(id); n.scrollTop=0;
+  if(window.__tgSync) window.__tgSync();
+}
+function f2Hide(id){
+  const n=el(id); if(n.hidden) return;
+  n.hidden=true; F2.stack=F2.stack.filter(x=>x!==id);
+  if(window.__tgSync) window.__tgSync();
+}
+function f2IsOpen(){ return F2.stack.length>0; }
+function f2Back(){
+  const id=F2.stack[F2.stack.length-1]; if(!id) return false;
+  (F2_CLOSE[id]||(()=>f2Hide(id)))(); return true;
+}
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&!viewerOpen()&&f2IsOpen()){ e.preventDefault(); f2Back(); }
+});
+const blobOf=(c,type,q)=>new Promise(r=>c.toBlob(r,type||"image/png",q));
+/* Отдать картинку человеку так, чтобы она попала в Фото:
+   Telegram и встроенные браузеры — показать и «сохранить долгим нажатием»;
+   телефон в браузере — системное меню «Поделиться» → «Сохранить изображение»;
+   компьютер — обычный файл. */
+async function f2Give(blob,name){
+  if(inApp){ viewImage(blob); return "view"; }
+  const file=new File([blob],name,{type:blob.type||"image/png"});
+  if(isTouch&&navigator.canShare&&navigator.share){
+    try{
+      if(navigator.canShare({files:[file]})){ await navigator.share({files:[file]}); return "share"; }
+    }catch(e){ if(e&&e.name==="AbortError") return "cancel"; }
+  }
+  try{
+    const u=URL.createObjectURL(blob), a=document.createElement("a");
+    a.href=u; a.download=name; a.rel="noopener";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(u),8000);
+  }catch(_){}
+  if(inFrame){ viewImage(blob); return "view"; }
+  return "file";
+}
+
+/* ══════════════════════ билет: сохранить картинкой в Фото ══════════════════════
+   В самой Проявочной код по-прежнему стирается при закрытии — картинка остаётся только там,
+   куда человек сам её сохранил. */
+function tkPng(tk){
+  const c=tkCode(tk), cv=document.createElement("canvas"), g=cv.getContext("2d");
+  if(c.qr){
+    const n=c.qr.size, Q=4, mod=Math.max(8,Math.round(1024/(n+Q*2))), px=mod*(n+Q*2);
+    cv.width=px; cv.height=px; g.fillStyle="#FFFFFF"; g.fillRect(0,0,px,px); g.fillStyle="#000000";
+    for(let y=0;y<n;y++) for(let x=0;x<n;x++) if(c.qr.grid[y][x]) g.fillRect((Q+x)*mod,(Q+y)*mod,mod,mod);
+    return cv;
+  }
+  if(c.bars&&c.bars.length){
+    const maxBits=Math.max.apply(null,c.bars.map(b=>b.bits.length));
+    const mod=Math.max(3,Math.round(1200/(maxBits+20))), bw=mod*(maxBits+20);
+    const barH=Math.round(bw*0.3), lab=mod*7, gap=Math.round(barH*0.22);
+    const H=c.bars.length*(barH+lab)+(c.bars.length+1)*gap;
+    cv.width=bw; cv.height=H; g.fillStyle="#FFFFFF"; g.fillRect(0,0,bw,H); g.fillStyle="#000000";
+    g.font=Math.round(lab*0.8)+"px "+FONT; g.textAlign="center"; g.textBaseline="top";
+    let y=gap;
+    c.bars.forEach(b=>{
+      const x0=Math.floor((bw-b.bits.length*mod)/2);
+      for(let i=0;i<b.bits.length;i++) if(b.bits[i]==="1") g.fillRect(x0+i*mod,y,mod,barH);
+      g.fillText(b.txt,bw/2,y+barH+3); y+=barH+lab+gap;
+    });
+    return cv;
+  }
+  return null;
+}
+el("tkvSave").addEventListener("click",async()=>{
+  const tk=tkCurrent(); if(!tk) return;
+  const cv=tkPng(tk); if(!cv) return;
+  const blob=await blobOf(cv); cv.width=1; cv.height=1;
+  fbuzz("light");
+  await f2Give(blob, tk.kind==="bar"?"ticket-barcode.png":"ticket-qr.png");
+});
+
+/* ══════════════════════ стикер из вырезанного ══════════════════════
+   Обрезаем по краям, вписываем в 512 px по длинной стороне (так требует Telegram),
+   обводка — силуэт, размноженный по кругу; тень — под обводкой. */
+const STK={color:"#FFFFFF",w:10,shadow:true,src:null};
+function stkHasCut(){
+  if(!S.img||!S.mask) return false;
+  const m=S.mask; let n=0, k=0;
+  for(let i=0;i<m.length;i+=7){ k++; if(m[i]<128) n++; }
+  return n>k*0.01;
+}
+function stkSource(){
+  const c=document.createElement("canvas"), bg=S.bg; S.bg="none";
+  try{ composeCut(c); } finally { S.bg=bg; }
+  const W=c.width, H=c.height, d=c.getContext("2d",{willReadFrequently:true}).getImageData(0,0,W,H).data;
+  let x0=W,y0=H,x1=-1,y1=-1;
+  for(let y=0;y<H;y++) for(let x=0,p=y*W*4+3;x<W;x++,p+=4) if(d[p]>12){ if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; }
+  if(x1<0){ c.width=1; c.height=1; return null; }
+  const out=document.createElement("canvas"); out.width=x1-x0+1; out.height=y1-y0+1;
+  out.getContext("2d").drawImage(c,-x0,-y0); c.width=1; c.height=1;
+  return out;
+}
+function stkRender(out){
+  const src=STK.src, R=STK.color?STK.w:0, sh=STK.shadow?10:0, pad=R+sh+4, inner=512-2*pad;
+  let sw,shh;
+  if(src.width>=src.height){ sw=inner; shh=Math.max(1,Math.round(src.height*inner/src.width)); }
+  else { shh=inner; sw=Math.max(1,Math.round(src.width*inner/src.height)); }
+  const W=sw+2*pad, H=shh+2*pad;
+  out.width=W; out.height=H;
+  const g=out.getContext("2d"); g.clearRect(0,0,W,H);
+  const lay=document.createElement("canvas"); lay.width=W; lay.height=H;
+  const lg=lay.getContext("2d"); lg.imageSmoothingQuality="high"; lg.drawImage(src,pad,pad,sw,shh);
+  const shadowOn=()=>{ g.shadowColor="rgba(0,0,0,.38)"; g.shadowBlur=sh; g.shadowOffsetY=Math.round(sh*0.35); };
+  const shadowOff=()=>{ g.shadowColor="transparent"; g.shadowBlur=0; g.shadowOffsetY=0; };
+  if(R>0){
+    const sil=document.createElement("canvas"); sil.width=W; sil.height=H;
+    const s2=sil.getContext("2d"); s2.drawImage(lay,0,0);
+    s2.globalCompositeOperation="source-in"; s2.fillStyle=STK.color; s2.fillRect(0,0,W,H);
+    const ol=document.createElement("canvas"); ol.width=W; ol.height=H;
+    const og=ol.getContext("2d",{willReadFrequently:true});
+    [R,R*0.66,R*0.33].forEach(rr=>{
+      const n=Math.max(12,Math.ceil(2*Math.PI*rr/1.5));
+      for(let i=0;i<n;i++){ const a=i/n*2*Math.PI; og.drawImage(sil,Math.cos(a)*rr,Math.sin(a)*rr); }
+    });
+    const od=og.getImageData(0,0,W,H), a=od.data;
+    for(let p=3;p<a.length;p+=4){ const v=a[p]; a[p]=v>100?255:Math.round(v*2.55); }
+    og.putImageData(od,0,0);
+    if(sh) shadowOn();
+    g.drawImage(ol,0,0); shadowOff();
+    g.drawImage(lay,0,0);
+    sil.width=1; ol.width=1;
+  }else{
+    if(sh) shadowOn();
+    g.drawImage(lay,0,0); shadowOff();
+  }
+  lay.width=1;
+  return {w:W,h:H};
+}
+function stkUI(){
+  document.querySelectorAll("#stkCol button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.c===STK.color)));
+  el("stkW").value=STK.w; el("stkWv").textContent=STK.w;
+  el("stkW").disabled=!STK.color; el("stkWrow").style.opacity=STK.color?"":"0.45";
+  el("stkSh").setAttribute("aria-pressed",String(STK.shadow));
+}
+let stkRaf=0;
+function stkDraw(){
+  cancelAnimationFrame(stkRaf);
+  stkRaf=requestAnimationFrame(()=>{ if(STK.src) stkRender(el("stkCv")); });
+}
+function stkOpen(){
+  if(!stkHasCut()){ say("stk_need",null,"bad"); fbuzz("light"); return; }
+  STK.src=stkSource();
+  if(!STK.src){ say("stk_need",null,"bad"); return; }
+  el("stkInfo").textContent=""; el("stkInfo").className="f2-info";
+  f2Open("stkView"); stkUI(); stkDraw(); fbuzz("light");
+}
+F2_CLOSE.stkView=()=>{ f2Hide("stkView"); STK.src=null; const c=el("stkCv"); c.width=1; c.height=1; };
+el("tStk").addEventListener("click",stkOpen);
+el("stkX").addEventListener("click",()=>F2_CLOSE.stkView());
+document.querySelectorAll("#stkCol button").forEach(b=>b.addEventListener("click",()=>{
+  STK.color=b.dataset.c; stkUI(); stkDraw(); fbuzz("light");
+}));
+el("stkW").addEventListener("input",()=>{ STK.w=+el("stkW").value; el("stkWv").textContent=STK.w; stkDraw(); });
+el("stkSh").addEventListener("click",()=>{ STK.shadow=!STK.shadow; stkUI(); stkDraw(); fbuzz("light"); });
+el("stkSave").addEventListener("click",async()=>{
+  if(!STK.src) return;
+  const c=document.createElement("canvas"), sz=stkRender(c);
+  let blob=await blobOf(c,"image/png");
+  if(blob.size>512000){                          // Telegram берёт до 512 КБ — пробуем WebP
+    const w=await blobOf(c,"image/webp",0.92);
+    if(w&&w.type==="image/webp"&&w.size<blob.size) blob=w;
+  }
+  c.width=1; c.height=1;
+  const kb=Math.round(blob.size/1024), big=blob.size>512000;
+  el("stkInfo").textContent=big?tf("stk_big",kb):tf("stk_ok",sz.w,sz.h,kb);
+  el("stkInfo").className="f2-info"+(big?" bad":"");
+  fbuzz("medium");
+  await f2Give(blob,(S.name||"photo")+"-sticker."+(blob.type==="image/webp"?"webp":"png"));
+});
+el("stkBot").addEventListener("click",()=>{
+  const u="https://t.me/Stickers", tg=window.Telegram&&window.Telegram.WebApp;
+  try{ if(tg&&tg.initData&&tg.openTelegramLink){ tg.openTelegramLink(u); return; } }catch(_){}
+  window.open(u,"_blank","noopener");
+});
+
+/* ══════════════════════ QR: Wi‑Fi и контакт ══════════════════════
+   Поля складываются в строку для QR (WIFI:… или vCard) прямо в qrText — так работают
+   и «На весь экран», и стирание. Пароль нигде не хранится; при стирании чистятся и поля. */
+S.qrWhat="text";
+const QW_F=["wfSsid","wfPass","ctName","ctTel","ctMail"];
+let qwLast="", qwTimer=0;
+F2.qwUndo=null;
+function qwUI(){
+  const qrTab=S.tab==="qr", bar=el("codeKind").value==="bar", w=bar?"text":S.qrWhat;
+  document.querySelectorAll(".f2q").forEach(n=>{ const q=n.dataset.q; n.hidden=!qrTab||(q==="qr"?bar:q!==w); });
+  el("qrText").closest(".fld").hidden = !qrTab || w!=="text";
+  el("wfPassFld").hidden = !qrTab || w!=="wifi" || el("wfSec").value==="nopass";
+  document.querySelectorAll("#qwSeg button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.w===S.qrWhat)));
+}
+const wfEsc=s=>String(s).replace(/([\;,:"])/g,"\\$1");
+const vcEsc=s=>String(s).replace(/([\;,])/g,"\\$1").replace(/\r?\n/g,"\\n");
+function qwPayload(){
+  if(S.qrWhat==="wifi"){
+    const ssid=el("wfSsid").value, sec=el("wfSec").value, pw=el("wfPass").value;
+    if(!ssid.trim()) return "";
+    return "WIFI:T:"+sec+";S:"+wfEsc(ssid)+";"+(sec!=="nopass"?"P:"+wfEsc(pw)+";":"")+";";
+  }
+  if(S.qrWhat==="contact"){
+    const n=el("ctName").value.trim().replace(/\s+/g," "), tel=el("ctTel").value.trim(), m=el("ctMail").value.trim();
+    if(!n&&!tel) return "";
+    const w=n.split(" ").filter(Boolean), first=w[0]||"", last=w.slice(1).join(" ");
+    const L=["BEGIN:VCARD","VERSION:3.0","N:"+vcEsc(last)+";"+vcEsc(first)+";;;","FN:"+vcEsc(n||tel)];
+    if(tel) L.push("TEL;TYPE=CELL:"+tel.replace(/[^\d+]/g,""));
+    if(m) L.push("EMAIL:"+vcEsc(m));
+    L.push("END:VCARD");
+    return L.join("\r\n");
+  }
+  return null;
+}
+function qwBuild(){
+  const pl=qwPayload();
+  if(pl===null) return;
+  /* однострочное поле съедает переносы строк визитки — сами байты кладём как «прочитанные с фото»:
+     buildQr, «На весь экран» и «Вернуть» берут именно их */
+  el("qrText").value=pl; qwLast=el("qrText").value;
+  S.scanBytes=pl?new TextEncoder().encode(pl):null; S.scanText=pl?qwLast:null;
+  if(!pl){ S.qr=null; S.bars=null; drawQr(); tkSync(); say(S.qrWhat==="wifi"?"wf_need":"ct_need",null,"bad"); return; }
+  buildQr();
+  if(!S.qr) return;
+  if(S.qrWhat==="wifi"){
+    const sec=el("wfSec").value, pw=el("wfPass").value;
+    if(sec!=="nopass"&&pw.length<8) say("wf_short",null,"bad");
+    else say("wf_done",[el("wfSsid").value.trim()],"good");
+  }else say("ct_done",[el("ctName").value.trim()||el("ctTel").value.trim()],"good");
+}
+document.querySelectorAll("#qwSeg button").forEach(b=>b.addEventListener("click",()=>{
+  const w=b.dataset.w; if(w===S.qrWhat) return;
+  const was=S.qrWhat; S.qrWhat=w; qwUI(); fbuzz("light");
+  if(w==="text"){
+    if(was!=="text"&&el("qrText").value===qwLast){ el("qrText").value=""; S.scanBytes=null; S.scanText=null; }
+    qwLast=""; buildQr();
+  }else qwBuild();
+}));
+QW_F.forEach(id=>el(id).addEventListener("input",()=>{ clearTimeout(qwTimer); qwTimer=setTimeout(qwBuild,250); }));
+el("wfSec").addEventListener("change",()=>{ qwUI(); qwBuild(); });
+el("wfEye").addEventListener("click",()=>{
+  const on=el("wfEye").getAttribute("aria-pressed")!=="true";
+  el("wfEye").setAttribute("aria-pressed",String(on)); el("wfPass").classList.toggle("masked",!on);
+});
+el("codeKind").addEventListener("change",()=>{
+  if(el("codeKind").value==="bar"&&S.qrWhat!=="text"){
+    if(el("qrText").value===qwLast){ el("qrText").value=""; S.scanBytes=null; S.scanText=null; }
+    S.qrWhat="text"; qwLast=""; buildQr();
+  }
+  qwUI();
+});
+{ const _st=setTab; setTab=function(tab){ _st(tab); qwUI(); }; }
+/* стирание билета чистит и поля Wi‑Fi/контакта; «Вернуть» за 10 секунд возвращает их из памяти */
+{ const _w=tkWipe; tkWipe=function(){
+    const keep={what:S.qrWhat, f:QW_F.map(id=>el(id).value), sec:el("wfSec").value};
+    _w();
+    QW_F.forEach(id=>{ el(id).value=""; });
+    qwLast="";
+    F2.qwUndo=keep.what!=="text"?keep:null;
+    clearTimeout(F2.qwUndoT); F2.qwUndoT=setTimeout(()=>{ F2.qwUndo=null; },12000);
+  }; }
+el("tkUndo").addEventListener("click",()=>{        // срабатывает после штатного «Вернуть»
+  const k=F2.qwUndo; F2.qwUndo=null; if(!k) return;
+  S.qrWhat=k.what; QW_F.forEach((id,i)=>{ el(id).value=k.f[i]; }); el("wfSec").value=k.sec;
+  qwUI(); qwBuild();
+});
+/* PNG Wi‑Fi/визитки — карточка: код и подпись (пароль в подпись не пишем) */
+{ const _pb=pngBlob; pngBlob=function(){
+    if(!(S.tab==="qr"&&S.qr&&!S.bars&&(S.qrWhat==="wifi"||S.qrWhat==="contact"))) return _pb();
+    const n=S.qr.size, Q=4, mod=Math.max(4,Math.round(S.quality/(n+Q*2)*SIZEK[S.codeSize])), px=(n+Q*2)*mod;
+    const cap=Math.round(px*0.2), off=document.createElement("canvas"); off.width=px; off.height=px+cap;
+    const g=off.getContext("2d");
+    g.fillStyle="#FFFFFF"; g.fillRect(0,0,px,px+cap); g.fillStyle="#000000";
+    for(let y=0;y<n;y++) for(let x=0;x<n;x++) if(S.qr.grid[y][x]) g.fillRect((Q+x)*mod,(Q+y)*mod,mod,mod);
+    const head=S.qrWhat==="wifi" ? t("qw_wifi")+" · "+el("wfSsid").value.trim() : (el("ctName").value.trim()||el("ctTel").value.trim());
+    const fit=(s,f)=>{ g.font=f; while(s.length>1&&g.measureText(s).width>px*0.9) s=s.slice(0,-2)+"…"; return s; };
+    g.textAlign="center"; g.textBaseline="middle"; g.fillStyle="#14100E";
+    const f1="700 "+Math.round(px*0.058)+"px "+FONT, f2="400 "+Math.round(px*0.036)+"px "+FONT;
+    g.fillText(fit(head,f1),px/2,px-Math.round(Q*mod*0.35)+cap*0.32); g.font=f1;
+    g.fillStyle="#5A4A3E"; g.fillText(fit(t(S.qrWhat==="wifi"?"wf_card":"ct_card"),f2),px/2,px-Math.round(Q*mod*0.35)+cap*0.7);
+    return new Promise(r=>off.toBlob(b=>r({blob:b,size:{w:off.width,h:off.height}}),"image/png"));
+  }; }
+
+/* ══════════════════════ чистое фото: показать и убрать метки (EXIF) ══════════════════════
+   Читаем метки прямо из файла (JPEG, PNG, WebP), показываем, что там, и пересохраняем картинку
+   через холст — у холста меток нет вообще. Ничего не уходит в сеть. */
+F2.file=null; F2.meta=null; F2.metaSeq=0;
+function exifFind(u,dv){
+  if(u[0]===0xFF&&u[1]===0xD8){                                       // JPEG: APP1 «Exif\0\0»
+    let p=2;
+    while(p+10<u.length){
+      if(u[p]!==0xFF){ p++; continue; }
+      const m=u[p+1]; if(m===0xD8||(m>=0xD0&&m<=0xD7)||m===0x01||m===0xFF){ p+=m===0xFF?1:2; continue; }
+      if(m===0xDA||m===0xD9) break;
+      const len=dv.getUint16(p+2);
+      if(m===0xE1&&u[p+4]===0x45&&u[p+5]===0x78&&u[p+6]===0x69&&u[p+7]===0x66&&u[p+8]===0&&u[p+9]===0)
+        return {off:p+10,end:Math.min(u.length,p+2+len)};
+      p+=2+len;
+    }
+    return null;
+  }
+  if(u[0]===0x89&&u[1]===0x50&&u[2]===0x4E&&u[3]===0x47){              // PNG: eXIf
+    let p=8;
+    while(p+12<=u.length){
+      const len=dv.getUint32(p), ty=String.fromCharCode(u[p+4],u[p+5],u[p+6],u[p+7]);
+      if(ty==="eXIf") return {off:p+8,end:Math.min(u.length,p+8+len)};
+      if(ty==="IEND") break; p+=12+len;
+    }
+    return null;
+  }
+  if(u[0]===0x52&&u[1]===0x49&&u[2]===0x46&&u[3]===0x46&&u[8]===0x57&&u[9]===0x45&&u[10]===0x42&&u[11]===0x50){   // WebP: EXIF
+    let p=12;
+    while(p+8<=u.length){
+      const ty=String.fromCharCode(u[p],u[p+1],u[p+2],u[p+3]), len=dv.getUint32(p+4,true);
+      if(ty==="EXIF"){ let o=p+8; if(u[o]===0x45&&u[o+1]===0x78) o+=6; return {off:o,end:Math.min(u.length,p+8+len)}; }
+      p+=8+len+(len&1);
+    }
+  }
+  return null;
+}
+function exifRead(buf){
+  const u=new Uint8Array(buf), dv=new DataView(buf), loc=exifFind(u,dv);
+  if(!loc||loc.off+8>loc.end) return null;
+  const b=loc.off, E=loc.end, le=dv.getUint16(b)===0x4949;
+  const ok=(o,n)=>o>=0&&b+o+n<=E;
+  const u16=o=>dv.getUint16(b+o,le), u32=o=>dv.getUint32(b+o,le), s32=o=>dv.getInt32(b+o,le);
+  if(!ok(0,8)||u16(2)!==42) return null;
+  const SZ={1:1,2:1,3:2,4:4,5:8,7:1,9:4,10:8};
+  const ifd=o=>{ const r={}; if(!o||!ok(o,2)) return r; const n=Math.min(u16(o),500);
+    for(let i=0;i<n;i++){ const e=o+2+i*12; if(!ok(e,12)) break;
+      const tag=u16(e), type=u16(e+2), cnt=u32(e+4), sz=(SZ[type]||1)*cnt, vo=sz<=4?e+8:u32(e+8);
+      if(ok(vo,Math.min(sz,64))) r[tag]={type,cnt,vo}; }
+    return r; };
+  const val=f=>{ if(!f) return null; const {type,cnt,vo}=f;
+    try{
+      if(type===2){ let s=""; for(let i=0;i<cnt&&i<200;i++){ const c=dv.getUint8(b+vo+i); if(!c) break; s+=String.fromCharCode(c); } return s.trim(); }
+      if(type===3) return cnt===1?u16(vo):Array.from({length:Math.min(cnt,8)},(_,i)=>u16(vo+i*2));
+      if(type===4) return cnt===1?u32(vo):Array.from({length:Math.min(cnt,8)},(_,i)=>u32(vo+i*4));
+      if(type===5||type===10){ const r=i=>{ const n=type===5?u32(vo+i*8):s32(vo+i*8), d=type===5?u32(vo+i*8+4):s32(vo+i*8+4); return d?n/d:0; };
+        return cnt===1?r(0):Array.from({length:Math.min(cnt,8)},(_,i)=>r(i)); }
+    }catch(_){}
+    return null; };
+  const i0=ifd(u32(4)), ex=i0[0x8769]?ifd(val(i0[0x8769])):{}, gp=i0[0x8825]?ifd(val(i0[0x8825])):{};
+  const m={rows:[], total:Object.keys(i0).length+Object.keys(ex).length+Object.keys(gp).length};
+  const la=val(gp[2]), lo=val(gp[4]);
+  if(Array.isArray(la)&&Array.isArray(lo)&&la.length===3&&lo.length===3){
+    let lat=la[0]+la[1]/60+la[2]/3600, lon=lo[0]+lo[1]/60+lo[2]/3600;
+    if(val(gp[1])==="S") lat=-lat; if(val(gp[3])==="W") lon=-lon;
+    if(lat||lon) m.gps=[lat,lon];
+  }
+  const dt=val(ex[0x9003])||val(i0[0x0132]);
+  const dm=/^(\d{4}):(\d\d):(\d\d) (\d\d):(\d\d)/.exec(dt||"");
+  if(dm) m.date=new Date(+dm[1],dm[2]-1,+dm[3],+dm[4],+dm[5]);
+  const make=val(i0[0x010F]), model=val(i0[0x0110]), lens=val(ex[0xA434]);
+  const cam=[model&&make&&model.toLowerCase().indexOf(make.toLowerCase())!==0?make+" "+model:(model||make), lens&&lens!==model?lens:""].filter(Boolean).join(" · ");
+  if(cam) m.cam=cam;
+  const fn=val(ex[0x829D]), et=val(ex[0x829A]), iso=val(ex[0x8827]), fl=val(ex[0x920A]), sh=[];
+  if(fn) sh.push("f/"+(+fn.toFixed(1)));
+  if(et) sh.push(et>=1?(+et.toFixed(1))+" s":"1/"+Math.round(1/et)+" s");
+  if(iso) sh.push("ISO "+(Array.isArray(iso)?iso[0]:iso));
+  if(fl) sh.push((+fl.toFixed(1))+" mm");
+  if(sh.length) m.shot=sh.join(" · ");
+  const sw=val(i0[0x0131]); if(sw) m.soft=sw;
+  return m;
+}
+async function metaOf(f){
+  try{ return exifRead(await f.slice(0,Math.min(f.size,4*1024*1024)).arrayBuffer()); }catch(_){ return null; }
+}
+function clnDot(){
+  const g=!!(F2.meta&&F2.meta.gps);
+  el("tClean").classList.toggle("dot",g);
+}
+{ const _ld=load; load=function(f){
+    F2.file=f||null; F2.meta=null; clnDot();
+    const seq=++F2.metaSeq;
+    if(f) metaOf(f).then(m=>{ if(seq!==F2.metaSeq) return; F2.meta=m; clnDot(); });
+    return _ld(f);
+  }; }
+const clnFmtDate=d=>{ try{ return d.toLocaleString(t("htmlLang"),{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}); }catch(_){ return d.toISOString().slice(0,16).replace("T"," "); } };
+function clnRender(){
+  const m=F2.meta, list=el("clnList"); list.textContent="";
+  const rows=[];
+  if(m){
+    if(m.gps) rows.push(["cln_gps",m.gps[0].toFixed(5)+", "+m.gps[1].toFixed(5)+" · "+t("cln_exact"),1]);
+    if(m.date) rows.push(["cln_date",clnFmtDate(m.date)]);
+    if(m.cam) rows.push(["cln_cam",m.cam]);
+    if(m.shot) rows.push(["cln_shot",m.shot]);
+    if(m.soft) rows.push(["cln_soft",m.soft]);
+  }
+  rows.forEach(r=>{
+    const row=document.createElement("div"); row.className="cln-row"+(r[2]?" hot":"");
+    const tx=document.createElement("div"), k=document.createElement("span"), v=document.createElement("b"), tag=document.createElement("i");
+    k.textContent=t(r[0]); v.textContent=r[1]; tag.textContent=t("cln_drop");
+    tx.appendChild(k); tx.appendChild(v); row.appendChild(tx); row.appendChild(tag); list.appendChild(row);
+  });
+  const more=m?m.total-rows.length:0;
+  el("clnMore").hidden=!m||more<=0; el("clnMore").textContent=m?tf("cln_more",more):"";
+  el("clnNone").hidden=!!(m&&m.total);
+  el("clnAfter").hidden=!(m&&m.total);
+  el("clnPin").hidden=!(m&&m.gps);
+}
+function clnThumb(){
+  const c=el("clnCv"), im=S.img, k=Math.min(1,700/Math.max(im.naturalWidth,im.naturalHeight));
+  c.width=Math.max(1,Math.round(im.naturalWidth*k)); c.height=Math.max(1,Math.round(im.naturalHeight*k));
+  c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+}
+function clnOpen(){
+  if(!S.img||S.isSample||!F2.file){ say("cln_need",null,"bad"); fbuzz("light"); return; }
+  el("clnInfo").textContent=""; el("clnInfo").className="f2-info";
+  f2Open("clnView"); clnThumb(); clnRender(); fbuzz("light");
+  if(!F2.meta&&F2.file){ const seq=F2.metaSeq; metaOf(F2.file).then(m=>{ if(seq===F2.metaSeq){ F2.meta=m; clnRender(); clnDot(); } }); }
+}
+F2_CLOSE.clnView=()=>{ f2Hide("clnView"); const c=el("clnCv"); c.width=1; c.height=1; };
+el("tClean").addEventListener("click",clnOpen);
+el("clnX").addEventListener("click",()=>F2_CLOSE.clnView());
+el("clnClose").addEventListener("click",()=>F2_CLOSE.clnView());
+el("clnSave").addEventListener("click",async()=>{
+  if(!S.img) return;
+  const im=S.img, W0=im.naturalWidth, H0=im.naturalHeight, k=Math.min(1,Math.sqrt(16e6/(W0*H0)));
+  const W=Math.max(1,Math.round(W0*k)), H=Math.max(1,Math.round(H0*k));
+  const c=document.createElement("canvas"); c.width=W; c.height=H;
+  const png=F2.file&&/png|webp|gif/i.test(F2.file.type||"");
+  const g=c.getContext("2d"); if(!png){ g.fillStyle="#FFFFFF"; g.fillRect(0,0,W,H); }
+  g.drawImage(im,0,0,W,H);
+  const blob=await blobOf(c,png?"image/png":"image/jpeg",0.92); c.width=1; c.height=1;
+  el("clnInfo").textContent=k<1?tf("cln_small",W,H):tf("cln_ok",W,H,Math.round(blob.size/1024));
+  el("clnInfo").className="f2-info";
+  fbuzz("medium");
+  await f2Give(blob,(S.name||"photo")+"-clean."+(png?"png":"jpg"));
+});
 
 applyLang();
 setTab("cut");
@@ -4824,12 +5619,13 @@ say("ready");
   syncH(); tg.onEvent("viewportChanged", syncH);
   const back=tg.BackButton;
   window.__tgSync=()=>{
-    try{ (viewerOpen()||guideIsOpen()||tkIsOpen()||S.tab!=="cut") ? back.show() : back.hide(); }catch(e){}
+    try{ (viewerOpen()||guideIsOpen()||tkIsOpen()||f2IsOpen()||S.tab!=="cut") ? back.show() : back.hide(); }catch(e){}
   };
   try{ back.onClick(()=>{
+    if(viewerOpen()){ el("vclose").click(); return; }       // картинка — самая верхняя
+    if(f2IsOpen()){ f2Back(); return; }
     if(tkIsOpen()){ tkClose(); return; }
     if(guideIsOpen()){ closeGuide(); return; }
-    if(viewerOpen()){ el("vclose").click(); return; }
     if(!el("saveMenu").hidden){ closeSaveMenu(); return; }
     setTab("cut");
   }); }catch(e){}
