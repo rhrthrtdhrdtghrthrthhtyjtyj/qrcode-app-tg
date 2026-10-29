@@ -943,6 +943,101 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 .cln-ok svg{width:16px;height:16px;flex:0 0 auto}
 .cln-ok[hidden],.cln-more[hidden],.f2-note[hidden]{display:none}
 .f2-note{margin:0;font-size:11px;line-height:1.55;color:var(--muted)}
+
+/* перевод: вслух и показать собеседнику */
+.trp-acts{display:grid;grid-template-columns:auto 1fr;gap:8px}
+.trp.dlgmode .trp-acts{display:none}
+.trp-acts button{min-height:42px;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 14px;
+  border:1px solid var(--edge);border-radius:3px;background:#191211;color:var(--paper);font:11px var(--ui);
+  letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.trp-acts button[hidden]{display:none}
+.trp-acts button:disabled{opacity:.45;cursor:default}
+.trp-acts svg{width:17px;height:17px;color:var(--safelight);flex:0 0 auto}
+.trp-acts #trShow{border-color:var(--safelight)}
+.frv{position:fixed;left:0;right:0;top:0;height:var(--app-h,100dvh);z-index:26;background:#F4EEE2;color:#14100E;
+  display:flex;flex-direction:column;box-sizing:border-box}
+.frv[hidden]{display:none}
+.fr-top{flex:1 1 0;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:14px;overflow:hidden;
+  padding:22px 22px calc(18px + env(safe-area-inset-top,0px));transform:rotate(180deg);transition:transform .35s ease}
+.frv.up .fr-top{transform:none;padding:calc(18px + env(safe-area-inset-top,0px)) 22px 22px}
+.fr-head{display:flex;align-items:center;gap:10px}
+.fr-head .gm-flag{width:30px;height:20px;display:inline-flex;border-radius:2px;overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+.fr-head .gm-flag svg{width:100%;height:100%}
+.fr-head b{font:700 11px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:#6B5A4C}
+.fr-big{margin:0;font:700 38px/1.18 var(--ui);letter-spacing:-.01em;overflow-wrap:anywhere;white-space:pre-wrap}
+.fr-waverow{min-height:18px}
+.fr-wave{display:flex;align-items:center;gap:8px;color:#8C2A16;font:700 12px var(--ui)}
+.fr-wave[hidden]{display:none}
+.fr-wave i{display:inline-block;width:3px;height:14px;border-radius:2px;background:currentColor;animation:frw .9s ease-in-out infinite}
+.fr-wave i:nth-child(2){animation-delay:.15s}.fr-wave i:nth-child(3){animation-delay:.3s}.fr-wave i:nth-child(4){animation-delay:.45s}
+@keyframes frw{50%{transform:scaleY(.35)}}
+.fr-bar{flex:0 0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 14px;background:var(--ink)}
+.fr-bar button{min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  border:1px solid var(--edge);border-radius:3px;background:#191211;color:var(--paper);font:10px var(--ui);
+  letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.fr-bar button[hidden]{display:none}
+.fr-bar button.amber{background:var(--safelight);border-color:var(--safelight);color:#1A1109;font-weight:700}
+.fr-bar svg{width:20px;height:20px}
+.fr-me{flex:1 1 0;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:10px;background:#EDE6D8;
+  padding:16px 22px calc(18px + var(--bar))}
+.fr-langs{display:flex;gap:6px;flex-wrap:wrap}
+.fr-langs[hidden]{display:none}
+.fr-langs button{min-height:34px;padding:0 12px;border:1px solid #B9AC9C;border-radius:17px;background:transparent;color:#5E4E42;
+  font:11px var(--ui);cursor:pointer}
+.fr-langs button[aria-pressed=true]{background:#14100E;border-color:#14100E;color:#EDE6D8;font-weight:700}
+.fr-lbl{font:700 11px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:#6B5A4C}
+.fr-src{margin:0;font:700 20px/1.3 var(--ui);overflow-wrap:anywhere;white-space:pre-wrap}
+.fr-reply{margin-top:auto;min-height:48px;border:2px solid #14100E;border-radius:3px;background:transparent;color:#14100E;
+  font:700 11px var(--ui);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.fr-note{margin:0;font-size:11px;line-height:1.5;color:#5E4E42}
+
+/* красивый QR */
+.sq-sw{display:flex;gap:10px;flex-wrap:wrap}
+.sq-sw button{width:44px;height:44px;border-radius:50%;border:3px solid var(--tray);box-shadow:0 0 0 1px var(--edge);cursor:pointer}
+.sq-sw button[aria-pressed=true]{box-shadow:0 0 0 2px var(--safelight)}
+.sq-pick{display:flex;align-items:center;justify-content:center;min-height:46px;border:1px dashed var(--safelight);border-radius:3px;
+  color:var(--safelight);font:700 11px var(--ui);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+
+/* скан документа */
+.sc-ed{position:relative;flex:1 1 240px;min-height:200px;border:1px solid var(--edge);border-radius:3px;background:#0F0B0A;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none}
+.sc-ed canvas{display:block;touch-action:none}
+.sc-row{display:flex;gap:12px;align-items:stretch;flex:0 0 auto}
+.sc-res{flex:0 0 auto;width:118px;display:flex;flex-direction:column;gap:5px}
+.sc-res canvas{display:block;width:118px;height:150px;object-fit:contain;background:#0F0B0A;border-radius:2px}
+.sc-side{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:8px;padding-top:17px}
+.sc-side .f2-seg button{min-height:36px}
+.sc-side button.sc-b{min-height:40px;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--edge);
+  border-radius:3px;background:#191211;color:var(--paper);font:11px var(--ui);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.sc-side button.sc-add{border-style:dashed;border-color:var(--safelight);color:var(--safelight);font-weight:700}
+.sc-side svg{width:15px;height:15px}
+.sc-meta{font-size:10px;color:var(--muted)}
+.sc-new{display:flex;align-items:center;justify-content:center;min-height:40px;border:1px solid var(--edge);border-radius:3px;background:#191211;
+  color:var(--paper);font:11px var(--ui);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+
+/* текст с фото */
+.trp-photo{display:inline-flex;align-items:center;gap:6px;min-height:36px;margin-left:auto;padding:0 12px;border:1px solid var(--safelight);
+  border-radius:18px;color:var(--safelight);font:700 11px var(--ui);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.trp-photo svg{width:15px;height:15px}
+.oc-pic{position:relative;flex:1 1 200px;min-height:170px;border:1px solid var(--edge);border-radius:3px;background:#0F0B0A;
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.oc-pic canvas{display:block}
+.oc-langs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:0 0 auto;padding-bottom:2px}
+.oc-langs::-webkit-scrollbar{display:none}
+.oc-langs button{flex:0 0 auto;min-height:34px;padding:0 12px;border:1px solid var(--edge);border-radius:17px;background:#191211;
+  color:var(--muted);font:11px var(--ui);cursor:pointer}
+.oc-langs button[aria-pressed=true]{border-color:var(--safelight);color:#1A1109;background:var(--safelight);font-weight:700}
+.oc-bar{height:4px;border-radius:2px;background:#2A1F1A;overflow:hidden;flex:0 0 auto}
+.oc-bar[hidden]{display:none}
+.oc-bar i{display:block;height:100%;width:0;background:var(--safelight);transition:width .2s}
+.oc-list{display:flex;flex-direction:column;border:1px solid var(--edge);border-radius:3px;overflow:hidden;flex:0 0 auto}
+.oc-list:empty{display:none}
+.oc-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:8px 10px;background:#191211;font-size:12px;line-height:1.35}
+.oc-row+.oc-row{border-top:1px solid var(--edge)}
+.oc-row span{color:var(--muted);overflow-wrap:anywhere}
+.oc-row b{font-weight:400;overflow-wrap:anywhere}
+.f2-btns button:disabled{opacity:.45;cursor:default}
+.f2-btns button.flash{box-shadow:0 0 0 3px rgba(255,176,32,.45)}
 </style>
 </head>
 <body>
@@ -982,6 +1077,7 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
     <div class="xrow" role="group">
       <button type="button" class="xbtn" id="tStk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h11l5 5v11H4Z"></path><path d="M15 4v5h5"></path></svg><span data-t="stk_btn"></span></button>
       <button type="button" class="xbtn" id="tClean"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s6-5.6 6-10.5a6 6 0 0 0-12 0C6 15.4 12 21 12 21Z"></path><path d="M4 4l16 16"></path></svg><span data-t="cln_btn"></span></button>
+      <button type="button" class="xbtn" id="tScan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V4h4"></path><path d="M16 4h4v4"></path><path d="M20 16v4h-4"></path><path d="M8 20H4v-4"></path><path d="M8 12h8"></path></svg><span data-t="sc_btn"></span></button>
     </div>
   </div>
 </div>
@@ -1008,7 +1104,9 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
       </div>
     </div>
     <div class="trp-lbl"><span data-t="tr_src"></span>
+      <label class="trp-photo" for="ocFile" tabindex="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4Z"></path><circle cx="12" cy="13" r="3.5"></circle></svg><span data-t="oc_btn"></span></label>
       <button class="trp-x" id="trClear" aria-label="Clear">×</button></div>
+    <input type="file" id="ocFile" accept="image/*" hidden>
     <textarea id="trIn" rows="4" data-t-ph="tr_ph"></textarea>
     <div class="trp-tools">
       <button class="trp-chip wide" id="trOrig" aria-pressed="false" data-t="tr_orig"></button>
@@ -1020,6 +1118,10 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
     </div>
     <div class="trp-lbl" id="trResLbl"><span data-t="tr_res"></span><span class="trp-eng" id="trEng"></span></div>
     <div class="trp-out" id="trOut" role="button" tabindex="0" data-empty=""></div>
+    <div class="trp-acts">
+      <button type="button" id="trSay" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9Z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg><span data-t="fr_say"></span></button>
+      <button type="button" id="trShow" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5"></path><path d="M20 15v5h-5"></path><path d="M15 4h5v5"></path><path d="M9 20H4v-5"></path></svg><span data-t="fr_show"></span></button>
+    </div>
   </div>
 </div>
 
@@ -1193,9 +1295,42 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
     <select id="qrStyle">
       <option value="img" selected data-t="qr_img"></option>
       <option value="blocks" data-t="qr_blocks"></option>
+      <option value="styled" data-t="qr_styled"></option>
     </select>
     <p class="tip" id="tipQrBlocks" hidden></p>
     <p class="tip" id="tipBar" hidden></p>
+  </div>
+  <div class="fld f2s" data-grp="qr" data-s="all" hidden>
+    <div class="row-lbl"><span data-t="sq_color"></span></div>
+    <div class="sq-sw" id="sqCol" role="group"><button type="button" data-c="#16110F" style="background:#16110F" aria-pressed="true" data-t-al="sq_c0"></button><button type="button" data-c="#8C2A16" style="background:#8C2A16" aria-pressed="false" data-t-al="sq_c1"></button><button type="button" data-c="#1F4FBF" style="background:#1F4FBF" aria-pressed="false" data-t-al="sq_c2"></button><button type="button" data-c="#1E6B3A" style="background:#1E6B3A" aria-pressed="false" data-t-al="sq_c3"></button><button type="button" data-c="#5B2A86" style="background:#5B2A86" aria-pressed="false" data-t-al="sq_c4"></button></div>
+  </div>
+  <div class="fld f2s" data-grp="qr" data-s="all" hidden>
+    <div class="row-lbl"><span data-t="sq_dots"></span></div>
+    <div class="f2-seg" id="sqDots" role="group">
+      <button type="button" data-d="sq" aria-pressed="true" data-t="sq_sq"></button>
+      <button type="button" data-d="ci" aria-pressed="false" data-t="sq_ci"></button>
+      <button type="button" data-d="di" aria-pressed="false" data-t="sq_di"></button>
+    </div>
+  </div>
+  <div class="fld f2s" data-grp="qr" data-s="all" hidden>
+    <div class="row-lbl"><span data-t="sq_center"></span></div>
+    <div class="f2-seg" id="sqCenter" role="group">
+      <button type="button" data-m="none" aria-pressed="true" data-t="sq_none"></button>
+      <button type="button" data-m="letter" aria-pressed="false" data-t="sq_letter"></button>
+      <button type="button" data-m="pic" aria-pressed="false" data-t="sq_pic"></button>
+    </div>
+  </div>
+  <div class="fld f2s" data-grp="qr" data-s="letter" hidden>
+    <div class="row-lbl"><label for="sqLetter" data-t="sq_letter_lbl"></label></div>
+    <input type="text" id="sqLetter" maxlength="2" autocomplete="off" spellcheck="false" placeholder="A">
+  </div>
+  <div class="fld f2s" data-grp="qr" data-s="pic" hidden>
+    <label class="sq-pick" for="sqFile" tabindex="0" data-t="sq_pick"></label>
+    <input type="file" id="sqFile" accept="image/*" hidden>
+  </div>
+  <div class="fld f2s" data-grp="qr" data-s="all" hidden>
+    <div class="row-lbl"><label for="sqCap" data-t="sq_cap"></label></div>
+    <input type="text" id="sqCap" maxlength="60" autocomplete="off" data-t-ph="sq_cap_ph">
   </div>
 
   <!-- вкладка «Символы» -->
@@ -1343,6 +1478,70 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
   <div class="f2-btns">
     <button type="button" id="clnClose" data-t="f2_close"></button>
     <button type="button" class="amber" id="clnSave" data-t="cln_save"></button>
+  </div>
+</div>
+
+<div class="frv" id="frView" hidden role="dialog" aria-modal="true" aria-labelledby="frBig">
+  <section class="fr-top" id="frTop">
+    <div class="fr-head" id="frHead"><span id="frFlag"></span><b id="frLangName"></b></div>
+    <p class="fr-big" id="frBig"></p>
+    <div class="fr-waverow" id="frWaveRow"><div class="fr-wave" id="frWave" hidden><span aria-hidden="true"><i></i> <i></i> <i></i> <i></i></span><span data-t="fr_speaking"></span></div></div>
+  </section>
+  <div class="fr-bar">
+    <button type="button" class="amber" id="frSay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9Z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg><span data-t="fr_say"></span></button>
+    <button type="button" id="frFlip" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16"></path><path d="m3 8 4-4 4 4"></path><path d="M17 20V4"></path><path d="m13 16 4 4 4-4"></path></svg><span data-t="fr_flip"></span></button>
+    <button type="button" id="frX"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6 6 18"></path></svg><span data-t="f2_close"></span></button>
+  </div>
+  <section class="fr-me">
+    <div class="fr-langs" id="frLangs" role="group" hidden></div>
+    <span class="fr-lbl" data-t="fr_you"></span>
+    <p class="fr-src" id="frSrc"></p>
+    <button type="button" class="fr-reply" id="frReply" data-t="fr_reply"></button>
+    <p class="fr-note" data-t="fr_note"></p>
+  </section>
+</div>
+
+<div class="f2v" id="scView" hidden role="dialog" aria-modal="true" aria-labelledby="scTitle">
+  <div class="f2-head"><b id="scTitle" data-t="sc_title"></b>
+    <button type="button" class="f2-x" id="scX" data-t-al="f2_close">×</button></div>
+  <div class="f2-lbl"><span data-t="sc_drag"></span></div>
+  <div class="sc-ed" id="scEd"><canvas id="scCv" width="1" height="1"></canvas></div>
+  <div class="sc-row">
+    <div class="sc-res"><span class="f2-lbl"><span data-t="sc_result"></span></span><canvas id="scOut" width="1" height="1"></canvas></div>
+    <div class="sc-side">
+      <div class="f2-seg" id="scFlt" role="group">
+        <button type="button" data-f="bw" aria-pressed="true" data-t="sc_bw"></button>
+        <button type="button" data-f="gray" aria-pressed="false" data-t="sc_gray"></button>
+        <button type="button" data-f="color" aria-pressed="false" data-t="sc_color"></button>
+      </div>
+      <button type="button" class="sc-b" id="scRot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7"></path><path d="M20 4v5h-5"></path></svg><span data-t="sc_rot"></span></button>
+      <button type="button" class="sc-b sc-add" id="scAdd" data-t="sc_add"></button>
+      <span class="sc-meta" id="scPages"></span>
+    </div>
+  </div>
+  <label class="sc-new" for="scFile" tabindex="0" data-t="sc_new"></label>
+  <input type="file" id="scFile" accept="image/*" hidden>
+  <p class="f2-note" data-t="sc_note"></p>
+  <p class="f2-info" id="scInfo" aria-live="polite"></p>
+  <div class="f2-btns">
+    <button type="button" id="scPng" data-t="sc_png"></button>
+    <button type="button" class="amber" id="scPdfBtn" data-t="sc_pdf"></button>
+  </div>
+</div>
+
+<div class="f2v" id="ocView" hidden role="dialog" aria-modal="true" aria-labelledby="ocTitle">
+  <div class="f2-head"><b id="ocTitle" data-t="oc_title"></b>
+    <button type="button" class="f2-x" id="ocX" data-t-al="f2_close">×</button></div>
+  <div class="oc-pic" id="ocPic"><canvas id="ocCv" width="1" height="1"></canvas></div>
+  <div class="f2-lbl"><span data-t="oc_lang"></span></div>
+  <div class="oc-langs" id="ocLangs" role="group"></div>
+  <div class="oc-bar" id="ocBar" hidden><i></i></div>
+  <p class="f2-info" id="ocInfo" aria-live="polite"></p>
+  <div class="oc-list" id="ocList"></div>
+  <p class="f2-note" data-t="oc_note"></p>
+  <div class="f2-btns">
+    <button type="button" id="ocCopy" disabled data-t="oc_copy"></button>
+    <button type="button" class="amber" id="ocTo" disabled data-t="oc_to"></button>
   </div>
 </div>
 
@@ -1557,6 +1756,30 @@ ru:{
   cln_save:"Сохранить чистое", cln_need:"сначала выбери фото — покажу, что в нём спрятано",
   cln_ok:(w,h,kb)=>"чистая копия "+w+"×"+h+" · "+kb+" КБ — меток нет",
   cln_small:(w,h)=>"фото очень большое — уменьшил до "+w+"×"+h+", иначе телефон не справится",
+  fr_show:"Показать собеседнику", fr_say:"Вслух", fr_flip:"Перевернуть", fr_you:"Ты написал",
+  fr_reply:"Ответ собеседника →", fr_note:"Положи телефон между вами: верх читает собеседник, низ — ты.",
+  fr_speaking:"звучит…", fr_nosay:"на этом телефоне нет голоса для этого языка", fr_need:"сначала переведи текст",
+  qr_styled:"Красивый", sq_color:"Цвет", sq_dots:"Точки", sq_sq:"Квадрат", sq_ci:"Круг", sq_di:"Ромб",
+  sq_center:"В центре", sq_none:"Пусто", sq_letter:"Буква", sq_pic:"Картинка", sq_pick:"Выбрать картинку",
+  sq_letter_lbl:"Буква в центре", sq_cap:"Подпись под кодом", sq_cap_ph:"Сканируй — мой канал",
+  sq_c0:"Тёмный", sq_c1:"Бордовый", sq_c2:"Синий", sq_c3:"Зелёный", sq_c4:"Фиолетовый",
+  sq_ok:"красивый QR готов — проверил: сканер его читает",
+  sq_bad:"осторожно: такой QR может не читаться — выбери квадраты или убери картинку",
+  sq_lvl:"для середины включил запас прочности H — так код читается даже под картинкой",
+  sc_btn:"Скан", sc_title:"Скан документа", sc_drag:"Потяни за углы, если лист нашёлся криво", sc_result:"Результат",
+  sc_bw:"Ч/Б", sc_gray:"Серый", sc_color:"Цвет", sc_rot:"Повернуть", sc_add:"+ Ещё страница", sc_new:"Новое фото",
+  sc_pages:n=>"страниц: "+n+" · всё в один PDF", sc_pdf:"В PDF", sc_png:"Картинкой",
+  sc_note:"Справка, чек, договор — ровно и читаемо, как со сканера. Всё на телефоне, никуда не загружается.",
+  sc_found:"нашёл лист — проверь углы", sc_nofound:"лист не нашёлся сам — поставь углы руками",
+  sc_added:n=>"страница "+n+" готова — сними следующую",
+  sc_pdf_ok:(n,kb)=>"PDF: страниц "+n+" · "+kb+" КБ",
+  sc_pdf_tg:"PDF здесь сохранить не получилось — в Telegram так бывает. Сохрани страницы картинками или открой Проявочную на сайте",
+  oc_btn:"С фото", oc_title:"Текст с фото", oc_lang:"Язык на фото",
+  oc_load:p=>"скачиваю распознавание… "+p+"%", oc_read:p=>"читаю текст… "+p+"%", oc_tr:"перевожу…",
+  oc_done:n=>"нашёл строк: "+n, oc_none:"текста не нашёл — сними ближе и ровнее или выбери другой язык",
+  oc_fail:"не получилось скачать распознавание — проверь интернет",
+  oc_note:"Фото не уходит в интернет: текст распознаётся на телефоне, переводится только он. В первый раз скачаю около 6 МБ.",
+  oc_to:"В переводчик", oc_copy:"Копировать перевод",
   dlg_tab_tr:"Перевод", dlg_tab:"Диалог", dlg_me:"Я пишу", dlg_friend:"Ответ друга",
   dlg_ph_me:"Напиши сообщение — переведу на два языка и добавлю в переписку",
   dlg_ph_fr:n=>"Вставь ответ друга — переведу на "+n,
@@ -1748,6 +1971,30 @@ en:{
   cln_save:"Save clean copy", cln_need:"pick a photo first — I'll show what's hidden in it",
   cln_ok:(w,h,kb)=>"clean copy "+w+"×"+h+" · "+kb+" KB — no tags",
   cln_small:(w,h)=>"the photo is huge — scaled to "+w+"×"+h+" so the phone can handle it",
+  fr_show:"Show to the other person", fr_say:"Read aloud", fr_flip:"Flip", fr_you:"You wrote",
+  fr_reply:"Their reply →", fr_note:"Put the phone between you: the top is for them, the bottom is for you.",
+  fr_speaking:"speaking…", fr_nosay:"this phone has no voice for that language", fr_need:"translate something first",
+  qr_styled:"Styled", sq_color:"Color", sq_dots:"Dots", sq_sq:"Square", sq_ci:"Circle", sq_di:"Diamond",
+  sq_center:"Center", sq_none:"Nothing", sq_letter:"Letter", sq_pic:"Picture", sq_pick:"Choose picture",
+  sq_letter_lbl:"Letter in the center", sq_cap:"Caption under the code", sq_cap_ph:"Scan me — my channel",
+  sq_c0:"Dark", sq_c1:"Burgundy", sq_c2:"Blue", sq_c3:"Green", sq_c4:"Purple",
+  sq_ok:"styled QR ready — checked: scanners read it",
+  sq_bad:"careful: this QR may not scan — pick squares or remove the picture",
+  sq_lvl:"turned on error correction H for the center — the code still scans under the picture",
+  sc_btn:"Scan", sc_title:"Document scan", sc_drag:"Drag the corners if the page edges are off", sc_result:"Result",
+  sc_bw:"B/W", sc_gray:"Gray", sc_color:"Color", sc_rot:"Rotate", sc_add:"+ Add page", sc_new:"New photo",
+  sc_pages:n=>"pages: "+n+" · all in one PDF", sc_pdf:"Save PDF", sc_png:"As image",
+  sc_note:"Certificates, receipts, contracts — straight and readable, like from a scanner. Everything stays on the phone.",
+  sc_found:"found the page — check the corners", sc_nofound:"couldn't find the page — place the corners by hand",
+  sc_added:n=>"page "+n+" is ready — shoot the next one",
+  sc_pdf_ok:(n,kb)=>"PDF: "+n+" pages · "+kb+" KB",
+  sc_pdf_tg:"Couldn't save the PDF here — Telegram sometimes blocks it. Save the pages as images or open Darkroom on the website",
+  oc_btn:"From photo", oc_title:"Text from a photo", oc_lang:"Language in the photo",
+  oc_load:p=>"downloading the text reader… "+p+"%", oc_read:p=>"reading the text… "+p+"%", oc_tr:"translating…",
+  oc_done:n=>"lines found: "+n, oc_none:"no text found — shoot closer and straighter or pick another language",
+  oc_fail:"couldn't download the text reader — check the connection",
+  oc_note:"The photo stays on the phone: the text is recognized here and only the text gets translated. The first time it downloads about 6 MB.",
+  oc_to:"To translator", oc_copy:"Copy translation",
   dlg_tab_tr:"Translate", dlg_tab:"Dialog", dlg_me:"I'm writing", dlg_friend:"Friend's reply",
   dlg_ph_me:"Write a message — I translate it into two languages and add it to the conversation",
   dlg_ph_fr:n=>"Paste your friend's reply — I translate it into "+n,
@@ -1941,6 +2188,30 @@ pl:{
   cln_save:"Zapisz czystą kopię", cln_need:"najpierw wybierz zdjęcie — pokażę, co w nim ukryte",
   cln_ok:(w,h,kb)=>"czysta kopia "+w+"×"+h+" · "+kb+" KB — bez znaczników",
   cln_small:(w,h)=>"zdjęcie jest bardzo duże — zmniejszyłem do "+w+"×"+h+", inaczej telefon nie da rady",
+  fr_show:"Pokaż rozmówcy", fr_say:"Na głos", fr_flip:"Obróć", fr_you:"Napisałeś",
+  fr_reply:"Odpowiedź rozmówcy →", fr_note:"Połóż telefon między wami: górę czyta rozmówca, dół — ty.",
+  fr_speaking:"czytam…", fr_nosay:"ten telefon nie ma głosu dla tego języka", fr_need:"najpierw coś przetłumacz",
+  qr_styled:"Ozdobny", sq_color:"Kolor", sq_dots:"Kropki", sq_sq:"Kwadrat", sq_ci:"Koło", sq_di:"Romb",
+  sq_center:"W środku", sq_none:"Nic", sq_letter:"Litera", sq_pic:"Obrazek", sq_pick:"Wybierz obrazek",
+  sq_letter_lbl:"Litera w środku", sq_cap:"Podpis pod kodem", sq_cap_ph:"Zeskanuj — mój kanał",
+  sq_c0:"Ciemny", sq_c1:"Bordowy", sq_c2:"Niebieski", sq_c3:"Zielony", sq_c4:"Fioletowy",
+  sq_ok:"ozdobny QR gotowy — sprawdziłem: skaner go czyta",
+  sq_bad:"uwaga: ten QR może się nie skanować — wybierz kwadraty albo usuń obrazek",
+  sq_lvl:"dla środka włączyłem korekcję H — kod czyta się nawet pod obrazkiem",
+  sc_btn:"Skan", sc_title:"Skan dokumentu", sc_drag:"Przeciągnij rogi, jeśli kartka wyszła krzywo", sc_result:"Wynik",
+  sc_bw:"Cz/B", sc_gray:"Szary", sc_color:"Kolor", sc_rot:"Obróć", sc_add:"+ Kolejna strona", sc_new:"Nowe zdjęcie",
+  sc_pages:n=>"stron: "+n+" · wszystko w jednym PDF", sc_pdf:"Do PDF", sc_png:"Jako obraz",
+  sc_note:"Zaświadczenie, paragon, umowa — prosto i czytelnie, jak ze skanera. Wszystko zostaje w telefonie.",
+  sc_found:"znalazłem kartkę — sprawdź rogi", sc_nofound:"nie znalazłem kartki — ustaw rogi ręcznie",
+  sc_added:n=>"strona "+n+" gotowa — zrób zdjęcie następnej",
+  sc_pdf_ok:(n,kb)=>"PDF: stron "+n+" · "+kb+" KB",
+  sc_pdf_tg:"Nie udało się tu zapisać PDF — Telegram czasem to blokuje. Zapisz strony jako obrazy albo otwórz Ciemnię w przeglądarce",
+  oc_btn:"Ze zdjęcia", oc_title:"Tekst ze zdjęcia", oc_lang:"Język na zdjęciu",
+  oc_load:p=>"pobieram rozpoznawanie… "+p+"%", oc_read:p=>"czytam tekst… "+p+"%", oc_tr:"tłumaczę…",
+  oc_done:n=>"znalezione linie: "+n, oc_none:"nie znalazłem tekstu — zrób zdjęcie bliżej i prościej albo wybierz inny język",
+  oc_fail:"nie udało się pobrać rozpoznawania — sprawdź internet",
+  oc_note:"Zdjęcie zostaje w telefonie: tekst rozpoznaję tutaj i tłumaczę tylko jego. Za pierwszym razem pobiorę ok. 6 MB.",
+  oc_to:"Do tłumacza", oc_copy:"Kopiuj tłumaczenie",
   dlg_tab_tr:"Tłumacz", dlg_tab:"Dialog", dlg_me:"Piszę ja", dlg_friend:"Odpowiedź",
   dlg_ph_me:"Napisz wiadomość — przetłumaczę na dwa języki i dodam do rozmowy",
   dlg_ph_fr:n=>"Wklej odpowiedź znajomego — przetłumaczę na "+n,
@@ -2136,6 +2407,30 @@ de:{
   cln_save:"Saubere Kopie sichern", cln_need:"wähle zuerst ein Foto — ich zeige, was darin steckt",
   cln_ok:(w,h,kb)=>"saubere Kopie "+w+"×"+h+" · "+kb+" KB — keine Angaben",
   cln_small:(w,h)=>"das Foto ist riesig — auf "+w+"×"+h+" verkleinert, sonst schafft es das Handy nicht",
+  fr_show:"Dem Gegenüber zeigen", fr_say:"Vorlesen", fr_flip:"Drehen", fr_you:"Du hast geschrieben",
+  fr_reply:"Antwort des Gegenübers →", fr_note:"Leg das Handy zwischen euch: oben liest dein Gegenüber, unten du.",
+  fr_speaking:"spricht…", fr_nosay:"dieses Handy hat keine Stimme für diese Sprache", fr_need:"erst etwas übersetzen",
+  qr_styled:"Gestaltet", sq_color:"Farbe", sq_dots:"Punkte", sq_sq:"Quadrat", sq_ci:"Kreis", sq_di:"Raute",
+  sq_center:"In der Mitte", sq_none:"Nichts", sq_letter:"Buchstabe", sq_pic:"Bild", sq_pick:"Bild wählen",
+  sq_letter_lbl:"Buchstabe in der Mitte", sq_cap:"Text unter dem Code", sq_cap_ph:"Scannen — mein Kanal",
+  sq_c0:"Dunkel", sq_c1:"Bordeaux", sq_c2:"Blau", sq_c3:"Grün", sq_c4:"Lila",
+  sq_ok:"gestalteter QR fertig — geprüft: Scanner lesen ihn",
+  sq_bad:"Vorsicht: dieser QR lässt sich evtl. nicht scannen — nimm Quadrate oder entferne das Bild",
+  sq_lvl:"für die Mitte Fehlerkorrektur H eingeschaltet — der Code bleibt unter dem Bild lesbar",
+  sc_btn:"Scan", sc_title:"Dokument scannen", sc_drag:"Zieh an den Ecken, falls das Blatt schief erkannt wurde", sc_result:"Ergebnis",
+  sc_bw:"S/W", sc_gray:"Grau", sc_color:"Farbe", sc_rot:"Drehen", sc_add:"+ Weitere Seite", sc_new:"Neues Foto",
+  sc_pages:n=>"Seiten: "+n+" · alles in einem PDF", sc_pdf:"Als PDF", sc_png:"Als Bild",
+  sc_note:"Bescheinigung, Kassenbon, Vertrag — gerade und lesbar wie vom Scanner. Alles bleibt auf dem Handy.",
+  sc_found:"Blatt gefunden — prüf die Ecken", sc_nofound:"Blatt nicht erkannt — setz die Ecken von Hand",
+  sc_added:n=>"Seite "+n+" fertig — fotografiere die nächste",
+  sc_pdf_ok:(n,kb)=>"PDF: "+n+" Seiten · "+kb+" KB",
+  sc_pdf_tg:"Das PDF ließ sich hier nicht sichern — Telegram blockiert das manchmal. Speichere die Seiten als Bilder oder öffne die Dunkelkammer im Browser",
+  oc_btn:"Vom Foto", oc_title:"Text vom Foto", oc_lang:"Sprache auf dem Foto",
+  oc_load:p=>"lade die Texterkennung… "+p+"%", oc_read:p=>"lese den Text… "+p+"%", oc_tr:"übersetze…",
+  oc_done:n=>"gefundene Zeilen: "+n, oc_none:"kein Text gefunden — näher und gerader fotografieren oder andere Sprache wählen",
+  oc_fail:"Texterkennung ließ sich nicht laden — Internet prüfen",
+  oc_note:"Das Foto bleibt auf dem Handy: Der Text wird hier erkannt, übersetzt wird nur er. Beim ersten Mal lade ich etwa 6 MB.",
+  oc_to:"In den Übersetzer", oc_copy:"Übersetzung kopieren",
   dlg_tab_tr:"Übersetzen", dlg_tab:"Dialog", dlg_me:"Ich schreibe", dlg_friend:"Antwort",
   dlg_ph_me:"Schreib eine Nachricht — ich übersetze sie in zwei Sprachen und füge sie dem Gespräch hinzu",
   dlg_ph_fr:n=>"Füg die Antwort ein — Übersetzung auf "+n,
@@ -2331,6 +2626,30 @@ fr:{
   cln_save:"Enregistrer la copie propre", cln_need:"choisis d’abord une photo — je te montre ce qu’elle cache",
   cln_ok:(w,h,kb)=>"copie propre "+w+"×"+h+" · "+kb+" Ko — aucune balise",
   cln_small:(w,h)=>"la photo est énorme — réduite à "+w+"×"+h+" pour que le téléphone suive",
+  fr_show:"Montrer à l’autre", fr_say:"À voix haute", fr_flip:"Retourner", fr_you:"Tu as écrit",
+  fr_reply:"Sa réponse →", fr_note:"Pose le téléphone entre vous : le haut est pour l’autre, le bas pour toi.",
+  fr_speaking:"lecture…", fr_nosay:"ce téléphone n’a pas de voix pour cette langue", fr_need:"traduis d’abord un texte",
+  qr_styled:"Stylisé", sq_color:"Couleur", sq_dots:"Points", sq_sq:"Carré", sq_ci:"Rond", sq_di:"Losange",
+  sq_center:"Au centre", sq_none:"Rien", sq_letter:"Lettre", sq_pic:"Image", sq_pick:"Choisir une image",
+  sq_letter_lbl:"Lettre au centre", sq_cap:"Légende sous le code", sq_cap_ph:"Scanne — ma chaîne",
+  sq_c0:"Foncé", sq_c1:"Bordeaux", sq_c2:"Bleu", sq_c3:"Vert", sq_c4:"Violet",
+  sq_ok:"QR stylisé prêt — vérifié : les scanners le lisent",
+  sq_bad:"attention : ce QR risque de ne pas se scanner — choisis les carrés ou retire l’image",
+  sq_lvl:"correction d’erreurs H activée pour le centre — le code reste lisible sous l’image",
+  sc_btn:"Scan", sc_title:"Scan de document", sc_drag:"Déplace les coins si la feuille est mal détectée", sc_result:"Résultat",
+  sc_bw:"N/B", sc_gray:"Gris", sc_color:"Couleur", sc_rot:"Pivoter", sc_add:"+ Page suivante", sc_new:"Nouvelle photo",
+  sc_pages:n=>"pages : "+n+" · tout dans un PDF", sc_pdf:"En PDF", sc_png:"En image",
+  sc_note:"Attestation, ticket, contrat — droit et lisible comme au scanner. Tout reste sur le téléphone.",
+  sc_found:"feuille trouvée — vérifie les coins", sc_nofound:"feuille introuvable — place les coins à la main",
+  sc_added:n=>"page "+n+" prête — photographie la suivante",
+  sc_pdf_ok:(n,kb)=>"PDF : "+n+" pages · "+kb+" Ko",
+  sc_pdf_tg:"Impossible d’enregistrer le PDF ici — Telegram le bloque parfois. Enregistre les pages en images ou ouvre Chambre noire dans le navigateur",
+  oc_btn:"Depuis photo", oc_title:"Texte d’une photo", oc_lang:"Langue sur la photo",
+  oc_load:p=>"téléchargement de la reconnaissance… "+p+" %", oc_read:p=>"lecture du texte… "+p+" %", oc_tr:"traduction…",
+  oc_done:n=>"lignes trouvées : "+n, oc_none:"aucun texte trouvé — rapproche-toi, cadre droit ou choisis une autre langue",
+  oc_fail:"impossible de télécharger la reconnaissance — vérifie la connexion",
+  oc_note:"La photo reste sur le téléphone : le texte est reconnu ici et seul le texte est traduit. La première fois, environ 6 Mo à télécharger.",
+  oc_to:"Vers le traducteur", oc_copy:"Copier la traduction",
   dlg_tab_tr:"Traduire", dlg_tab:"Dialogue", dlg_me:"J’écris", dlg_friend:"Sa réponse",
   dlg_ph_me:"Écris un message — je le traduis en deux langues et l’ajoute à la conversation",
   dlg_ph_fr:n=>"Colle la réponse de ton ami — je la traduis en "+n,
@@ -2523,6 +2842,30 @@ es:{
   cln_save:"Guardar copia limpia", cln_need:"primero elige una foto — te enseño lo que esconde",
   cln_ok:(w,h,kb)=>"copia limpia "+w+"×"+h+" · "+kb+" KB — sin etiquetas",
   cln_small:(w,h)=>"la foto es enorme — la reduje a "+w+"×"+h+" para que el móvil pueda con ella",
+  fr_show:"Mostrar a la otra persona", fr_say:"En voz alta", fr_flip:"Girar", fr_you:"Escribiste",
+  fr_reply:"Su respuesta →", fr_note:"Deja el móvil entre los dos: arriba lee la otra persona, abajo tú.",
+  fr_speaking:"hablando…", fr_nosay:"este móvil no tiene voz para ese idioma", fr_need:"primero traduce algo",
+  qr_styled:"Con estilo", sq_color:"Color", sq_dots:"Puntos", sq_sq:"Cuadrado", sq_ci:"Círculo", sq_di:"Rombo",
+  sq_center:"En el centro", sq_none:"Nada", sq_letter:"Letra", sq_pic:"Imagen", sq_pick:"Elegir imagen",
+  sq_letter_lbl:"Letra en el centro", sq_cap:"Texto bajo el código", sq_cap_ph:"Escanéame — mi canal",
+  sq_c0:"Oscuro", sq_c1:"Granate", sq_c2:"Azul", sq_c3:"Verde", sq_c4:"Morado",
+  sq_ok:"QR con estilo listo — comprobado: los escáneres lo leen",
+  sq_bad:"cuidado: este QR puede no leerse — elige cuadrados o quita la imagen",
+  sq_lvl:"activé la corrección H para el centro — el código se lee incluso bajo la imagen",
+  sc_btn:"Escanear", sc_title:"Escanear documento", sc_drag:"Arrastra las esquinas si la hoja salió torcida", sc_result:"Resultado",
+  sc_bw:"B/N", sc_gray:"Gris", sc_color:"Color", sc_rot:"Girar", sc_add:"+ Otra página", sc_new:"Foto nueva",
+  sc_pages:n=>"páginas: "+n+" · todo en un PDF", sc_pdf:"En PDF", sc_png:"Como imagen",
+  sc_note:"Certificado, tique, contrato — recto y legible, como de escáner. Todo se queda en el móvil.",
+  sc_found:"encontré la hoja — revisa las esquinas", sc_nofound:"no encontré la hoja — coloca las esquinas a mano",
+  sc_added:n=>"página "+n+" lista — fotografía la siguiente",
+  sc_pdf_ok:(n,kb)=>"PDF: "+n+" páginas · "+kb+" KB",
+  sc_pdf_tg:"No se pudo guardar el PDF aquí — Telegram a veces lo bloquea. Guarda las páginas como imágenes o abre Cuarto oscuro en el navegador",
+  oc_btn:"De foto", oc_title:"Texto de una foto", oc_lang:"Idioma de la foto",
+  oc_load:p=>"descargando el reconocimiento… "+p+"%", oc_read:p=>"leyendo el texto… "+p+"%", oc_tr:"traduciendo…",
+  oc_done:n=>"líneas encontradas: "+n, oc_none:"no encontré texto — acércate, encuadra recto o elige otro idioma",
+  oc_fail:"no se pudo descargar el reconocimiento — revisa la conexión",
+  oc_note:"La foto se queda en el móvil: el texto se reconoce aquí y solo se traduce el texto. La primera vez descargo unos 6 MB.",
+  oc_to:"Al traductor", oc_copy:"Copiar traducción",
   dlg_tab_tr:"Traducir", dlg_tab:"Diálogo", dlg_me:"Escribo yo", dlg_friend:"Su respuesta",
   dlg_ph_me:"Escribe un mensaje — lo traduzco a dos idiomas y lo añado a la conversación",
   dlg_ph_fr:n=>"Pega la respuesta de tu amigo — la traduzco al "+n,
@@ -5597,6 +5940,609 @@ el("clnSave").addEventListener("click",async()=>{
   fbuzz("medium");
   await f2Give(blob,(S.name||"photo")+"-clean."+(png?"png":"jpg"));
 });
+
+/* ══════════════════════ перевод: «Показать собеседнику» и «Вслух» ══════════════════════
+   Телефон лежит между вами: верхняя половина перевёрнута для собеседника — там перевод крупно;
+   снизу — твой текст. «Вслух» читает перевод голосом телефона (speechSynthesis). */
+const FR={i:0,flip:true,list:[],src:""};
+const canSpeak="speechSynthesis" in window && typeof SpeechSynthesisUtterance!=="undefined";
+function frTargets(){
+  const tr=S.tr, P=S.trParts; if(!P) return [];
+  const langs=[tr.to1].concat(tr.to2&&tr.to2!=="none"&&tr.to2!==tr.to1?[tr.to2]:[]);
+  return P.res.map((r,i)=>({lang:langs[i]||tr.to1, text:String(r||"").trim()})).filter(x=>x.text);
+}
+function frVoice(code){
+  if(!canSpeak) return null;
+  const vs=speechSynthesis.getVoices()||[], c=code.toLowerCase(), base=c.split("-")[0];
+  return vs.find(v=>v.lang&&v.lang.toLowerCase().replace("_","-")===c)
+      || vs.find(v=>v.lang&&v.lang.toLowerCase().split(/[-_]/)[0]===base) || null;
+}
+function frSpeakList(items){
+  if(!canSpeak||!items.length) return false;
+  try{ speechSynthesis.cancel(); }catch(_){}
+  let any=false;
+  items.forEach((it,k)=>{
+    const u=new SpeechSynthesisUtterance(it.text), v=frVoice(it.lang);
+    u.lang=it.lang; if(v) u.voice=v; u.rate=0.95;
+    if(k===0) u.onstart=()=>{ el("frWave").hidden=false; };
+    if(k===items.length-1){ u.onend=u.onerror=()=>{ el("frWave").hidden=true; }; }
+    any=true; speechSynthesis.speak(u);
+  });
+  const vs=speechSynthesis.getVoices()||[];
+  if(vs.length&&!items.some(it=>frVoice(it.lang))) say("fr_nosay",null,"bad");
+  fbuzz("light");
+  return any;
+}
+function frStop(){ if(canSpeak){ try{ speechSynthesis.cancel(); }catch(_){} } el("frWave").hidden=true; }
+function frFit(){
+  const box=el("frTop"), p=el("frBig"); if(el("frView").hidden) return;
+  let fs=Math.min(46,Math.max(18,Math.round(box.clientWidth/7)));
+  p.style.fontSize=fs+"px";
+  const room=()=>box.clientHeight-(el("frHead").offsetHeight+el("frWaveRow").offsetHeight+28);
+  while(fs>15&&p.scrollHeight>room()){ fs-=2; p.style.fontSize=fs+"px"; }
+}
+function frShowItem(){
+  const it=FR.list[FR.i]; if(!it) return;
+  el("frBig").textContent=it.text; el("frBig").lang=it.lang;
+  el("frFlag").innerHTML=gFlag(it.lang); el("frFlag").hidden=!el("frFlag").textContent&&!el("frFlag").querySelector("svg");
+  el("frLangName").textContent=gLang(it.lang);
+  document.querySelectorAll("#frLangs button").forEach((b,k)=>b.setAttribute("aria-pressed",String(k===FR.i)));
+  requestAnimationFrame(frFit);
+}
+function frOpen(){
+  FR.list=frTargets(); FR.i=0;
+  if(!FR.list.length){ say("fr_need",null,"bad"); fbuzz("light"); return; }
+  FR.src=S.trParts.src;
+  el("frSrc").textContent=FR.src;
+  const ls=el("frLangs"); ls.textContent="";
+  if(FR.list.length>1) FR.list.forEach((it,k)=>{
+    const b=document.createElement("button"); b.type="button"; b.textContent=gLang(it.lang);
+    b.addEventListener("click",()=>{ FR.i=k; frStop(); frShowItem(); fbuzz("light"); });
+    ls.appendChild(b);
+  });
+  ls.hidden=FR.list.length<2;
+  el("frView").classList.toggle("up",!FR.flip);
+  el("frFlip").setAttribute("aria-pressed",String(FR.flip));
+  f2Open("frView"); frShowItem();
+  try{ if(navigator.wakeLock&&navigator.wakeLock.request) navigator.wakeLock.request("screen").then(l=>{ FR.lock=l; }).catch(()=>{}); }catch(_){}
+  fbuzz("light");
+}
+F2_CLOSE.frView=()=>{ frStop(); f2Hide("frView"); try{ if(FR.lock) FR.lock.release(); }catch(_){} FR.lock=null; };
+function frUI(){
+  const has=!!(S.trOut&&S.trParts);
+  el("trShow").disabled=!has; el("trSay").disabled=!has;
+  el("trSay").hidden=!canSpeak; el("frSay").hidden=!canSpeak;
+}
+{ const _rt=renderTr; renderTr=function(){ _rt(); if(el("trShow")) frUI(); }; }
+el("trShow").addEventListener("click",frOpen);
+el("trSay").addEventListener("click",()=>{ const l=frTargets(); if(!l.length){ say("fr_need",null,"bad"); return; } frSpeakList(l); });
+el("frSay").addEventListener("click",()=>{ const it=FR.list[FR.i]; if(it) frSpeakList([it]); });
+el("frFlip").addEventListener("click",()=>{
+  FR.flip=!FR.flip; el("frView").classList.toggle("up",!FR.flip);
+  el("frFlip").setAttribute("aria-pressed",String(FR.flip)); fbuzz("light"); requestAnimationFrame(frFit);
+});
+el("frX").addEventListener("click",()=>F2_CLOSE.frView());
+el("frReply").addEventListener("click",()=>{
+  /* ответ собеседника — в «Диалог»: показанное сообщение ложится в переписку, дальше пишет он */
+  const src=FR.src, out=S.trOut;
+  F2_CLOSE.frView();
+  const last=S.dlg[S.dlg.length-1];
+  if(src&&out&&!(last&&last.w==="me"&&last.src===src)){
+    S.dlg.push({w:"me",src,out,ts:Date.now()}); if(S.dlg.length>DLG_MAX) S.dlg=S.dlg.slice(-DLG_MAX); dlgSave();
+  }
+  el("trIn").value=""; S.dlgWho="fr";
+  if(S.trMode!=="dlg") dlgMode("dlg"); else dlgUI();
+  setTimeout(()=>{ try{ el("trIn").focus(); }catch(_){} },60);
+});
+addEventListener("resize",()=>{ if(!el("frView").hidden) frFit(); });
+if(canSpeak){ try{ speechSynthesis.getVoices(); speechSynthesis.addEventListener("voiceschanged",()=>{}); }catch(_){} }
+
+/* ══════════════════════ красивый QR ══════════════════════
+   Цвет, форма точек, круглые «глаза», буква или картинка в центре (тогда запас прочности H),
+   подпись под кодом. После каждой отрисовки проверяем настоящим декодером (jsQR), что код читается. */
+const SQ={color:"#16110F",dots:"sq",center:"none",letter:"",img:null,cap:"",tell:false};
+let sqT=0;
+function sqOn(){ return el("qrStyle").value==="styled" && el("codeKind").value!=="bar"; }
+function sqUI(){
+  const on=S.tab==="qr"&&sqOn();
+  document.querySelectorAll(".f2s").forEach(n=>{ const k=n.dataset.s;
+    n.hidden=!on||(k==="letter"&&SQ.center!=="letter")||(k==="pic"&&SQ.center!=="pic"); });
+  document.querySelectorAll("#sqCol button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.c===SQ.color)));
+  document.querySelectorAll("#sqDots button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.d===SQ.dots)));
+  document.querySelectorAll("#sqCenter button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.m===SQ.center)));
+}
+function sqRR(g,x,y,w,h,r){
+  g.beginPath();
+  if(r<=0){ g.rect(x,y,w,h); }
+  else{ r=Math.min(r,w/2,h/2);
+    g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+  g.fill();
+}
+function sqLetter(){
+  const s=(SQ.letter||"").trim()||(SQ.cap||"").trim()||"A";
+  return Array.from(s).slice(0,(SQ.letter||"").trim()?2:1).join("").toUpperCase();
+}
+function sqPaint(g,ox,oy,px){
+  const q=S.qr, n=q.size, Q=4, m=px/(n+2*Q), col=SQ.color;
+  let hs=0; if(SQ.center!=="none"&&!(SQ.center==="pic"&&!SQ.img)){ hs=Math.round(n*0.26); if(hs%2===0) hs++; }
+  const h0=(n-hs)/2;
+  const inHole=(x,y)=>hs&&x>=h0&&x<h0+hs&&y>=h0&&y<h0+hs;
+  const inEye=(x,y)=>(x<7&&y<7)||(x>=n-7&&y<7)||(x<7&&y>=n-7);
+  g.fillStyle="#FFFFFF"; g.fillRect(ox,oy,px,px); g.fillStyle=col;
+  for(let y=0;y<n;y++) for(let x=0;x<n;x++){
+    if(!q.grid[y][x]||inEye(x,y)||inHole(x,y)) continue;
+    const X=ox+(Q+x)*m, Y=oy+(Q+y)*m;
+    if(SQ.dots==="ci"){ g.beginPath(); g.arc(X+m/2,Y+m/2,m*(SQ.cr||0.47),0,Math.PI*2); g.fill(); }
+    else if(SQ.dots==="di"){ const c=m/2, r=m*(SQ.dr||0.62); g.beginPath(); g.moveTo(X+c,Y+c-r); g.lineTo(X+c+r,Y+c); g.lineTo(X+c,Y+c+r); g.lineTo(X+c-r,Y+c); g.closePath(); g.fill(); }
+    else g.fillRect(X,Y,m+0.4,m+0.4);
+  }
+  const round=SQ.dots!=="sq";
+  [[0,0],[n-7,0],[0,n-7]].forEach(([ex,ey])=>{
+    const X=ox+(Q+ex)*m, Y=oy+(Q+ey)*m;
+    g.fillStyle=col; sqRR(g,X,Y,7*m,7*m,round?2.2*m:0);
+    g.fillStyle="#FFFFFF"; sqRR(g,X+m,Y+m,5*m,5*m,round?1.5*m:0);
+    g.fillStyle=col; sqRR(g,X+2*m,Y+2*m,3*m,3*m,round?1.1*m:0);
+  });
+  if(hs){
+    const X=ox+(Q+h0)*m, Y=oy+(Q+h0)*m, W=hs*m, pad=m*0.7;
+    g.fillStyle="#FFFFFF"; sqRR(g,X,Y,W,W,m);
+    if(SQ.center==="letter"){
+      const ch=sqLetter();
+      g.fillStyle=col; g.textAlign="center"; g.textBaseline="middle";
+      g.font="700 "+Math.round((W-2*pad)*(ch.length>1?0.56:0.8))+"px "+FONT;
+      g.fillText(ch,X+W/2,Y+W/2+W*0.04);
+    }else if(SQ.img){
+      const s=W-2*pad, im=SQ.img, k=Math.max(s/im.width,s/im.height), dw=im.width*k, dh=im.height*k;
+      g.save(); g.beginPath();
+      const r=m*0.9, x=X+pad, y=Y+pad;
+      g.moveTo(x+r,y); g.arcTo(x+s,y,x+s,y+s,r); g.arcTo(x+s,y+s,x,y+s,r); g.arcTo(x,y+s,x,y,r); g.arcTo(x,y,x+s,y,r); g.closePath();
+      g.clip(); g.drawImage(im,x+(s-dw)/2,y+(s-dh)/2,dw,dh); g.restore();
+    }
+  }
+}
+function sqCaps(){
+  let c1=(SQ.cap||"").trim(), c2="";
+  if(S.qrWhat==="wifi"){ if(!c1) c1=t("qw_wifi")+" · "+el("wfSsid").value.trim(); c2=t("wf_card"); }
+  else if(S.qrWhat==="contact"){ if(!c1) c1=el("ctName").value.trim()||el("ctTel").value.trim(); c2=t("ct_card"); }
+  else{ const v=(el("qrText").value||"").trim(); if(c1&&v.length<=48&&!/\n/.test(v)) c2=v; }
+  return [c1,c2];
+}
+/* код + подпись; px — ширина, dpr — для чёткости на экране */
+function sqCard(cv,px,dpr){
+  const [c1,c2]=sqCaps(), capH=(c1?px*0.1:0)+(c2?px*0.07:0)+(c1||c2?px*0.03:0);
+  const H=Math.round(px+capH);
+  cv.width=Math.round(px*dpr); cv.height=Math.round(H*dpr);
+  const g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0);
+  g.fillStyle="#FFFFFF"; g.fillRect(0,0,px,H);
+  sqPaint(g,0,0,px);
+  const fit=(s,f)=>{ g.font=f; while(s.length>1&&g.measureText(s).width>px*0.9) s=s.slice(0,-2)+"…"; return s; };
+  g.textAlign="center"; g.textBaseline="middle";
+  let y=px-px*0.012;
+  if(c1){ const f="700 "+Math.round(px*0.06)+"px "+FONT; g.fillStyle=SQ.color; g.fillText(fit(c1,f),px/2,y+px*0.045); y+=px*0.1; }
+  if(c2){ const f="400 "+Math.round(px*0.038)+"px "+FONT; g.fillStyle="#6B5A4C"; g.fillText(fit(c2,f),px/2,y+px*0.03); }
+  return {w:cv.width,h:cv.height};
+}
+function sqCheck(){
+  clearTimeout(sqT);
+  sqT=setTimeout(()=>{
+    if(!(S.tab==="qr"&&S.qr&&sqOn())) return;
+    /* jsQR слабее камеры телефона и капризен к размеру точки — пробуем несколько масштабов */
+    const want=(S.scanBytes&&el("qrText").value===S.scanText)?S.scanBytes:new TextEncoder().encode((el("qrText").value||"").trim());
+    const c=document.createElement("canvas"), g=c.getContext("2d",{willReadFrequently:true});
+    let ok=false;
+    for(const mod of [6,8,10,12]){
+      const px=(S.qr.size+8)*mod; c.width=px; c.height=px; sqPaint(g,0,0,px);
+      try{
+        const r=self.jsQR(g.getImageData(0,0,px,px).data,px,px,{inversionAttempts:"dontInvert"});
+        ok=!!r&&!!r.binaryData&&r.binaryData.length===want.length&&r.binaryData.every((v,i)=>v===want[i]);
+      }catch(_){ ok=false; }
+      if(ok) break;
+    }
+    c.width=1; c.height=1;
+    S.sqOk=ok;
+    if(!ok) say("sq_bad",null,"bad"); else if(SQ.tell) say("sq_ok",null,"good");
+    SQ.tell=false;
+  },250);
+}
+{ const _dq=drawQr; drawQr=function(){
+    if(!(S.tab==="qr"&&S.qr&&!S.bars&&sqOn())) return _dq();
+    tkSync();
+    const b=el("board"), c=el("cv"); b.hidden=false; b.className="board flat";
+    el("copy").disabled=false; el("dl").disabled=false;
+    const avail=Math.max(120,el("stage").clientWidth-24-16), px=Math.max(120,Math.floor(Math.min(avail,420)*SIZEK[S.codeSize]));
+    const r=sqCard(c,px,Math.min(3,window.devicePixelRatio||1));
+    c.style.width=px+"px"; c.style.height=Math.round(r.h/Math.min(3,window.devicePixelRatio||1))+"px";
+    drawMini(); sqCheck();
+  }; }
+{ const _pb=pngBlob; pngBlob=function(){
+    if(!(S.tab==="qr"&&S.qr&&!S.bars&&sqOn())) return _pb();
+    const off=document.createElement("canvas"), px=Math.max(400,Math.round(S.quality*SIZEK[S.codeSize]));
+    const sz=sqCard(off,px,1);
+    return new Promise(r=>off.toBlob(b=>r({blob:b,size:{w:sz.w,h:sz.h}}),"image/png"));
+  }; }
+function sqRedraw(tell){ SQ.tell=!!tell; sqUI(); drawQr(); }
+function sqNeedH(){
+  if(SQ.center!=="none"&&el("qrLvl").value!=="H"){
+    el("qrLvl").value="H"; buildQr(); say("sq_lvl",null,"good"); SQ.tell=false; return true;
+  }
+  return false;
+}
+el("qrStyle").addEventListener("change",()=>{ sqUI(); if(sqOn()){ sqNeedH(); SQ.tell=true; drawQr(); } });
+el("codeKind").addEventListener("change",sqUI);
+document.querySelectorAll("#sqCol button").forEach(b=>b.addEventListener("click",()=>{ SQ.color=b.dataset.c; sqRedraw(true); fbuzz("light"); }));
+document.querySelectorAll("#sqDots button").forEach(b=>b.addEventListener("click",()=>{ SQ.dots=b.dataset.d; sqRedraw(true); fbuzz("light"); }));
+document.querySelectorAll("#sqCenter button").forEach(b=>b.addEventListener("click",()=>{
+  SQ.center=b.dataset.m; sqUI();
+  if(SQ.center==="pic"&&!SQ.img){ el("sqFile").click(); }
+  if(!sqNeedH()) sqRedraw(true); else drawQr();
+  fbuzz("light");
+}));
+el("sqLetter").addEventListener("input",()=>{ SQ.letter=el("sqLetter").value; sqRedraw(true); });
+el("sqCap").addEventListener("input",()=>{ SQ.cap=el("sqCap").value; clearTimeout(F2.sqCapT); F2.sqCapT=setTimeout(()=>sqRedraw(false),200); });
+el("sqFile").addEventListener("change",e=>{
+  const f=e.target.files&&e.target.files[0]; e.target.value=""; if(!f) return;
+  const u=URL.createObjectURL(f), im=new Image();
+  im.onload=()=>{
+    const k=Math.min(1,256/Math.max(im.naturalWidth,im.naturalHeight)), c=document.createElement("canvas");
+    c.width=Math.max(1,Math.round(im.naturalWidth*k)); c.height=Math.max(1,Math.round(im.naturalHeight*k));
+    c.getContext("2d").drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(u);
+    SQ.img=c; SQ.center="pic"; if(!sqNeedH()) sqRedraw(true); else drawQr();
+  };
+  im.onerror=()=>{ URL.revokeObjectURL(u); say("nodecode",null,"bad"); };
+  im.src=u;
+});
+{ const _st=setTab; setTab=function(tab){ _st(tab); sqUI(); }; }
+
+/* ══════════════════════ скан документа ══════════════════════
+   Находим лист (самое большое светлое пятно → 4 крайние точки), даём подвинуть углы,
+   выпрямляем перспективу, делаем «как со сканера» (Ч/Б с местным порогом, серый или цвет),
+   страницы собираем в PDF. Всё в памяти телефона. */
+const SC={src:null,quad:null,filter:"bw",rot:0,pages:[],drag:-1,view:null,prevT:0};
+function scSourceFrom(im){
+  const W0=im.naturalWidth||im.width, H0=im.naturalHeight||im.height, k=Math.min(1,2400/Math.max(W0,H0));
+  const c=document.createElement("canvas"); c.width=Math.max(1,Math.round(W0*k)); c.height=Math.max(1,Math.round(H0*k));
+  c.getContext("2d").drawImage(im,0,0,c.width,c.height); return c;
+}
+function scDetect(src){
+  const k=Math.min(1,360/Math.max(src.width,src.height)), w=Math.max(8,Math.round(src.width*k)), h=Math.max(8,Math.round(src.height*k));
+  const c=document.createElement("canvas"); c.width=w; c.height=h;
+  const g=c.getContext("2d",{willReadFrequently:true}); g.drawImage(src,0,0,w,h);
+  const d=g.getImageData(0,0,w,h).data, n=w*h, lum=new Float32Array(n);
+  for(let i=0,p=0;i<n;i++,p+=4) lum[i]=0.299*d[p]+0.587*d[p+1]+0.114*d[p+2];
+  const bl=new Float32Array(n);                                   // лёгкое размытие 3×3
+  for(let y=0;y<h;y++) for(let x=0;x<w;x++){ let s=0,m=0;
+    for(let dy=-1;dy<=1;dy++){ const yy=y+dy; if(yy<0||yy>=h) continue;
+      for(let dx=-1;dx<=1;dx++){ const xx=x+dx; if(xx<0||xx>=w) continue; s+=lum[yy*w+xx]; m++; } }
+    bl[y*w+x]=s/m; }
+  const hist=new Array(256).fill(0); for(let i=0;i<n;i++) hist[bl[i]|0]++;
+  let sum=0; for(let i=0;i<256;i++) sum+=i*hist[i];
+  let sB=0,wB=0,best=0,th=128;                                     // порог Оцу
+  for(let i=0;i<256;i++){ wB+=hist[i]; if(!wB) continue; const wF=n-wB; if(!wF) break;
+    sB+=i*hist[i]; const mB=sB/wB, mF=(sum-sB)/wF, v=wB*wF*(mB-mF)*(mB-mF); if(v>best){ best=v; th=i; } }
+  const lab=new Int32Array(n).fill(-1); let bestN=0, bestId=-1; const st=[];
+  for(let i=0;i<n;i++){
+    if(lab[i]!==-1||bl[i]<=th) continue;
+    let cnt=0; st.push(i); lab[i]=i;
+    while(st.length){ const j=st.pop(); cnt++; const x=j%w, y=(j/w)|0;
+      if(x>0&&lab[j-1]===-1&&bl[j-1]>th){ lab[j-1]=i; st.push(j-1); }
+      if(x<w-1&&lab[j+1]===-1&&bl[j+1]>th){ lab[j+1]=i; st.push(j+1); }
+      if(y>0&&lab[j-w]===-1&&bl[j-w]>th){ lab[j-w]=i; st.push(j-w); }
+      if(y<h-1&&lab[j+w]===-1&&bl[j+w]>th){ lab[j+w]=i; st.push(j+w); } }
+    if(cnt>bestN){ bestN=cnt; bestId=i; }
+  }
+  c.width=1; c.height=1;
+  const inset=()=>{ const mx=src.width*0.08, my=src.height*0.08; return [[mx,my],[src.width-mx,my],[src.width-mx,src.height-my],[mx,src.height-my]]; };
+  if(bestId<0||bestN<n*0.12) return {quad:inset(),found:false};
+  let tl=[0,0,1e9],tr=[0,0,-1e9],br=[0,0,-1e9],bL=[0,0,1e9];
+  for(let i=0;i<n;i++){ if(lab[i]!==bestId) continue; const x=i%w, y=(i/w)|0, s=x+y, df=x-y;
+    if(s<tl[2]) tl=[x,y,s]; if(s>br[2]) br=[x,y,s]; if(df>tr[2]) tr=[x,y,df]; if(df<bL[2]) bL=[x,y,df]; }
+  const q=[tl,tr,br,bL].map(p=>[(p[0]+0.5)/k,(p[1]+0.5)/k]);
+  const area=Math.abs((q[0][0]*q[1][1]-q[1][0]*q[0][1])+(q[1][0]*q[2][1]-q[2][0]*q[1][1])+(q[2][0]*q[3][1]-q[3][0]*q[2][1])+(q[3][0]*q[0][1]-q[0][0]*q[3][1]))/2;
+  if(area<src.width*src.height*0.12) return {quad:inset(),found:false};
+  return {quad:q,found:true};
+}
+function scH(q){                                                   // единичный квадрат → четырёхугольник
+  const [x0,y0]=q[0],[x1,y1]=q[1],[x2,y2]=q[2],[x3,y3]=q[3];
+  const dx1=x1-x2, dx2=x3-x2, dx3=x0-x1+x2-x3, dy1=y1-y2, dy2=y3-y2, dy3=y0-y1+y2-y3;
+  if(Math.abs(dx3)<1e-9&&Math.abs(dy3)<1e-9) return {a:x1-x0,b:x3-x0,c:x0,d:y1-y0,e:y3-y0,f:y0,g:0,h:0};
+  const den=dx1*dy2-dx2*dy1, g=(dx3*dy2-dx2*dy3)/den, h=(dx1*dy3-dx3*dy1)/den;
+  return {a:x1-x0+g*x1,b:x3-x0+h*x3,c:x0,d:y1-y0+g*y1,e:y3-y0+h*y3,f:y0,g,h};
+}
+const scDist=(p,q)=>Math.hypot(p[0]-q[0],p[1]-q[1]);
+/* настоящая пропорция листа по перспективе (Zhang & He, «Whiteboard scanning», 2007):
+   центр снимка считаем центром объектива; без перспективы — null */
+function scAspect(q,cx,cy){
+  const m1=[q[0][0],q[0][1],1], m2=[q[1][0],q[1][1],1], m3=[q[3][0],q[3][1],1], m4=[q[2][0],q[2][1],1];
+  const cr=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]], dt=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+  const k2=dt(cr(m1,m4),m3)/dt(cr(m2,m4),m3), k3=dt(cr(m1,m4),m2)/dt(cr(m3,m4),m2);
+  const n2=m2.map((v,i)=>k2*v-m1[i]), n3=m3.map((v,i)=>k3*v-m1[i]);
+  const [n21,n22,n23]=n2, [n31,n32,n33]=n3;
+  if(!isFinite(k2)||!isFinite(k3)||Math.abs(n23*n33)<1e-9) return null;
+  const f2=Math.abs(((n21*n31-(n21*n33+n23*n31)*cx+n23*n33*cx*cx)+(n22*n32-(n22*n33+n23*n32)*cy+n23*n33*cy*cy))/(n23*n33));
+  if(!(f2>1)) return null;
+  const f=Math.sqrt(f2), len=n=>{ const a=(n[0]-cx*n[2])/f, b=(n[1]-cy*n[2])/f; return a*a+b*b+n[2]*n[2]; };
+  const ar=Math.sqrt(len(n2)/len(n3));
+  return isFinite(ar)&&ar>0.2&&ar<5?ar:null;
+}
+function scSize(){
+  const q=SC.quad, src=SC.src;
+  let W=Math.max(scDist(q[0],q[1]),scDist(q[3],q[2])), H=Math.max(scDist(q[0],q[3]),scDist(q[1],q[2]));
+  const ar=scAspect(q,src.width/2,src.height/2), vis=W/H;
+  if(ar&&ar/vis<2&&vis/ar<2){ if(ar<vis) W=H*ar; else H=W/ar; }
+  return [W,H];
+}
+function scWarp(maxSide){
+  const q=SC.quad, src=SC.src;
+  let [W,H]=scSize();
+  const k=Math.min(1,maxSide/Math.max(W,H)); W=Math.max(8,Math.round(W*k)); H=Math.max(8,Math.round(H*k));
+  const sd=src.getContext("2d",{willReadFrequently:true}).getImageData(0,0,src.width,src.height), s=sd.data, SW=src.width, SH=src.height;
+  const out=document.createElement("canvas"); out.width=W; out.height=H;
+  const og=out.getContext("2d",{willReadFrequently:true}), od=og.createImageData(W,H), o=od.data, M=scH(q);
+  for(let y=0;y<H;y++){ const v=(y+0.5)/H;
+    for(let x=0;x<W;x++){ const u=(x+0.5)/W, z=M.g*u+M.h*v+1;
+      let sx=(M.a*u+M.b*v+M.c)/z-0.5, sy=(M.d*u+M.e*v+M.f)/z-0.5;
+      if(sx<0) sx=0; if(sy<0) sy=0; if(sx>SW-1.001) sx=SW-1.001; if(sy>SH-1.001) sy=SH-1.001;
+      const ix=sx|0, iy=sy|0, fx=sx-ix, fy=sy-iy, p=(iy*SW+ix)*4, p2=p+SW*4, t=(y*W+x)*4;
+      for(let ch=0;ch<3;ch++){
+        const a=s[p+ch]+(s[p+4+ch]-s[p+ch])*fx, b=s[p2+ch]+(s[p2+4+ch]-s[p2+ch])*fx;
+        o[t+ch]=a+(b-a)*fy; }
+      o[t+3]=255; } }
+  og.putImageData(od,0,0);
+  return out;
+}
+function scFilter(cv){
+  const W=cv.width, H=cv.height, g=cv.getContext("2d",{willReadFrequently:true}), id=g.getImageData(0,0,W,H), d=id.data, n=W*H;
+  const lum=new Float32Array(n); for(let i=0,p=0;i<n;i++,p+=4) lum[i]=0.299*d[p]+0.587*d[p+1]+0.114*d[p+2];
+  if(SC.filter==="bw"){                                            // местный порог (Брэдли): тени и неровный свет не мешают
+    const I=new Float64Array((W+1)*(H+1));
+    for(let y=0;y<H;y++){ let row=0; for(let x=0;x<W;x++){ row+=lum[y*W+x]; I[(y+1)*(W+1)+x+1]=I[y*(W+1)+x+1]+row; } }
+    const r=Math.max(4,Math.round(Math.max(W,H)/32));
+    for(let y=0;y<H;y++){ const y0=Math.max(0,y-r), y1=Math.min(H,y+r+1);
+      for(let x=0;x<W;x++){ const x0=Math.max(0,x-r), x1=Math.min(W,x+r+1);
+        const s=I[y1*(W+1)+x1]-I[y0*(W+1)+x1]-I[y1*(W+1)+x0]+I[y0*(W+1)+x0], m=s/((x1-x0)*(y1-y0));
+        const v=lum[y*W+x]<m*0.86?0:255, p=(y*W+x)*4; d[p]=d[p+1]=d[p+2]=v; } }
+  }else{
+    const hist=new Uint32Array(256); for(let i=0;i<n;i++) hist[lum[i]|0]++;
+    let lo=0,hi=255,acc=0; for(let i=0;i<256;i++){ acc+=hist[i]; if(acc>n*0.02){ lo=i; break; } }
+    acc=0; for(let i=255;i>=0;i--){ acc+=hist[i]; if(acc>n*0.08){ hi=i; break; } }
+    const sc=255/Math.max(30,hi-lo);
+    for(let i=0,p=0;i<n;i++,p+=4){
+      if(SC.filter==="gray"){ const v=Math.max(0,Math.min(255,(lum[i]-lo)*sc)); d[p]=d[p+1]=d[p+2]=v; }
+      else for(let ch=0;ch<3;ch++) d[p+ch]=Math.max(0,Math.min(255,(d[p+ch]-lo)*sc)); }
+  }
+  g.putImageData(id,0,0);
+  return cv;
+}
+function scRotate(cv){
+  const r=((SC.rot%4)+4)%4; if(!r) return cv;
+  const o=document.createElement("canvas"); o.width=r%2?cv.height:cv.width; o.height=r%2?cv.width:cv.height;
+  const g=o.getContext("2d"); g.translate(o.width/2,o.height/2); g.rotate(r*Math.PI/2); g.drawImage(cv,-cv.width/2,-cv.height/2);
+  cv.width=1; return o;
+}
+function scPage(maxSide){ return scRotate(scFilter(scWarp(maxSide))); }
+function scDrawEditor(){
+  const cv=el("scCv"), box=el("scEd"), src=SC.src; if(!src) return;
+  const dpr=Math.min(3,window.devicePixelRatio||1), bw=box.clientWidth, bh=box.clientHeight;
+  const k=Math.min(bw/src.width,bh/src.height), w=Math.round(src.width*k), h=Math.round(src.height*k);
+  if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){ cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); cv.style.width=w+"px"; cv.style.height=h+"px"; }
+  SC.view={k};
+  const g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0);
+  g.drawImage(src,0,0,w,h);
+  const P=SC.quad.map(p=>[p[0]*k,p[1]*k]);
+  g.fillStyle="rgba(10,7,6,.55)"; g.beginPath(); g.rect(0,0,w,h);
+  g.moveTo(P[0][0],P[0][1]); for(let i=3;i>=0;i--) g.lineTo(P[i][0],P[i][1]); g.closePath(); g.fill("evenodd");
+  g.strokeStyle="#FFB020"; g.lineWidth=2; g.setLineDash([7,5]); g.beginPath(); P.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1])); g.closePath(); g.stroke(); g.setLineDash([]);
+  P.forEach((p,i)=>{ g.beginPath(); g.arc(p[0],p[1],SC.drag===i?13:10,0,Math.PI*2); g.fillStyle="#FFB020"; g.fill(); g.lineWidth=3; g.strokeStyle="#16110F"; g.stroke(); });
+}
+function scPreview(now){
+  clearTimeout(SC.prevT);
+  const run=()=>{ if(!SC.src||el("scView").hidden) return;
+    const p=scPage(700), c=el("scOut"), g=c.getContext("2d"); c.width=p.width; c.height=p.height; g.drawImage(p,0,0); p.width=1; };
+  if(now) run(); else SC.prevT=setTimeout(run,140);
+}
+function scUI(){
+  document.querySelectorAll("#scFlt button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.f===SC.filter)));
+  el("scPages").textContent=tf("sc_pages",SC.pages.length+1);
+}
+function scStart(im){
+  SC.src=scSourceFrom(im); SC.rot=0;
+  const r=scDetect(SC.src); SC.quad=r.quad;
+  el("scInfo").textContent=t(r.found?"sc_found":"sc_nofound"); el("scInfo").className="f2-info"+(r.found?"":" bad");
+  f2Open("scView"); scUI();
+  requestAnimationFrame(()=>{ scDrawEditor(); scPreview(true); });
+}
+function scOpen(){
+  if(!el("scView").hidden) return;
+  if(S.img&&!S.isSample){ SC.pages=[]; scStart(S.img); fbuzz("light"); }
+  else el("scFile").click();
+}
+F2_CLOSE.scView=()=>{ f2Hide("scView"); SC.src=null; SC.pages=[]; ["scCv","scOut"].forEach(id=>{ const c=el(id); c.width=1; c.height=1; }); };
+el("tScan").addEventListener("click",scOpen);
+el("scX").addEventListener("click",()=>F2_CLOSE.scView());
+el("scFile").addEventListener("change",e=>{
+  const f=e.target.files&&e.target.files[0]; e.target.value=""; if(!f) return;
+  const u=URL.createObjectURL(f), im=new Image();
+  im.onload=()=>{ const keep=el("scView").hidden?[]:SC.pages; scStart(im); SC.pages=keep; scUI(); URL.revokeObjectURL(u); };
+  im.onerror=()=>{ URL.revokeObjectURL(u); say("nodecode",null,"bad"); };
+  im.src=u;
+});
+/* углы — пальцем: ближайший угол в радиусе ~32px */
+function scPt(e){ const r=el("scCv").getBoundingClientRect(), k=SC.view?SC.view.k:1; return [(e.clientX-r.left)/k,(e.clientY-r.top)/k]; }
+el("scCv").addEventListener("pointerdown",e=>{
+  if(!SC.quad) return;
+  const p=scPt(e), k=SC.view.k; let best=-1, bd=34/k;
+  SC.quad.forEach((q,i)=>{ const dd=scDist(q,p); if(dd<bd){ bd=dd; best=i; } });
+  if(best<0) return;
+  SC.drag=best; e.preventDefault(); try{ el("scCv").setPointerCapture(e.pointerId); }catch(_){}
+  scDrawEditor();
+});
+el("scCv").addEventListener("pointermove",e=>{
+  if(SC.drag<0) return; e.preventDefault();
+  const p=scPt(e); SC.quad[SC.drag]=[Math.max(0,Math.min(SC.src.width,p[0])),Math.max(0,Math.min(SC.src.height,p[1]))];
+  scDrawEditor(); scPreview(false);
+});
+const scUp=()=>{ if(SC.drag<0) return; SC.drag=-1; scDrawEditor(); scPreview(true); };
+el("scCv").addEventListener("pointerup",scUp); el("scCv").addEventListener("pointercancel",scUp);
+document.querySelectorAll("#scFlt button").forEach(b=>b.addEventListener("click",()=>{ SC.filter=b.dataset.f; scUI(); scPreview(true); fbuzz("light"); }));
+el("scRot").addEventListener("click",()=>{ SC.rot=(SC.rot+1)%4; scPreview(true); fbuzz("light"); });
+async function scJpeg(){ const p=scPage(2200), b=await blobOf(p,"image/jpeg",0.86), r={blob:b,w:p.width,h:p.height}; p.width=1; return r; }
+el("scAdd").addEventListener("click",async()=>{
+  SC.pages.push(await scJpeg()); scUI(); fbuzz("medium");
+  el("scInfo").textContent=tf("sc_added",SC.pages.length); el("scInfo").className="f2-info";
+  el("scFile").click();
+});
+el("scPng").addEventListener("click",async()=>{
+  const p=scPage(2200), b=await blobOf(p,SC.filter==="color"?"image/jpeg":"image/png",0.9); p.width=1;
+  fbuzz("medium"); await f2Give(b,"scan-"+(SC.pages.length+1)+(SC.filter==="color"?".jpg":".png"));
+});
+/* PDF руками: каждая страница — JPEG (DCTDecode) на листе A4 */
+function scPdf(pages){
+  const enc=new TextEncoder(), parts=[], offs=[]; let len=0;
+  const put=x=>{ const b=typeof x==="string"?enc.encode(x):x; parts.push(b); len+=b.length; };
+  const obj=(i,body)=>{ offs[i]=len; put(i+" 0 obj\n"); body(); put("\nendobj\n"); };
+  const N=pages.length, kids=pages.map((_,i)=>(3+i*3)+" 0 R").join(" ");
+  put("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n");
+  obj(1,()=>put("<< /Type /Catalog /Pages 2 0 R >>"));
+  obj(2,()=>put("<< /Type /Pages /Kids ["+kids+"] /Count "+N+" >>"));
+  pages.forEach((p,i)=>{
+    const P=3+i*3, land=p.w>p.h, PW=land?842:595, PH=land?595:842, k=Math.min(PW/p.w,PH/p.h), w=p.w*k, h=p.h*k;
+    const cs="q "+w.toFixed(2)+" 0 0 "+h.toFixed(2)+" "+((PW-w)/2).toFixed(2)+" "+((PH-h)/2).toFixed(2)+" cm /Im0 Do Q";
+    obj(P,()=>put("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 "+PW+" "+PH+"] /Resources << /XObject << /Im0 "+(P+1)+" 0 R >> >> /Contents "+(P+2)+" 0 R >>"));
+    obj(P+1,()=>{ put("<< /Type /XObject /Subtype /Image /Width "+p.w+" /Height "+p.h+" /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length "+p.bytes.length+" >>\nstream\n"); put(p.bytes); put("\nendstream"); });
+    obj(P+2,()=>put("<< /Length "+cs.length+" >>\nstream\n"+cs+"\nendstream"));
+  });
+  const xref=len, total=3+N*3;
+  let x="xref\n0 "+total+"\n0000000000 65535 f \n"; for(let i=1;i<total;i++) x+=String(offs[i]).padStart(10,"0")+" 00000 n \n";
+  put(x+"trailer\n<< /Size "+total+" /Root 1 0 R >>\nstartxref\n"+xref+"\n%%EOF\n");
+  return new Blob(parts,{type:"application/pdf"});
+}
+el("scPdfBtn").addEventListener("click",async()=>{
+  const all=SC.pages.concat([await scJpeg()]);
+  for(const p of all) if(!p.bytes) p.bytes=new Uint8Array(await p.blob.arrayBuffer());
+  const pdf=scPdf(all), name="scan-"+new Date().toISOString().slice(0,10)+".pdf", file=new File([pdf],name,{type:"application/pdf"});
+  fbuzz("medium");
+  el("scInfo").textContent=tf("sc_pdf_ok",all.length,Math.round(pdf.size/1024)); el("scInfo").className="f2-info";
+  if(navigator.canShare&&navigator.share&&(isTouch||inApp)){
+    try{ if(navigator.canShare({files:[file]})){ await navigator.share({files:[file]}); return; } }catch(e){ if(e&&e.name==="AbortError") return; }
+  }
+  if(inApp){ el("scInfo").textContent=t("sc_pdf_tg"); el("scInfo").className="f2-info bad"; return; }
+  const u=URL.createObjectURL(pdf), a=document.createElement("a"); a.href=u; a.download=name; a.rel="noopener";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),10000);
+});
+addEventListener("resize",()=>{ if(!el("scView").hidden) scDrawEditor(); });
+
+/* ══════════════════════ текст с фото → перевод ══════════════════════
+   Распознаёт Tesseract прямо на телефоне (движок и словарь языка — с CDN, один раз, ~6 МБ);
+   в сеть уходит только распознанный текст — тот же переводчик, что и обычно. */
+const OC={worker:null,lang:"",busy:false,img:null,lines:[],tr:[],seq:0,base:""};
+const OC_LANGS=[["en","eng"],["de","deu"],["fr","fra"],["es","spa"],["pl","pol"],["it","ita"],["ru","rus"],["uk","ukr"],["pt","por"],["tr","tur"],["cs","ces"]];
+const OC_CDN=[
+  {js:"https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.min.js", worker:"https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/worker.min.js",
+   core:"https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0", lang:c=>"https://cdn.jsdelivr.net/npm/@tesseract.js-data/"+c+"/4.0.0_best_int"},
+  {js:"https://unpkg.com/tesseract.js@6.0.1/dist/tesseract.min.js", worker:"https://unpkg.com/tesseract.js@6.0.1/dist/worker.min.js",
+   core:"https://unpkg.com/tesseract.js-core@6.0.0", lang:c=>"https://unpkg.com/@tesseract.js-data/"+c+"/4.0.0_best_int"}];
+OC.code=(()=>{ try{ const v=localStorage.getItem("proyav.ocrlang"); if(OC_LANGS.some(r=>r[0]===v)) return v; }catch(_){}
+  return OC_LANGS.some(r=>r[0]===S.tr.from)?S.tr.from:"en"; })();
+function ocScript(src){ return new Promise((ok,no)=>{ const s=document.createElement("script"); s.src=src; s.async=true; s.crossOrigin="anonymous";
+  s.onload=()=>ok(); s.onerror=()=>{ s.remove(); no(new Error("cdn")); }; document.head.appendChild(s); }); }
+async function ocLib(){
+  if(window.Tesseract&&OC.cdn) return OC.cdn;
+  for(const c of OC_CDN){ try{ await ocScript(c.js); if(window.Tesseract){ OC.cdn=c; return c; } }catch(_){} }
+  throw new Error("cdn");
+}
+function ocState(key,p,kind){ el("ocInfo").textContent=p==null?t(key):tf(key,p); el("ocInfo").className="f2-info"+(kind==="bad"?" bad":""); }
+function ocBar(v){ el("ocBar").hidden=v==null; if(v!=null) el("ocBar").firstElementChild.style.width=Math.round(v*100)+"%"; }
+async function ocWorker(code){
+  const tess=OC_LANGS.find(r=>r[0]===code)[1];
+  if(OC.worker&&OC.lang===tess) return OC.worker;
+  if(OC.worker){ try{ await OC.worker.terminate(); }catch(_){} OC.worker=null; }
+  const c=await ocLib();
+  const w=await window.Tesseract.createWorker(tess,1,{workerPath:c.worker,corePath:c.core,langPath:c.lang(tess),
+    logger:m=>{ if(!m||OC.seq!==OC.cur) return; const p=Math.round((m.progress||0)*100);
+      if(/recogniz/i.test(m.status||"")){ ocState("oc_read",p); ocBar(m.progress||0); }
+      else { ocState("oc_load",p); ocBar((m.progress||0)*0.99); } }});
+  OC.worker=w; OC.lang=tess; return w;
+}
+function ocDraw(){
+  const c=el("ocCv"), im=OC.img; if(!im) return;
+  const box=el("ocPic"), dpr=Math.min(3,window.devicePixelRatio||1), k=Math.min(box.clientWidth/im.width,box.clientHeight/im.height);
+  const w=Math.max(1,Math.round(im.width*k)), h=Math.max(1,Math.round(im.height*k));
+  c.width=Math.round(w*dpr); c.height=Math.round(h*dpr); c.style.width=w+"px"; c.style.height=h+"px";
+  const g=c.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0); g.drawImage(im,0,0,w,h);
+  g.strokeStyle="#FFB020"; g.lineWidth=2;
+  (OC.linesAll||OC.lines).forEach(l=>{ const b=l.bbox; g.strokeRect(b.x0*k-2,b.y0*k-2,(b.x1-b.x0)*k+4,(b.y1-b.y0)*k+4); });
+}
+function ocTable(){
+  const tb=el("ocList"); tb.textContent="";
+  OC.lines.forEach((l,i)=>{
+    const r=document.createElement("div"); r.className="oc-row";
+    const a=document.createElement("span"), b=document.createElement("b");
+    a.textContent=l.text; b.textContent=OC.tr[i]||""; r.appendChild(a); r.appendChild(b); tb.appendChild(r);
+  });
+  el("ocTo").disabled=!OC.lines.length; el("ocCopy").disabled=!OC.tr.length;
+}
+function ocChips(){
+  const box=el("ocLangs"); box.textContent="";
+  OC_LANGS.forEach(([code])=>{
+    const b=document.createElement("button"); b.type="button"; b.textContent=gLang(code); b.dataset.c=code;
+    b.setAttribute("aria-pressed",String(code===OC.code));
+    b.addEventListener("click",()=>{ if(OC.code===code||OC.busy) return; OC.code=code;
+      try{ localStorage.setItem("proyav.ocrlang",code); }catch(_){}
+      ocChips(); fbuzz("light"); ocRun(); });
+    box.appendChild(b);
+  });
+}
+async function ocRun(){
+  if(!OC.img) return;
+  const my=++OC.seq; OC.cur=my; OC.busy=true; OC.lines=[]; OC.tr=[]; ocTable(); ocDraw();
+  ocState("oc_load",0); ocBar(0);
+  let w;
+  try{ w=await ocWorker(OC.code); }catch(e){ if(my===OC.seq){ OC.busy=false; ocBar(null); ocState("oc_fail",null,"bad"); } return; }
+  try{
+    const r=await w.recognize(OC.img,{},{blocks:true,text:true});
+    if(my!==OC.seq) return;
+    const lines=[];
+    (r.data.blocks||[]).forEach(bk=>(bk.paragraphs||[]).forEach(pa=>(pa.lines||[]).forEach(l=>{
+      const tx=String(l.text||"").replace(/\s+/g," ").trim();
+      if(tx.length>=2&&(l.confidence||0)>=35&&/[\p{L}\p{N}]/u.test(tx)) lines.push({text:tx,bbox:l.bbox});
+    })));
+    OC.lines=lines; ocDraw(); ocTable(); ocBar(null);
+    if(!lines.length){ OC.busy=false; ocState("oc_none",null,"bad"); return; }
+    ocState("oc_tr");
+    const out=await trOne(lines.map(l=>l.text).join("\n"),OC.code,S.tr.to1);
+    if(my!==OC.seq) return;
+    const parts=String(out||"").split(/\n/).map(s=>s.trim());
+    OC.tr=parts.length===lines.length?parts:[String(out||"").trim()];
+    if(parts.length!==lines.length){ OC.linesAll=lines; OC.lines=[{text:lines.map(l=>l.text).join(" "),bbox:lines[0].bbox}]; }
+    ocTable(); ocState("oc_done",lines.length); fbuzz("light");
+  }catch(e){ if(my===OC.seq){ ocBar(null); ocState(OC.lines.length?"tr_fail":"oc_none",null,"bad"); } }
+  finally{ if(my===OC.seq) OC.busy=false; }
+}
+function ocOpen(file){
+  const u=URL.createObjectURL(file), im=new Image();
+  im.onload=()=>{
+    const k=Math.min(1,2000/Math.max(im.naturalWidth,im.naturalHeight)), c=document.createElement("canvas");
+    c.width=Math.max(1,Math.round(im.naturalWidth*k)); c.height=Math.max(1,Math.round(im.naturalHeight*k));
+    c.getContext("2d").drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(u);
+    OC.img=c; OC.linesAll=null; ocChips(); f2Open("ocView"); requestAnimationFrame(()=>{ ocDraw(); ocRun(); });
+  };
+  im.onerror=()=>{ URL.revokeObjectURL(u); say("nodecode",null,"bad"); };
+  im.src=u;
+}
+F2_CLOSE.ocView=()=>{ OC.seq++; OC.busy=false; f2Hide("ocView"); OC.img=null; OC.lines=[]; OC.tr=[]; const c=el("ocCv"); c.width=1; c.height=1; };
+el("ocFile").addEventListener("change",e=>{ const f=e.target.files&&e.target.files[0]; e.target.value=""; if(f) ocOpen(f); });
+el("ocX").addEventListener("click",()=>F2_CLOSE.ocView());
+el("ocTo").addEventListener("click",()=>{
+  const txt=(OC.linesAll||OC.lines).map(l=>l.text).join("\n"); if(!txt) return;
+  F2_CLOSE.ocView(); el("trIn").value=txt;
+  if(S.trMode!=="dlg") trNow(); else el("trIn").focus();
+});
+el("ocCopy").addEventListener("click",async()=>{
+  const txt=OC.tr.join("\n"); if(!txt) return;
+  try{ await navigator.clipboard.writeText(txt); say("tr_copied",null,"good"); }catch(_){}
+  el("ocCopy").classList.add("flash"); setTimeout(()=>el("ocCopy").classList.remove("flash"),600); fbuzz("light");
+});
+addEventListener("resize",()=>{ if(!el("ocView").hidden) ocDraw(); });
 
 applyLang();
 setTab("cut");
