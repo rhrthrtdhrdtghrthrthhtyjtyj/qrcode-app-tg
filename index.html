@@ -1038,6 +1038,39 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 .oc-row b{font-weight:400;overflow-wrap:anywhere}
 .f2-btns button:disabled{opacity:.45;cursor:default}
 .f2-btns button.flash{box-shadow:0 0 0 3px rgba(255,176,32,.45)}
+
+/* перевод видео */
+.vd-stage{flex:0 0 auto;height:min(52vh,460px);min-height:240px;border:1px solid var(--edge);border-radius:3px;background:#0F0B0A;
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.vd-wrap{position:relative;max-width:100%;max-height:100%}
+.vd-wrap video{display:block;width:100%;height:100%;background:#000}
+.vd-band{position:absolute;left:0;right:0;border:2px solid var(--safelight);background:rgba(255,176,32,.13);touch-action:none;cursor:ns-resize;
+  box-shadow:0 0 0 999px rgba(10,7,6,.35)}
+.vd-band[hidden]{display:none}
+.vd-band i{position:absolute;left:50%;top:-11px;width:38px;height:20px;margin-left:-19px;border-radius:10px;background:var(--safelight)}
+.vd-band i::before{content:"";position:absolute;left:11px;right:11px;top:6px;height:2px;background:#1A1109;box-shadow:0 5px 0 #1A1109}
+.vd-cover{position:absolute;border-radius:4px;background:rgba(14,10,8,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  pointer-events:none;visibility:hidden}
+.vd-sub{position:absolute;left:6%;right:6%;transform:translateY(-50%);text-align:center;color:#FFFFFF;pointer-events:none;visibility:hidden;
+  font:700 16px/1.22 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;overflow-wrap:anywhere;
+  text-shadow:0 0 2px #000,1px 1px 0 #000,-1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000,0 2px 6px rgba(0,0,0,.7)}
+.vd-cover[hidden],.vd-sub[hidden]{display:none}
+.vd-hrow{display:flex;flex-direction:column;gap:4px;flex:0 0 auto}
+.vd-hrow[hidden]{display:none}
+.vd-list{display:flex;flex-direction:column;border:1px solid var(--edge);border-radius:3px;overflow:hidden;flex:0 0 auto}
+.vd-list:empty{display:none}
+.vd-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;padding:8px 10px;background:#191211;align-items:start}
+.vd-row+.vd-row{border-top:1px solid var(--edge)}
+.vd-t{min-height:30px;padding:0 8px;border:1px solid var(--edge);border-radius:15px;background:transparent;color:var(--safelight);
+  font:11px var(--ui);cursor:pointer}
+.vd-row div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.vd-o{font-size:11px;line-height:1.35;color:var(--muted);overflow-wrap:anywhere}
+.vd-tr{font-size:13px;line-height:1.35;color:var(--paper);overflow-wrap:anywhere;outline:none;border-bottom:1px dashed transparent;padding-bottom:1px}
+.vd-tr:focus{border-bottom-color:var(--safelight)}
+#vdStop{grid-column:1/-1}
+.f2-info.good{color:#A8D99C}
+
+.trp-photo+.trp-photo{margin-left:6px}
 </style>
 </head>
 <body>
@@ -1104,9 +1137,10 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
       </div>
     </div>
     <div class="trp-lbl"><span data-t="tr_src"></span>
-      <label class="trp-photo" for="ocFile" tabindex="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4Z"></path><circle cx="12" cy="13" r="3.5"></circle></svg><span data-t="oc_btn"></span></label>
+      <label class="trp-photo" for="ocFile" tabindex="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4Z"></path><circle cx="12" cy="13" r="3.5"></circle></svg><span data-t="oc_btn"></span></label><label class="trp-photo" for="vdFile" tabindex="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="1"></rect><path d="m16 10 5-3v10l-5-3"></path></svg><span data-t="vd_btn"></span></label>
       <button class="trp-x" id="trClear" aria-label="Clear">×</button></div>
     <input type="file" id="ocFile" accept="image/*" hidden>
+    <input type="file" id="vdFile" accept="video/*" hidden>
     <textarea id="trIn" rows="4" data-t-ph="tr_ph"></textarea>
     <div class="trp-tools">
       <button class="trp-chip wide" id="trOrig" aria-pressed="false" data-t="tr_orig"></button>
@@ -1545,6 +1579,33 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
   </div>
 </div>
 
+<div class="f2v" id="vdView" hidden role="dialog" aria-modal="true" aria-labelledby="vdTitle">
+  <div class="f2-head"><b id="vdTitle" data-t="vd_title"></b>
+    <button type="button" class="f2-x" id="vdX" data-t-al="f2_close">×</button></div>
+  <div class="vd-stage" id="vdStage">
+    <div class="vd-wrap" id="vdWrap">
+      <video id="vdVid" playsinline webkit-playsinline muted preload="auto" controlslist="nofullscreen nodownload noremoteplayback" disablepictureinpicture></video>
+      <div class="vd-cover" id="vdCover" hidden></div>
+      <div class="vd-sub" id="vdSub" hidden></div>
+      <div class="vd-band" id="vdBand" hidden><i></i></div>
+    </div>
+  </div>
+  <div id="vdLangRow"><div class="f2-lbl"><span data-t="vd_lang"></span></div><div class="oc-langs" id="vdLangs" role="group"></div></div>
+  <label class="vd-hrow" id="vdHrow" hidden><span class="f2-lbl"><span data-t="vd_height"></span></span>
+    <input type="range" id="vdH" min="5" max="35" step="1" value="15"></label>
+  <div class="oc-bar" id="vdBar" hidden><i></i></div>
+  <p class="f2-info" id="vdInfo" aria-live="polite"></p>
+  <div class="vd-list" id="vdList"></div>
+  <p class="f2-note" data-t="vd_note"></p>
+  <div class="f2-btns">
+    <button type="button" id="vdAgain" data-t="vd_again"></button>
+    <button type="button" class="amber" id="vdGo" data-t="vd_go"></button>
+    <button type="button" id="vdSrt" data-t="vd_srt" hidden></button>
+    <button type="button" class="amber" id="vdSave" data-t="vd_save" hidden></button>
+    <button type="button" id="vdStop" data-t="vd_stop" hidden></button>
+  </div>
+</div>
+
 <div class="viewer" id="viewer" hidden>
   <div class="vbar">
     <button class="vback" id="vback" aria-label="Назад">←</button>
@@ -1780,6 +1841,18 @@ ru:{
   oc_fail:"не получилось скачать распознавание — проверь интернет",
   oc_note:"Фото не уходит в интернет: текст распознаётся на телефоне, переводится только он. В первый раз скачаю около 6 МБ.",
   oc_to:"В переводчик", oc_copy:"Копировать перевод",
+  vd_btn:"Видео", vd_title:"Перевод видео", vd_lang:"Язык субтитров",
+  vd_find:p=>"ищу, где субтитры… "+p+"%", vd_band:"Субтитры здесь — подвинь рамку пальцем, если не так",
+  vd_noband:"субтитры сами не нашлись — поставь рамку на текст", vd_height:"Высота рамки",
+  vd_go:"Читать и перевести", vd_read:p=>"читаю субтитры… "+p+"%", vd_tr:"перевожу фразы…",
+  vd_done:n=>"фраз: "+n+" — проверь перевод, его можно поправить", vd_none:"в рамке текста не нашлось — подвинь рамку или выбери язык",
+  vd_srt:"Субтитры .srt", vd_save:"Сохранить видео", vd_make:p=>"готовлю видео… "+p+"%", vd_ok:mb=>"видео готово · "+mb+" МБ",
+  vd_stop:"Остановить", vd_again:"Найти заново",
+  vd_nosave:"здесь видео не сохранить — Telegram не даёт. Открой Проявочную на сайте или сохрани субтитры .srt",
+  vd_norec:"этот браузер не умеет записывать видео — сохрани субтитры .srt",
+  vd_long:"видео длиннее 5 минут — возьму первые 5", vd_err:"не получилось открыть видео — попробуй другое (MP4, MOV)",
+  vd_srt_copy:"субтитры .srt скопированы — вставь в файл или в монтажку",
+  vd_note:"Видео не уходит в интернет: субтитры читаются на телефоне, переводится только текст. Переводятся надписи в кадре, не речь и не жесты.",
   dlg_tab_tr:"Перевод", dlg_tab:"Диалог", dlg_me:"Я пишу", dlg_friend:"Ответ друга",
   dlg_ph_me:"Напиши сообщение — переведу на два языка и добавлю в переписку",
   dlg_ph_fr:n=>"Вставь ответ друга — переведу на "+n,
@@ -1995,6 +2068,18 @@ en:{
   oc_fail:"couldn't download the text reader — check the connection",
   oc_note:"The photo stays on the phone: the text is recognized here and only the text gets translated. The first time it downloads about 6 MB.",
   oc_to:"To translator", oc_copy:"Copy translation",
+  vd_btn:"Video", vd_title:"Video translation", vd_lang:"Subtitle language",
+  vd_find:p=>"looking for the subtitles… "+p+"%", vd_band:"Subtitles are here — drag the frame if not",
+  vd_noband:"couldn't find subtitles — put the frame over the text", vd_height:"Frame height",
+  vd_go:"Read and translate", vd_read:p=>"reading subtitles… "+p+"%", vd_tr:"translating phrases…",
+  vd_done:n=>"phrases: "+n+" — check the translation, you can edit it", vd_none:"no text inside the frame — move the frame or pick a language",
+  vd_srt:"Subtitles .srt", vd_save:"Save video", vd_make:p=>"making the video… "+p+"%", vd_ok:mb=>"video ready · "+mb+" MB",
+  vd_stop:"Stop", vd_again:"Search again",
+  vd_nosave:"can't save the video here — Telegram blocks it. Open Darkroom on the website or save the .srt subtitles",
+  vd_norec:"this browser can't record video — save the .srt subtitles",
+  vd_long:"the video is longer than 5 minutes — I'll take the first 5", vd_err:"couldn't open the video — try another one (MP4, MOV)",
+  vd_srt_copy:".srt subtitles copied — paste them into a file or your editor",
+  vd_note:"The video stays on the phone: subtitles are read here and only the text gets translated. On-screen text is translated, not speech or signs.",
   dlg_tab_tr:"Translate", dlg_tab:"Dialog", dlg_me:"I'm writing", dlg_friend:"Friend's reply",
   dlg_ph_me:"Write a message — I translate it into two languages and add it to the conversation",
   dlg_ph_fr:n=>"Paste your friend's reply — I translate it into "+n,
@@ -2212,6 +2297,18 @@ pl:{
   oc_fail:"nie udało się pobrać rozpoznawania — sprawdź internet",
   oc_note:"Zdjęcie zostaje w telefonie: tekst rozpoznaję tutaj i tłumaczę tylko jego. Za pierwszym razem pobiorę ok. 6 MB.",
   oc_to:"Do tłumacza", oc_copy:"Kopiuj tłumaczenie",
+  vd_btn:"Wideo", vd_title:"Tłumaczenie wideo", vd_lang:"Język napisów",
+  vd_find:p=>"szukam napisów… "+p+"%", vd_band:"Napisy są tutaj — przeciągnij ramkę, jeśli nie",
+  vd_noband:"nie znalazłem napisów — ustaw ramkę na tekście", vd_height:"Wysokość ramki",
+  vd_go:"Czytaj i tłumacz", vd_read:p=>"czytam napisy… "+p+"%", vd_tr:"tłumaczę zdania…",
+  vd_done:n=>"zdań: "+n+" — sprawdź tłumaczenie, można je poprawić", vd_none:"w ramce nie ma tekstu — przesuń ramkę albo wybierz język",
+  vd_srt:"Napisy .srt", vd_save:"Zapisz wideo", vd_make:p=>"przygotowuję wideo… "+p+"%", vd_ok:mb=>"wideo gotowe · "+mb+" MB",
+  vd_stop:"Zatrzymaj", vd_again:"Szukaj ponownie",
+  vd_nosave:"tu nie da się zapisać wideo — Telegram blokuje. Otwórz Ciemnię w przeglądarce albo zapisz napisy .srt",
+  vd_norec:"ta przeglądarka nie umie nagrywać wideo — zapisz napisy .srt",
+  vd_long:"wideo dłuższe niż 5 minut — wezmę pierwsze 5", vd_err:"nie udało się otworzyć wideo — spróbuj innego (MP4, MOV)",
+  vd_srt_copy:"napisy .srt skopiowane — wklej do pliku albo do edytora",
+  vd_note:"Wideo zostaje w telefonie: napisy czytam tutaj, tłumaczę tylko tekst. Tłumaczę napisy w kadrze, nie mowę i nie migi.",
   dlg_tab_tr:"Tłumacz", dlg_tab:"Dialog", dlg_me:"Piszę ja", dlg_friend:"Odpowiedź",
   dlg_ph_me:"Napisz wiadomość — przetłumaczę na dwa języki i dodam do rozmowy",
   dlg_ph_fr:n=>"Wklej odpowiedź znajomego — przetłumaczę na "+n,
@@ -2431,6 +2528,18 @@ de:{
   oc_fail:"Texterkennung ließ sich nicht laden — Internet prüfen",
   oc_note:"Das Foto bleibt auf dem Handy: Der Text wird hier erkannt, übersetzt wird nur er. Beim ersten Mal lade ich etwa 6 MB.",
   oc_to:"In den Übersetzer", oc_copy:"Übersetzung kopieren",
+  vd_btn:"Video", vd_title:"Video übersetzen", vd_lang:"Sprache der Untertitel",
+  vd_find:p=>"suche die Untertitel… "+p+"%", vd_band:"Hier sind die Untertitel — sonst den Rahmen verschieben",
+  vd_noband:"Untertitel nicht gefunden — setz den Rahmen auf den Text", vd_height:"Rahmenhöhe",
+  vd_go:"Lesen und übersetzen", vd_read:p=>"lese Untertitel… "+p+"%", vd_tr:"übersetze die Sätze…",
+  vd_done:n=>"Sätze: "+n+" — prüf die Übersetzung, du kannst sie ändern", vd_none:"im Rahmen kein Text — Rahmen verschieben oder Sprache wählen",
+  vd_srt:"Untertitel .srt", vd_save:"Video sichern", vd_make:p=>"erstelle das Video… "+p+"%", vd_ok:mb=>"Video fertig · "+mb+" MB",
+  vd_stop:"Stopp", vd_again:"Neu suchen",
+  vd_nosave:"hier lässt sich das Video nicht sichern — Telegram blockiert es. Öffne die Dunkelkammer im Browser oder sichere die Untertitel .srt",
+  vd_norec:"dieser Browser kann kein Video aufnehmen — sichere die Untertitel .srt",
+  vd_long:"Video länger als 5 Minuten — ich nehme die ersten 5", vd_err:"Video ließ sich nicht öffnen — versuch ein anderes (MP4, MOV)",
+  vd_srt_copy:"Untertitel .srt kopiert — in eine Datei oder den Editor einfügen",
+  vd_note:"Das Video bleibt auf dem Handy: Untertitel werden hier gelesen, übersetzt wird nur der Text. Übersetzt wird Text im Bild, keine Sprache und keine Gebärden.",
   dlg_tab_tr:"Übersetzen", dlg_tab:"Dialog", dlg_me:"Ich schreibe", dlg_friend:"Antwort",
   dlg_ph_me:"Schreib eine Nachricht — ich übersetze sie in zwei Sprachen und füge sie dem Gespräch hinzu",
   dlg_ph_fr:n=>"Füg die Antwort ein — Übersetzung auf "+n,
@@ -2650,6 +2759,18 @@ fr:{
   oc_fail:"impossible de télécharger la reconnaissance — vérifie la connexion",
   oc_note:"La photo reste sur le téléphone : le texte est reconnu ici et seul le texte est traduit. La première fois, environ 6 Mo à télécharger.",
   oc_to:"Vers le traducteur", oc_copy:"Copier la traduction",
+  vd_btn:"Vidéo", vd_title:"Traduire une vidéo", vd_lang:"Langue des sous-titres",
+  vd_find:p=>"je cherche les sous-titres… "+p+" %", vd_band:"Les sous-titres sont ici — déplace le cadre sinon",
+  vd_noband:"sous-titres introuvables — place le cadre sur le texte", vd_height:"Hauteur du cadre",
+  vd_go:"Lire et traduire", vd_read:p=>"lecture des sous-titres… "+p+" %", vd_tr:"traduction des phrases…",
+  vd_done:n=>"phrases : "+n+" — vérifie la traduction, tu peux la corriger", vd_none:"aucun texte dans le cadre — déplace le cadre ou choisis la langue",
+  vd_srt:"Sous-titres .srt", vd_save:"Enregistrer la vidéo", vd_make:p=>"préparation de la vidéo… "+p+" %", vd_ok:mb=>"vidéo prête · "+mb+" Mo",
+  vd_stop:"Arrêter", vd_again:"Chercher à nouveau",
+  vd_nosave:"impossible d’enregistrer la vidéo ici — Telegram le bloque. Ouvre Chambre noire dans le navigateur ou enregistre les sous-titres .srt",
+  vd_norec:"ce navigateur ne sait pas enregistrer de vidéo — enregistre les sous-titres .srt",
+  vd_long:"vidéo de plus de 5 minutes — je prends les 5 premières", vd_err:"impossible d’ouvrir la vidéo — essaie une autre (MP4, MOV)",
+  vd_srt_copy:"sous-titres .srt copiés — colle-les dans un fichier ou ton éditeur",
+  vd_note:"La vidéo reste sur le téléphone : les sous-titres sont lus ici et seul le texte est traduit. C’est le texte à l’image qui est traduit, pas la voix ni les signes.",
   dlg_tab_tr:"Traduire", dlg_tab:"Dialogue", dlg_me:"J’écris", dlg_friend:"Sa réponse",
   dlg_ph_me:"Écris un message — je le traduis en deux langues et l’ajoute à la conversation",
   dlg_ph_fr:n=>"Colle la réponse de ton ami — je la traduis en "+n,
@@ -2866,6 +2987,18 @@ es:{
   oc_fail:"no se pudo descargar el reconocimiento — revisa la conexión",
   oc_note:"La foto se queda en el móvil: el texto se reconoce aquí y solo se traduce el texto. La primera vez descargo unos 6 MB.",
   oc_to:"Al traductor", oc_copy:"Copiar traducción",
+  vd_btn:"Vídeo", vd_title:"Traducir vídeo", vd_lang:"Idioma de los subtítulos",
+  vd_find:p=>"busco los subtítulos… "+p+"%", vd_band:"Los subtítulos están aquí — arrastra el marco si no",
+  vd_noband:"no encontré subtítulos — coloca el marco sobre el texto", vd_height:"Altura del marco",
+  vd_go:"Leer y traducir", vd_read:p=>"leyendo subtítulos… "+p+"%", vd_tr:"traduciendo frases…",
+  vd_done:n=>"frases: "+n+" — revisa la traducción, puedes corregirla", vd_none:"no hay texto en el marco — muévelo o elige el idioma",
+  vd_srt:"Subtítulos .srt", vd_save:"Guardar vídeo", vd_make:p=>"preparando el vídeo… "+p+"%", vd_ok:mb=>"vídeo listo · "+mb+" MB",
+  vd_stop:"Detener", vd_again:"Buscar de nuevo",
+  vd_nosave:"aquí no se puede guardar el vídeo — Telegram lo bloquea. Abre Cuarto oscuro en el navegador o guarda los subtítulos .srt",
+  vd_norec:"este navegador no puede grabar vídeo — guarda los subtítulos .srt",
+  vd_long:"el vídeo dura más de 5 minutos — tomo los primeros 5", vd_err:"no se pudo abrir el vídeo — prueba otro (MP4, MOV)",
+  vd_srt_copy:"subtítulos .srt copiados — pégalos en un archivo o en tu editor",
+  vd_note:"El vídeo se queda en el móvil: los subtítulos se leen aquí y solo se traduce el texto. Se traduce el texto en pantalla, no la voz ni los signos.",
   dlg_tab_tr:"Traducir", dlg_tab:"Diálogo", dlg_me:"Escribo yo", dlg_friend:"Su respuesta",
   dlg_ph_me:"Escribe un mensaje — lo traduzco a dos idiomas y lo añado a la conversación",
   dlg_ph_fr:n=>"Pega la respuesta de tu amigo — la traduzco al "+n,
@@ -5527,6 +5660,9 @@ function f2Back(){
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&!viewerOpen()&&f2IsOpen()){ e.preventDefault(); f2Back(); }
 });
+function f2ChipScroll(box){                          // выбранный язык — в середину ленты
+  requestAnimationFrame(()=>{ const b=box.querySelector('[aria-pressed="true"]'); if(b) box.scrollLeft=b.offsetLeft-box.offsetLeft-(box.clientWidth-b.offsetWidth)/2; });
+}
 const blobOf=(c,type,q)=>new Promise(r=>c.toBlob(r,type||"image/png",q));
 /* Отдать картинку человеку так, чтобы она попала в Фото:
    Telegram и встроенные браузеры — показать и «сохранить долгим нажатием»;
@@ -6458,9 +6594,7 @@ async function ocWorker(code){
   if(OC.worker){ try{ await OC.worker.terminate(); }catch(_){} OC.worker=null; }
   const c=await ocLib();
   const w=await window.Tesseract.createWorker(tess,1,{workerPath:c.worker,corePath:c.core,langPath:c.lang(tess),
-    logger:m=>{ if(!m||OC.seq!==OC.cur) return; const p=Math.round((m.progress||0)*100);
-      if(/recogniz/i.test(m.status||"")){ ocState("oc_read",p); ocBar(m.progress||0); }
-      else { ocState("oc_load",p); ocBar((m.progress||0)*0.99); } }});
+    logger:m=>{ if(m&&F2.ocProg) F2.ocProg(m); }});
   OC.worker=w; OC.lang=tess; return w;
 }
 function ocDraw(){
@@ -6491,11 +6625,15 @@ function ocChips(){
       ocChips(); fbuzz("light"); ocRun(); });
     box.appendChild(b);
   });
+  f2ChipScroll(box);
 }
 async function ocRun(){
   if(!OC.img) return;
   const my=++OC.seq; OC.cur=my; OC.busy=true; OC.lines=[]; OC.tr=[]; ocTable(); ocDraw();
   ocState("oc_load",0); ocBar(0);
+  F2.ocProg=m=>{ if(OC.seq!==my) return; const p=Math.round((m.progress||0)*100);
+    if(/recogniz/i.test(m.status||"")){ ocState("oc_read",p); ocBar(m.progress||0); }
+    else { ocState("oc_load",p); ocBar((m.progress||0)*0.99); } };
   let w;
   try{ w=await ocWorker(OC.code); }catch(e){ if(my===OC.seq){ OC.busy=false; ocBar(null); ocState("oc_fail",null,"bad"); } return; }
   try{
@@ -6543,6 +6681,404 @@ el("ocCopy").addEventListener("click",async()=>{
   el("ocCopy").classList.add("flash"); setTimeout(()=>el("ocCopy").classList.remove("flash"),600); fbuzz("light");
 });
 addEventListener("resize",()=>{ if(!el("ocView").hidden) ocDraw(); });
+
+/* ══════════════════════ перевод видео: субтитры в кадре ══════════════════════
+   1) находим, где в кадре субтитры (несколько кадров целиком через Tesseract);
+   2) читаем полосу субтитров каждые 0,5 с (если картинка в полосе не менялась — не читаем заново);
+   3) склеиваем одинаковые подряд в фразы со временем, переводим разом;
+   4) смотрим с переводом поверх, правим, сохраняем .srt или новое видео (холст + звук → MediaRecorder).
+   Видео никуда не отправляется — в сеть уходит только текст фраз. */
+const VD={url:"",dur:0,w:0,h:0,band:null,method:"wfill",segs:[],run:0,state:"",rec:null,name:"video"};
+const VD_STEP=0.5, VD_MAX=300;
+const VD_SAVE=false;          // «Сохранить видео» (новый файл) — готово, но выключено: Илья выбрал «смотреть с переводом»
+const vdV=()=>el("vdVid");
+function vdState(key,p,kind){ el("vdInfo").textContent=p==null?t(key):tf(key,p); el("vdInfo").className="f2-info"+(kind==="bad"?" bad":kind==="good"?" good":""); }
+function vdBar(v){ el("vdBar").hidden=v==null; if(v!=null) el("vdBar").firstElementChild.style.width=Math.round(Math.max(0,Math.min(1,v))*100)+"%"; }
+function vdMode(m){                                   // setup | busy | ready | render
+  VD.state=m; const box=el("vdView"); box.dataset.m=m;
+  el("vdGo").hidden=m!=="setup"; el("vdAgain").hidden=m!=="setup";
+  el("vdSrt").hidden=m!=="ready"; el("vdSave").hidden=!VD_SAVE||m!=="ready"; el("vdStop").hidden=m!=="busy"&&m!=="render";
+  el("vdHrow").hidden=m!=="setup"; el("vdBand").hidden=m!=="setup"; el("vdLangRow").hidden=m==="render";
+  el("vdSub").hidden=m!=="ready"; el("vdCover").hidden=m!=="ready";
+  vdV().controls=m==="ready";
+  document.querySelectorAll("#vdLangs button").forEach(b=>b.disabled=m==="busy"||m==="render");
+}
+function vdFit(){
+  const st=el("vdStage"), wrap=el("vdWrap"); if(!VD.w) return;
+  const k=Math.min(st.clientWidth/VD.w,st.clientHeight/VD.h);
+  wrap.style.width=Math.round(VD.w*k)+"px"; wrap.style.height=Math.round(VD.h*k)+"px";
+  vdBandUI(); vdSubFont();
+}
+function vdBandUI(){ const b=VD.band; if(!b) return; const n=el("vdBand"); n.style.top=(b[0]*100)+"%"; n.style.height=((b[1]-b[0])*100)+"%";
+  el("vdH").value=Math.round((b[1]-b[0])*100); }
+function vdSubFont(){ const w=el("vdWrap").clientWidth; el("vdSub").style.fontSize=Math.max(11,Math.round(w*0.05))+"px"; }
+function vdSeek(t){
+  const v=vdV();
+  return new Promise(ok=>{
+    /* после «seeked» ждём, пока кадр правда нарисуется (requestVideoFrameCallback), иначе можно прочитать старый */
+    let done=false; const fin=()=>{ if(done) return; done=true; v.removeEventListener("seeked",fin);
+      let ready=false; const go=()=>{ if(ready) return; ready=true; ok(); };
+      if(v.requestVideoFrameCallback){ v.requestVideoFrameCallback(()=>go()); setTimeout(go,350); }
+      else requestAnimationFrame(()=>requestAnimationFrame(go)); };
+    v.addEventListener("seeked",fin); v.currentTime=Math.min(Math.max(0,t),Math.max(0,VD.dur-0.05)); setTimeout(fin,4000);
+  });
+}
+function vdGrab(maxW){                                  // текущий кадр → холст (ширина ≤ maxW)
+  const v=vdV(), k=Math.min(1,maxW/VD.w), c=document.createElement("canvas");
+  c.width=Math.max(1,Math.round(VD.w*k)); c.height=Math.max(1,Math.round(VD.h*k));
+  c.getContext("2d",{willReadFrequently:true}).drawImage(v,0,0,c.width,c.height); c.k=k; return c;
+}
+/* подготовка картинки для распознавания:
+   wfill — белые буквы с тёмной обводкой (как в TikTok/Reels): берём самое светлое рядом с тёмной каймой;
+   kfill — тёмные буквы на светлой плашке; gray / inv — просто серый (или наоборот) с растяжкой контраста */
+function vdPrep(src,method,scale){
+  const W=src.width, H=src.height, d=src.getContext("2d",{willReadFrequently:true}).getImageData(0,0,W,H).data, n=W*H;
+  const L=new Uint8ClampedArray(n), MN=new Uint8ClampedArray(n), MX=new Uint8ClampedArray(n);
+  for(let i=0,p=0;i<n;i++,p+=4){ const r=d[p],g=d[p+1],b=d[p+2]; L[i]=0.299*r+0.587*g+0.114*b; MN[i]=Math.min(r,g,b); MX[i]=Math.max(r,g,b); }
+  const out=new Uint8ClampedArray(n);
+  if(method==="gray"||method==="inv"){
+    const hist=new Uint32Array(256); for(let i=0;i<n;i++) hist[L[i]]++;
+    let lo=0,hi=255,a=0; for(let i=0;i<256;i++){ a+=hist[i]; if(a>n*0.01){ lo=i; break; } }
+    a=0; for(let i=255;i>=0;i--){ a+=hist[i]; if(a>n*0.01){ hi=i; break; } }
+    const k=255/Math.max(20,hi-lo);
+    for(let i=0;i<n;i++){ const v=Math.max(0,Math.min(255,(L[i]-lo)*k)); out[i]=method==="inv"?255-v:v; }
+  }else{
+    const white=method==="wfill", r=Math.max(3,Math.round(W*0.008));
+    const seed=new Uint8Array(n); for(let i=0;i<n;i++) seed[i]=white?(L[i]<90?1:0):(L[i]>170?1:0);
+    const tmp=new Uint8Array(n), near=new Uint8Array(n);               // «рядом с каймой»: max-фильтр по строкам и столбцам
+    for(let y=0;y<H;y++){ let run=-1e9; for(let x=0;x<W;x++){ if(seed[y*W+x]) run=x; tmp[y*W+x]=x-run<=r?1:0; }
+      run=1e9; for(let x=W-1;x>=0;x--){ if(seed[y*W+x]) run=x; if(run-x<=r) tmp[y*W+x]=1; } }
+    for(let x=0;x<W;x++){ let run=-1e9; for(let y=0;y<H;y++){ if(tmp[y*W+x]) run=y; near[y*W+x]=y-run<=r?1:0; }
+      run=1e9; for(let y=H-1;y>=0;y--){ if(tmp[y*W+x]) run=y; if(run-y<=r) near[y*W+x]=1; } }
+    const hist=new Uint32Array(256); let cnt=0;
+    for(let i=0;i<n;i++) if(near[i]&&!seed[i]){ hist[white?MN[i]:MX[i]]++; cnt++; }
+    let T=white?255:0;
+    if(cnt){ let a=0; if(white){ for(let v=255;v>=0;v--){ a+=hist[v]; if(a>cnt*0.02){ T=v; break; } } T=Math.max(150,T-12); }
+      else{ for(let v=0;v<256;v++){ a+=hist[v]; if(a>cnt*0.02){ T=v; break; } } T=Math.min(110,T+9); } }
+    const m=new Uint8Array(n);
+    for(let i=0;i<n;i++) m[i]=near[i]&&(white?MN[i]>=T&&!seed[i]:MX[i]<=T&&!seed[i])?1:0;
+    const lab=new Int32Array(n), st=[];                                  // мелкий мусор (меньше 12 точек) — прочь
+    for(let i=0;i<n;i++){ if(!m[i]||lab[i]) continue; const comp=[]; st.push(i); lab[i]=1;
+      while(st.length){ const j=st.pop(); comp.push(j); const x=j%W;
+        if(x>0&&m[j-1]&&!lab[j-1]){ lab[j-1]=1; st.push(j-1); } if(x<W-1&&m[j+1]&&!lab[j+1]){ lab[j+1]=1; st.push(j+1); }
+        if(j>=W&&m[j-W]&&!lab[j-W]){ lab[j-W]=1; st.push(j-W); } if(j<n-W&&m[j+W]&&!lab[j+W]){ lab[j+W]=1; st.push(j+W); } }
+      if(comp.length<6) comp.forEach(j=>{ m[j]=0; }); }
+    for(let i=0;i<n;i++) out[i]=m[i]?0:255;
+  }
+  const s=scale||1, c=document.createElement("canvas"); c.width=Math.round(W*s); c.height=Math.round(H*s);
+  const t0=document.createElement("canvas"); t0.width=W; t0.height=H;
+  const g0=t0.getContext("2d"), id=g0.createImageData(W,H);
+  for(let i=0,p=0;i<n;i++,p+=4){ id.data[p]=id.data[p+1]=id.data[p+2]=out[i]; id.data[p+3]=255; }
+  g0.putImageData(id,0,0);
+  const g=c.getContext("2d"); g.fillStyle="#FFFFFF"; g.fillRect(0,0,c.width,c.height);
+  g.imageSmoothingEnabled=method==="gray"||method==="inv"; g.drawImage(t0,0,0,c.width,c.height); t0.width=1;
+  return c;
+}
+async function vdOcr(canvas){                            // строки: текст, уверенность, рамка (в точках этого холста)
+  const w=await ocWorker(OC.code);
+  const r=await w.recognize(canvas,{},{blocks:true,text:true}), lines=[];
+  (r.data.blocks||[]).forEach(bk=>(bk.paragraphs||[]).forEach(pa=>(pa.lines||[]).forEach(l=>{
+    const tx=String(l.text||"").replace(/[|_~«»]+/g," ").replace(/\s+/g," ").trim();
+    const letters=(tx.match(/\p{L}/gu)||[]).length;
+    if(letters>=2&&(l.confidence||0)>=45&&letters>=tx.replace(/\s/g,"").length*0.5) lines.push({text:tx,conf:l.confidence,bbox:l.bbox});
+  })));
+  return lines;
+}
+const vdCancelled=my=>my!==VD.run||el("vdView").hidden;
+async function vdDetect(){
+  const my=++VD.run; vdMode("busy"); vdBar(0); vdState("vd_find",0);
+  F2.ocProg=m=>{ if(my!==VD.run) return; if(!/recogniz/i.test(m.status||"")) vdState("oc_load",Math.round((m.progress||0)*100)); };
+  const span=Math.min(VD.dur,VD_MAX), N=Math.min(6,Math.max(3,Math.round(span/4))), hits=[], frames=[];
+  try{
+    for(let i=0;i<N;i++){
+      const tt=(i+0.5)*span/N; await vdSeek(tt); if(vdCancelled(my)) return;
+      const fr=vdGrab(720); frames.push({t:tt,fr});
+      for(const m of ["wfill","gray"]){
+        const pc=vdPrep(fr,m,1), ls=await vdOcr(pc); pc.width=1; if(vdCancelled(my)) return;
+        ls.forEach(l=>{ if(l.conf>=55) hits.push({i,m,text:l.text,conf:l.conf,y0:l.bbox.y0/fr.height,y1:l.bbox.y1/fr.height}); });
+      }
+      vdBar((i+1)/(N+2)); vdState("vd_find",Math.round((i+1)/(N+2)*100));
+    }
+  }catch(e){ if(!vdCancelled(my)){ vdBar(null); vdMode("setup"); vdState("oc_fail",null,"bad"); } return; }
+  /* надпись, которая стоит одинаково почти во всех кадрах (логотип, ник) — не субтитры */
+  const key=h=>h.text.toLowerCase().replace(/[^\p{L}\p{N}]/gu,"");
+  const seen={}; hits.forEach(h=>{ const k=key(h); (seen[k]=seen[k]||new Set()).add(h.i); });
+  const good=hits.filter(h=>!(N>=3&&seen[key(h)].size>=Math.ceil(N*0.8)));
+  let band=null;
+  if(good.length){
+    const bins=new Float32Array(50);
+    good.forEach(h=>{ const c=Math.min(49,Math.floor((h.y0+h.y1)/2*50)); bins[c]+=h.conf*h.text.length; });
+    let bi=0; for(let i=1;i<50;i++) if(bins[i]>bins[bi]) bi=i;
+    const cy=(bi+0.5)/50, near=good.filter(h=>Math.abs((h.y0+h.y1)/2-cy)<0.09);
+    const y0=Math.min.apply(null,near.map(h=>h.y0)), y1=Math.max.apply(null,near.map(h=>h.y1));
+    /* запас на строку сверху и снизу: субтитры бывают в две строки, а в пробных кадрах могла быть одна */
+    const hs=near.map(h=>h.y1-h.y0).sort((a,b)=>a-b), lh=hs[hs.length>>1]||0.03, pad=Math.max(0.025,lh*1.15);
+    band=[Math.max(0,y0-pad),Math.min(1,y1+pad)];
+    if(band[1]-band[0]>0.35){ const c=(band[0]+band[1])/2; band=[c-0.175,c+0.175]; }
+    if(band[1]-band[0]<0.07){ const c=(band[0]+band[1])/2; band=[Math.max(0,c-0.035),Math.min(1,c+0.035)]; }
+  }
+  VD.band=band||[0.62,0.8];
+  /* какой способ подготовки лучше читает эти субтитры */
+  const score={wfill:0,kfill:0,gray:0,inv:0};
+  const withText=[...new Set(good.map(h=>h.i))].slice(0,4);
+  try{
+    for(const i of withText){
+      const crop=vdCrop(frames[i].fr);
+      for(const m of Object.keys(score)){
+        const pc=vdPrep(crop,m,vdScale(crop)), ls=await vdOcr(pc); pc.width=1; if(vdCancelled(my)) return;
+        score[m]+=ls.reduce((a,l)=>a+l.conf*l.text.length,0);
+      }
+      crop.width=1;
+    }
+  }catch(_){}
+  VD.method=Object.keys(score).reduce((a,b)=>score[b]>score[a]?b:a,"wfill");
+  frames.forEach(f=>{ f.fr.width=1; });
+  const show=good.length?good[0].i:0;
+  await vdSeek((show+0.5)*span/N);
+  vdBar(null); vdMode("setup"); vdBandUI();
+  vdState(band?"vd_band":"vd_noband",null,band?"":"bad");
+}
+function vdCrop(fr){                                    // полоса субтитров из кадра fr (холст)
+  const y0=Math.floor(VD.band[0]*fr.height), y1=Math.ceil(VD.band[1]*fr.height), c=document.createElement("canvas");
+  c.width=fr.width; c.height=Math.max(8,y1-y0); c.y0=y0; c.getContext("2d").drawImage(fr,0,y0,fr.width,c.height,0,0,fr.width,c.height); return c;
+}
+const vdScale=c=>c.height<240?2:1;
+function vdSig(c){ const s=document.createElement("canvas"); s.width=96; s.height=24; const g=s.getContext("2d",{willReadFrequently:true});
+  g.drawImage(c,0,0,96,24); const d=g.getImageData(0,0,96,24).data, o=new Uint8Array(96*24);
+  for(let i=0,p=0;i<o.length;i++,p+=4) o[i]=(d[p]+d[p+1]+d[p+2])/3; return o; }
+function vdDiff(a,b){ if(!a||!b) return 255; let s=0; for(let i=0;i<a.length;i++) s+=Math.abs(a[i]-b[i]); return s/a.length; }
+function vdNorm(s){ return s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,""); }
+function vdSim(a,b){
+  a=vdNorm(a); b=vdNorm(b); if(!a||!b) return 0; if(a===b) return 1;
+  const m=a.length, n=b.length; let prev=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){ const cur=[i]; for(let j=1;j<=n;j++) cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1)); prev=cur; }
+  return 1-prev[n]/Math.max(m,n);
+}
+async function vdRead(){
+  const my=++VD.run; vdMode("busy"); vdBar(0); vdState("vd_read",0);
+  F2.ocProg=null;
+  const span=Math.min(VD.dur,VD_MAX), samples=[];
+  let prevSig=null, prev=null;
+  try{
+    for(let tt=VD_STEP/2;tt<span;tt+=VD_STEP){
+      await vdSeek(tt); if(vdCancelled(my)) return;
+      const fr=vdGrab(1080), crop=vdCrop(fr), sig=vdSig(crop);
+      let res;
+      if(prev&&vdDiff(sig,prevSig)<4) res=prev;
+      else{
+        const sc=vdScale(crop), pc=vdPrep(crop,VD.method,sc), ls=await vdOcr(pc); pc.width=1;
+        if(vdCancelled(my)) return;
+        if(!ls.length) res={text:"",conf:0};
+        else{
+          const k=fr.k*sc, box={x0:1e9,y0:1e9,x1:-1,y1:-1};
+          ls.forEach(l=>{ box.x0=Math.min(box.x0,l.bbox.x0/k); box.x1=Math.max(box.x1,l.bbox.x1/k);
+            box.y0=Math.min(box.y0,(l.bbox.y0/sc+crop.y0)/fr.k); box.y1=Math.max(box.y1,(l.bbox.y1/sc+crop.y0)/fr.k); });
+          res={text:ls.map(l=>l.text).join(" "),conf:ls.reduce((a,l)=>a+l.conf,0)/ls.length,box};
+        }
+      }
+      samples.push({t:tt,...res,re:res===prev}); prev=res; prevSig=sig; fr.width=1; crop.width=1;
+      vdBar(tt/span*0.9); vdState("vd_read",Math.round(tt/span*90));
+    }
+  }catch(e){ if(!vdCancelled(my)){ vdBar(null); vdMode("setup"); vdState("oc_fail",null,"bad"); } return; }
+  VD.samples=samples;
+  /* фразы: одинаковое подряд — одна фраза, лучший вариант по уверенности */
+  const segs=[]; let cur=null;
+  const close=()=>{ if(cur) segs.push(cur); cur=null; };
+  samples.forEach(s=>{
+    if(!s.text){ if(cur&&++cur.gap>1) close(); return; }        // один «пустой» кадр посреди фразы — не разрыв
+    if(cur&&vdSim(cur.text,s.text)>=0.6){ cur.gap=0; cur.e=s.t+VD_STEP/2; cur.n++; if(s.conf>cur.conf){ cur.text=s.text; cur.conf=s.conf; }
+      if(s.box){ cur.box.x0=Math.min(cur.box.x0,s.box.x0); cur.box.y0=Math.min(cur.box.y0,s.box.y0); cur.box.x1=Math.max(cur.box.x1,s.box.x1); cur.box.y1=Math.max(cur.box.y1,s.box.y1); } }
+    else{ close(); cur={s:Math.max(0,s.t-VD_STEP/2),e:s.t+VD_STEP/2,text:s.text,conf:s.conf,n:1,gap:0,box:{...s.box}}; }
+  });
+  close();
+  VD.segs=segs.filter(g=>g.n>1||g.conf>=55).map(g=>({...g,e:Math.min(g.e,VD.dur),tr:""}));
+  if(!VD.segs.length){ vdBar(null); vdMode("setup"); vdState("vd_none",null,"bad"); return; }
+  vdState("vd_tr"); vdBar(0.95);
+  try{
+    const out=await trOne(VD.segs.map(g=>g.text).join("\n"),OC.code,S.tr.to1);
+    let parts=String(out||"").split(/\n/).map(x=>x.trim());
+    if(parts.length!==VD.segs.length){
+      parts=[];
+      for(const g of VD.segs){ if(vdCancelled(my)) return; try{ parts.push(String(await trOne(g.text,OC.code,S.tr.to1)).trim()); }catch(_){ parts.push(""); } }
+    }
+    VD.segs.forEach((g,i)=>{ g.tr=parts[i]||""; });
+  }catch(e){ if(vdCancelled(my)) return; vdBar(null); vdList(); vdMode("ready"); vdState("tr_fail",null,"bad"); return; }
+  if(vdCancelled(my)) return;
+  vdBar(null); vdList(); vdMode("ready"); vdState("vd_done",VD.segs.length,"good");
+  await vdSeek(VD.segs[0].s+0.05); vdShowSub();
+  fbuzz("medium");
+}
+const vdTime=s=>{ const m=Math.floor(s/60), x=s-m*60; return m+":"+(x<10?"0":"")+x.toFixed(1); };
+function vdList(){
+  const box=el("vdList"); box.textContent="";
+  VD.segs.forEach((g,i)=>{
+    const r=document.createElement("div"); r.className="vd-row";
+    const tm=document.createElement("button"); tm.type="button"; tm.className="vd-t"; tm.textContent=vdTime(g.s);
+    tm.addEventListener("click",async()=>{ const v=vdV(); v.pause(); await vdSeek(g.s+0.05); vdShowSub(); });
+    const o=document.createElement("span"); o.className="vd-o"; o.textContent=g.text;
+    const tr=document.createElement("span"); tr.className="vd-tr"; tr.contentEditable="true"; tr.spellcheck=false; tr.textContent=g.tr;
+    tr.addEventListener("input",()=>{ g.tr=tr.textContent.replace(/\s+/g," ").trim(); vdShowSub(); });
+    r.appendChild(tm); const tx=document.createElement("div"); tx.appendChild(o); tx.appendChild(tr); r.appendChild(tx); box.appendChild(r);
+  });
+}
+const vdAt=tt=>VD.segs.find(g=>tt>=g.s&&tt<g.e)||null;
+function vdShowSub(){
+  if(VD.state!=="ready") return;
+  const g=vdAt(vdV().currentTime), sub=el("vdSub"), cov=el("vdCover");
+  if(!g||!g.tr){ sub.textContent=""; sub.style.visibility="hidden"; cov.style.visibility="hidden"; return; }
+  sub.textContent=g.tr; sub.style.visibility="visible";
+  const b=g.box, cy=b&&b.y1>0?(b.y0+b.y1)/2/VD.h:(VD.band[0]+VD.band[1])/2;
+  sub.style.top=(cy*100)+"%";
+  if(b&&b.x1>0){ cov.style.visibility="visible";
+    cov.style.left=Math.max(0,(b.x0/VD.w-0.03)*100)+"%"; cov.style.width=Math.min(100,((b.x1-b.x0)/VD.w+0.06)*100)+"%";
+    cov.style.top=Math.max(0,(b.y0/VD.h-0.015)*100)+"%"; cov.style.height=((b.y1-b.y0)/VD.h+0.03)*100+"%"; }
+  else cov.style.visibility="hidden";
+}
+/* .srt */
+function vdSrtText(){
+  const ts=s=>{ const ms=Math.round(s*1000), h=Math.floor(ms/3600000), m=Math.floor(ms/60000)%60, x=Math.floor(ms/1000)%60, r=ms%1000;
+    return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(x).padStart(2,"0")+","+String(r).padStart(3,"0"); };
+  return VD.segs.filter(g=>g.tr).map((g,i)=>(i+1)+"\n"+ts(g.s)+" --> "+ts(g.e)+"\n"+g.tr+"\n").join("\n");
+}
+el("vdSrt").addEventListener("click",async()=>{
+  const txt=vdSrtText(), name=VD.name+"-"+S.tr.to1+".srt", blob=new Blob([txt],{type:"text/plain"});
+  const how=await f2GiveFile(blob,name);
+  if(how==="blocked"){ try{ await navigator.clipboard.writeText(txt); }catch(_){} vdState("vd_srt_copy",null,"good"); }
+  fbuzz("light");
+});
+async function f2GiveFile(blob,name){
+  const file=new File([blob],name,{type:blob.type||"application/octet-stream"});
+  if((isTouch||inApp)&&navigator.canShare&&navigator.share){
+    try{ if(navigator.canShare({files:[file]})){ await navigator.share({files:[file]}); return "share"; } }
+    catch(e){ if(e&&e.name==="AbortError") return "cancel"; }
+  }
+  if(inApp) return "blocked";
+  const u=URL.createObjectURL(blob), a=document.createElement("a"); a.href=u; a.download=name; a.rel="noopener";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),15000);
+  return "file";
+}
+/* новое видео: кадр → прикрыть старые субтитры (размытие + тень) → перевод; звук — через WebAudio */
+function vdWrap(g,text,maxW){
+  const words=String(text).split(/\s+/), lines=[]; let line="";
+  words.forEach(w=>{ const tt=line?line+" "+w:w; if(g.measureText(tt).width>maxW&&line){ lines.push(line); line=w; } else line=tt; });
+  if(line) lines.push(line); return lines.slice(0,4);
+}
+function vdPaint(g,v,W,H,tt,pix){
+  g.drawImage(v,0,0,W,H);
+  const s=vdAt(tt); if(!s||!s.tr) return;
+  const k=W/VD.w, b=s.box&&s.box.x1>0?s.box:{x0:VD.w*0.06,x1:VD.w*0.94,y0:VD.band[0]*VD.h,y1:VD.band[1]*VD.h};
+  const x0=Math.max(0,(b.x0-VD.w*0.03)*k), y0=Math.max(0,(b.y0-VD.h*0.015)*k), x1=Math.min(W,(b.x1+VD.w*0.03)*k), y1=Math.min(H,(b.y1+VD.h*0.015)*k);
+  const bw=Math.max(2,Math.round((x1-x0)/48)), bh=Math.max(2,Math.round((y1-y0)/16));        // сильное размытие: старые буквы не читаются
+  pix.width=bw; pix.height=bh; const pg=pix.getContext("2d"); pg.imageSmoothingEnabled=true;
+  pg.drawImage(g.canvas,x0,y0,x1-x0,y1-y0,0,0,bw,bh);
+  g.save(); g.imageSmoothingEnabled=true; g.drawImage(pix,0,0,bw,bh,x0,y0,x1-x0,y1-y0);
+  g.fillStyle="rgba(0,0,0,.42)"; g.fillRect(x0,y0,x1-x0,y1-y0);
+  const fs=Math.max(14,Math.round(W*0.05));
+  g.font="700 "+fs+"px system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif"; g.textAlign="center"; g.textBaseline="middle";
+  const lines=vdWrap(g,s.tr,W*0.88), lh=fs*1.22, cy=(y0+y1)/2-(lines.length-1)*lh/2;
+  g.lineJoin="round"; g.lineWidth=Math.max(3,fs*0.16); g.strokeStyle="rgba(0,0,0,.9)"; g.fillStyle="#FFFFFF";
+  lines.forEach((ln,i)=>{ g.strokeText(ln,W/2,cy+i*lh); g.fillText(ln,W/2,cy+i*lh); });
+  g.restore();
+}
+function vdMime(){
+  if(typeof MediaRecorder==="undefined") return null;
+  /* MP4 (с H.264 — для Фото на iPhone и Android; у MP4 есть длительность, у записанного WebM её нет) */
+  const c=["video/mp4;codecs=avc1.42E01E,mp4a.40.2","video/mp4;codecs=avc1,mp4a","video/mp4","video/webm;codecs=vp9,opus","video/webm;codecs=vp8,opus","video/webm"];
+  return c.find(m=>{ try{ return MediaRecorder.isTypeSupported(m); }catch(_){ return false; } })||null;
+}
+el("vdSave").addEventListener("click",async()=>{
+  /* всё до play() — синхронно в нажатии: иначе iOS не даст звук */
+  const mime=vdMime(), cv=document.createElement("canvas");
+  if(!mime||!cv.captureStream){ vdState("vd_norec",null,"bad"); return; }
+  const my=++VD.run; vdMode("render"); vdBar(0); vdState("vd_make",0);
+  let ac=null; try{ ac=new (window.AudioContext||window.webkitAudioContext)(); ac.resume(); }catch(_){}
+  const v=document.createElement("video"); v.playsInline=true; v.preload="auto"; v.src=VD.url;
+  const k=Math.min(1,1280/Math.max(VD.w,VD.h)); cv.width=Math.round(VD.w*k/2)*2; cv.height=Math.round(VD.h*k/2)*2;
+  const g=cv.getContext("2d"), pix=document.createElement("canvas"), stream=cv.captureStream(30);
+  let routed=false;
+  if(ac){ try{ const srcN=ac.createMediaElementSource(v), dst=ac.createMediaStreamDestination(); srcN.connect(dst);
+    dst.stream.getAudioTracks().forEach(tr=>stream.addTrack(tr)); routed=true; }catch(_){} }
+  if(!routed) v.muted=true;
+  const chunks=[], rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:4000000});
+  VD.rec={rec,v,ac,stop:false};
+  rec.ondataavailable=e=>{ if(e.data&&e.data.size) chunks.push(e.data); };
+  const finished=new Promise(ok=>{ rec.onstop=ok; });
+  const span=Math.min(VD.dur,VD_MAX);
+  let alive=true;
+  const tick=()=>{ if(!alive) return; vdPaint(g,v,cv.width,cv.height,v.currentTime,pix);
+    vdBar(v.currentTime/span); vdState("vd_make",Math.round(v.currentTime/span*100));
+    if(v.currentTime>=span-0.02||v.ended){ alive=false; try{ v.pause(); }catch(_){} if(rec.state!=="inactive") rec.stop(); return; }
+    if(v.requestVideoFrameCallback) v.requestVideoFrameCallback(tick); else requestAnimationFrame(tick); };
+  v.onended=()=>{ if(alive){ alive=false; if(rec.state!=="inactive") rec.stop(); } };
+  rec.start(500);
+  const pp=v.play();
+  if(v.requestVideoFrameCallback) v.requestVideoFrameCallback(tick); else requestAnimationFrame(tick);
+  try{ await pp; }catch(e){ try{ v.muted=true; await v.play(); }catch(_){ alive=false; if(rec.state!=="inactive") rec.stop(); } }
+  await finished;
+  const stopped=VD.rec&&VD.rec.stop; VD.rec=null;
+  try{ v.pause(); v.removeAttribute("src"); v.load(); }catch(_){} try{ if(ac) ac.close(); }catch(_){}
+  stream.getTracks().forEach(tr=>tr.stop()); cv.width=1; pix.width=1;
+  if(vdCancelled(my)||stopped){ if(!el("vdView").hidden){ vdBar(null); vdMode("ready"); vdState("vd_done",VD.segs.length,"good"); } return; }
+  const blob=new Blob(chunks,{type:mime.split(";")[0]});
+  vdBar(null); vdMode("ready"); vdState("vd_ok",(blob.size/1048576).toFixed(1),"good");
+  VD.lastBlob=blob;
+  const how=await f2GiveFile(blob,VD.name+"-"+S.tr.to1+(mime.indexOf("mp4")>=0?".mp4":".webm"));
+  if(how==="blocked") vdState("vd_nosave",null,"bad");
+  fbuzz("medium");
+});
+el("vdStop").addEventListener("click",()=>{
+  if(VD.rec){ VD.rec.stop=true; try{ VD.rec.v.pause(); }catch(_){} try{ if(VD.rec.rec.state!=="inactive") VD.rec.rec.stop(); }catch(_){} return; }
+  VD.run++; vdBar(null); vdMode(VD.segs.length?"ready":"setup"); vdState(VD.segs.length?"vd_done":"vd_band",VD.segs.length||null);
+});
+/* открыть видео */
+function vdChips(){
+  const box=el("vdLangs"); box.textContent="";
+  OC_LANGS.forEach(([code])=>{
+    const b=document.createElement("button"); b.type="button"; b.textContent=gLang(code); b.dataset.c=code;
+    b.setAttribute("aria-pressed",String(code===OC.code));
+    b.addEventListener("click",()=>{ if(OC.code===code||VD.state==="busy"||VD.state==="render") return; OC.code=code;
+      try{ localStorage.setItem("proyav.ocrlang",code); }catch(_){}
+      vdChips(); fbuzz("light"); if(VD.segs.length){ VD.segs=[]; vdList(); vdMode("setup"); } vdDetect(); });
+    box.appendChild(b);
+  });
+  f2ChipScroll(box);
+}
+function vdOpen(file){
+  if(VD.url) URL.revokeObjectURL(VD.url);
+  VD.url=URL.createObjectURL(file); VD.name=String(file.name||"video").replace(/\.[^.]+$/,"").slice(0,40)||"video";
+  VD.segs=[]; VD.band=null; VD.w=0; vdList();
+  const v=vdV(); v.muted=true; v.playsInline=true; v.preload="auto";
+  v.onloadedmetadata=()=>{
+    VD.dur=v.duration||0; VD.w=v.videoWidth; VD.h=v.videoHeight;
+    if(!VD.w||!isFinite(VD.dur)){ vdState("vd_err",null,"bad"); return; }
+    vdFit();
+    if(VD.dur>VD_MAX) say("vd_long");
+  };
+  v.onloadeddata=()=>{ if(VD.w) vdDetect(); };
+  v.onerror=()=>{ vdMode("setup"); vdState("vd_err",null,"bad"); };
+  v.src=VD.url; v.load();
+  vdChips(); f2Open("vdView"); vdMode("busy"); vdState("vd_find",0); vdBar(0);
+}
+F2_CLOSE.vdView=()=>{
+  VD.run++; if(VD.rec){ VD.rec.stop=true; try{ VD.rec.rec.stop(); }catch(_){} }
+  const v=vdV(); try{ v.pause(); v.removeAttribute("src"); v.load(); }catch(_){}
+  if(VD.url){ URL.revokeObjectURL(VD.url); VD.url=""; }
+  VD.segs=[]; f2Hide("vdView");
+};
+el("vdFile").addEventListener("change",e=>{ const f=e.target.files&&e.target.files[0]; e.target.value=""; if(f) vdOpen(f); });
+el("vdX").addEventListener("click",()=>F2_CLOSE.vdView());
+el("vdGo").addEventListener("click",()=>vdRead());
+el("vdAgain").addEventListener("click",()=>{ VD.segs=[]; vdList(); vdDetect(); });
+el("vdH").addEventListener("input",()=>{ if(!VD.band) return; const h=+el("vdH").value/100, c=(VD.band[0]+VD.band[1])/2;
+  VD.band=[Math.max(0,c-h/2),Math.min(1,c+h/2)]; vdBandUI(); });
+el("vdBand").addEventListener("pointerdown",e=>{
+  if(!VD.band) return; e.preventDefault(); const r=el("vdWrap").getBoundingClientRect(), y0=e.clientY, b0=VD.band.slice();
+  const mv=ev=>{ const dy=(ev.clientY-y0)/r.height, h=b0[1]-b0[0]; let a=Math.max(0,Math.min(1-h,b0[0]+dy)); VD.band=[a,a+h]; vdBandUI(); };
+  const up=()=>{ removeEventListener("pointermove",mv); removeEventListener("pointerup",up); removeEventListener("pointercancel",up); };
+  addEventListener("pointermove",mv); addEventListener("pointerup",up); addEventListener("pointercancel",up);
+});
+vdV().addEventListener("timeupdate",vdShowSub); vdV().addEventListener("seeked",vdShowSub);
+addEventListener("resize",()=>{ if(!el("vdView").hidden) vdFit(); });
 
 applyLang();
 setTab("cut");
