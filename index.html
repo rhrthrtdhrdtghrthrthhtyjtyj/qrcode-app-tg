@@ -1016,7 +1016,7 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 @keyframes f6c{0%,3%{background:#191211;color:var(--safelight)}6%,12%{background:var(--safelight);color:#1A1109}18%,100%{background:#191211;color:var(--safelight)}}
 
 /* ── Перевод 7: «Видео» — рамка на субтитрах, перевод поверх, список фраз ── */
-.s-tr7{--P:7.6s}
+.s-tr7{--P:9.6s}
 .f7-vid{left:14px;top:6px;width:104px;height:184px;border-radius:6px;overflow:hidden;background:linear-gradient(#5E6E7E,#3A4652 60%,#22282E)}
 .f7-man{position:absolute;left:2px;right:2px;top:44px;height:90px}
 .f7-man .gm-man{width:100%;height:100%}
@@ -1029,31 +1029,384 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
 .f7-play{position:absolute;left:8px;bottom:9px;width:0;height:0;border-left:7px solid #fff;border-top:4.5px solid transparent;border-bottom:4.5px solid transparent}
 .f7-prog{position:absolute;left:22px;right:8px;bottom:12px;height:3px;border-radius:2px;background:rgba(255,255,255,.3)}
 .f7-prog b{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:2px;background:var(--safelight)}
-.f7-pill{left:130px;top:10px;border-color:var(--safelight);color:var(--safelight);font-weight:700}
 .f7-list{left:130px;top:44px;width:160px;border:1px solid var(--edge);border-radius:4px;overflow:hidden}
 .f7-r{display:grid;grid-template-columns:22px minmax(0,1fr);gap:1px 5px;padding:6px;background:#191211;font:7px/1.3 var(--ui)}
 .f7-r+.f7-r{border-top:1px solid var(--edge)}
 .f7-r i{grid-row:1/3;font-style:normal;color:var(--safelight)}
 .f7-r span{color:var(--muted)}.f7-r b{font-weight:400;color:var(--paper)}
-.gslide.on .f7-pill{animation:f6c var(--P) infinite}
 .gslide.on .f7-vid{animation:f7v var(--P) cubic-bezier(.22,1,.36,1) infinite}
-@keyframes f7v{0%,5%{opacity:0;transform:scale(.8)}12%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes f7v{0%,22%,25.9%{opacity:0;transform:scale(.8)}31.4%,95.3%{opacity:1;transform:none}100%{opacity:0}}
 .gslide.on .f7-band{animation:f7b var(--P) infinite}
-@keyframes f7b{0%,16%{opacity:0}20%,24%{opacity:1}27%{opacity:.4}30%,34%{opacity:1}38%,100%{opacity:0}}
+@keyframes f7b{0%,22%,34.5%{opacity:0}37.6%,40.7%{opacity:1}43.1%{opacity:.4}45.4%,48.5%{opacity:1}51.6%,100%{opacity:0}}
 .gslide.on .f7-s1{animation:f7s1 var(--P) infinite}
-@keyframes f7s1{0%,62%{opacity:1}64%,100%{opacity:0}}
+@keyframes f7s1{0%,22%,70.4%{opacity:1}71.9%,100%{opacity:0}}
 .gslide.on .f7-s2{animation:f7s2 var(--P) infinite}
-@keyframes f7s2{0%,62%{opacity:0}64%,96%{opacity:1}100%{opacity:0}}
+@keyframes f7s2{0%,22%,70.4%{opacity:0}71.9%,96.9%{opacity:1}100%{opacity:0}}
 .gslide.on .f7-t1{animation:f7t1 var(--P) cubic-bezier(.22,1,.36,1) infinite}
-@keyframes f7t1{0%,36%{opacity:0;transform:scale(.9)}40%,62%{opacity:1;transform:none}64%,100%{opacity:0}}
+@keyframes f7t1{0%,22%,50.1%{opacity:0;transform:scale(.9)}53.2%,70.4%{opacity:1;transform:none}71.9%,100%{opacity:0}}
 .gslide.on .f7-t2{animation:f7t2 var(--P) infinite}
-@keyframes f7t2{0%,63%{opacity:0}65%,94%{opacity:1}100%{opacity:0}}
+@keyframes f7t2{0%,22%,71.1%{opacity:0}72.7%,95.3%{opacity:1}100%{opacity:0}}
 .gslide.on .f7-prog b{animation:f7p var(--P) linear infinite}
-@keyframes f7p{0%,36%{width:0}96%{width:100%}100%{width:0}}
+@keyframes f7p{0%,22%,50.1%{width:0}96.9%{width:100%}100%{width:0}}
 .gslide.on .f7-r1{animation:f7r1 var(--P) cubic-bezier(.22,1,.36,1) infinite}
-@keyframes f7r1{0%,38%{opacity:0;transform:translateX(10px)}44%,62%{opacity:1;transform:none;background:#2A1F1A}64%,94%{opacity:1;background:#191211}100%{opacity:0}}
+@keyframes f7r1{0%,22%,51.6%{opacity:0;transform:translateX(10px)}56.3%,70.4%{opacity:1;transform:none;background:#2A1F1A}71.9%,95.3%{opacity:1;background:#191211}100%{opacity:0}}
 .gslide.on .f7-r2{animation:f7r2 var(--P) cubic-bezier(.22,1,.36,1) infinite}
-@keyframes f7r2{0%,42%{opacity:0;transform:translateX(10px)}48%,62%{opacity:1;transform:none;background:#191211}64%,94%{opacity:1;background:#2A1F1A}100%{opacity:0}}
+@keyframes f7r2{0%,22%,54.8%{opacity:0;transform:translateX(10px)}59.4%,70.4%{opacity:1;transform:none;background:#191211}71.9%,95.3%{opacity:1;background:#2A1F1A}100%{opacity:0}}
+
+/* сначала — где кнопка: «Перевод» → над полем «Текст», рядом с «С фото» */
+.f7-a{left:0;top:0;width:300px;height:196px;z-index:3;background:radial-gradient(120% 95% at 50% 0%,#3B2919 0%,#211814 58%,#181210 100%)}
+.f7-seg{position:absolute;left:10px;top:12px;display:flex;border:1px solid var(--edge);border-radius:3px;overflow:hidden;font:7.5px/1 var(--ui);
+  letter-spacing:.08em;text-transform:uppercase}
+.f7-seg b,.f7-seg span{padding:7px 12px}
+.f7-seg b{background:var(--safelight);color:#1A1109}.f7-seg span{color:var(--muted)}
+.f7-row{position:absolute;left:10px;right:10px;top:46px;display:flex;align-items:center;gap:6px}
+.f7-row .gm-lbl{flex:1 1 auto}
+.f7-row .gm-x{border-color:var(--safelight);color:var(--safelight)}
+.f7-x{width:22px;height:22px;box-sizing:border-box;border:1px solid var(--edge);border-radius:3px;color:var(--paper);font:12px/20px var(--ui);text-align:center;font-style:normal}
+.f7-ta{position:absolute;left:10px;width:280px;top:78px;height:58px;box-sizing:border-box;align-items:flex-start;padding-top:7px;
+  white-space:normal;font-size:9px;line-height:1.4;color:var(--muted)}
+.f7-hd{left:130px;top:10px;width:160px;display:flex;align-items:center;justify-content:space-between;font:700 7.5px/1 var(--ui);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--paper)}
+.f7-hd i{width:20px;height:20px;box-sizing:border-box;border:1px solid var(--edge);border-radius:3px;font:11px/18px var(--ui);text-align:center;font-style:normal}
+.gslide.on .f7-a{animation:f7a var(--P) cubic-bezier(.4,0,.2,1) infinite}
+@keyframes f7a{0%,17%{opacity:1;transform:none}22%,97%{opacity:0;transform:translateY(-10px);visibility:hidden}100%{opacity:1;transform:none}}
+.gslide.on .f7-vb{animation:f7vb var(--P) infinite}
+@keyframes f7vb{0%,8%{background:#191211;color:var(--safelight)}10%,19%{background:var(--safelight);color:#1A1109;box-shadow:0 0 0 3px rgba(255,176,32,.3)}
+  22%,100%{background:#191211;color:var(--safelight)}}
+.gslide.on .f7-hd{animation:f7h var(--P) infinite}
+@keyframes f7h{0%,19%{opacity:0}24%,94%{opacity:1}100%{opacity:0}}
+.gslide.on .s-tr7 .f7-list{animation:f7l var(--P) infinite}
+@keyframes f7l{0%,49%{opacity:0}53%,95%{opacity:1}100%{opacity:0}}
+
+/* ══ «Мелочи» ══ */
+.gsecs button{position:relative}
+.gsecs button.new::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:#FF5A3C;
+  box-shadow:0 0 0 2px #191211}
+.gsecs button.new[aria-selected=true]::after{display:none}
+.ms-wh{left:10px;top:6px;font:6.5px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.ms-vf b,.m6-vf b,.m8-vf b{position:absolute;width:12px;height:12px;border:0 solid #fff}
+.m6-vf,.m8-vf{position:absolute;opacity:0;z-index:3}
+.m6-vf b:nth-child(1),.m8-vf b:nth-child(1){left:0;top:0;border-width:2px 0 0 2px}
+.m6-vf b:nth-child(2),.m8-vf b:nth-child(2){right:0;top:0;border-width:2px 2px 0 0}
+.m6-vf b:nth-child(3),.m8-vf b:nth-child(3){right:0;bottom:0;border-width:0 2px 2px 0}
+.m6-vf b:nth-child(4),.m8-vf b:nth-child(4){left:0;bottom:0;border-width:0 0 2px 2px}
+@keyframes msvf{0%,48%{opacity:0;transform:scale(1.25)}54%,62%{opacity:1;transform:none}66%,100%{opacity:0;transform:none}}
+@keyframes msok{0%,62%{opacity:0;transform:scale(.4)}67%{opacity:1;transform:scale(1.18)}71%,93%{opacity:1;transform:none}98%,100%{opacity:0}}
+
+/* ── Мелочи 1: флажок → список языков → всё на другом языке ── */
+.s-tips1{--P:6.4s}
+.m1-head{left:8px;top:10px;width:284px;height:30px;box-sizing:border-box;border:1px solid var(--edge);border-radius:6px;background:var(--ink)}
+.m1-mk{position:absolute;left:10px;top:10px;font:700 9px/1 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--paper);white-space:nowrap}
+.m1-mk span{color:var(--safelight)}
+.m1-q{position:absolute;left:192px;top:4px;width:22px;height:20px;box-sizing:border-box;border:1px solid var(--edge);border-radius:3px;
+  color:var(--safelight);font:700 10px/18px var(--ui);text-align:center;font-style:normal}
+.m1-pill{position:absolute;left:220px;top:4px;width:58px;height:20px;box-sizing:border-box;border:1px solid var(--edge);border-radius:3px}
+.m1-c{position:absolute;left:5px;top:5px;display:flex;align-items:center;gap:3px;font:700 8px/1 var(--ui);color:var(--paper)}
+.m1-c .gm-flag,.m1-o .gm-flag{width:12px;height:8px}
+.m1-pill em{position:absolute;right:5px;top:5px;font:7px/1 var(--ui);color:var(--muted);font-style:normal}
+.m1-tabs{left:8px;top:50px;width:284px;display:flex;gap:4px}
+.m1-tabs span{flex:1 1 0;min-width:0;height:22px;display:flex;align-items:center;justify-content:center;border-bottom:2px solid var(--edge);
+  font:6.5px/1 var(--ui);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden}
+.m1-tabs span:first-child{border-color:var(--safelight);color:var(--paper)}
+.m1-bar{top:156px}
+.m1-st{left:10px;width:280px;top:104px;text-align:center;font:8px/1.4 var(--ui);color:var(--muted)}
+.m1-sb{opacity:0}
+.gslide.on .m1-sa{animation:m1a var(--P) infinite}
+.gslide.on .m1-sb{animation:m1b var(--P) infinite}
+.m1-kb,.m1-tb,.m1-bb,.m1-c2{opacity:0}
+.m1-list{left:168px;top:40px;width:120px;border:1px solid var(--edge);border-radius:5px;background:var(--tray);overflow:hidden;
+  box-shadow:0 8px 20px rgba(0,0,0,.5);z-index:4;opacity:0;transform-origin:85% 0}
+.m1-o{display:flex;align-items:center;gap:5px;height:18px;padding:0 7px;font:8px/1 var(--ui);color:var(--paper);white-space:nowrap}
+.m1-o sup{font-size:6px;color:var(--safelight)}
+.m1-cur{background:#2A1F1A}
+.gslide.on .m1-list{animation:m1l var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m1l{0%,8%{opacity:0;transform:translateY(-6px) scale(.94)}12%,33%{opacity:1;transform:none}37%,100%{opacity:0;transform:translateY(-4px)}}
+.gslide.on .m1-nx{animation:m1n var(--P) infinite}
+@keyframes m1n{0%,26%{background:transparent;color:var(--paper)}29%,36%{background:var(--safelight);color:#1A1109}40%,100%{background:transparent;color:var(--paper)}}
+.gslide.on .m1-pill{animation:m1p var(--P) infinite}
+@keyframes m1p{0%,6%{border-color:var(--edge)}9%,34%{border-color:var(--safelight)}38%,100%{border-color:var(--edge)}}
+.gslide.on .m1-ka,.gslide.on .m1-ta,.gslide.on .m1-ba,.gslide.on .m1-c1{animation:m1a var(--P) infinite}
+@keyframes m1a{0%,35%{opacity:1}39%,95%{opacity:0}99%,100%{opacity:1}}
+.gslide.on .m1-kb,.gslide.on .m1-tb,.gslide.on .m1-bb,.gslide.on .m1-c2{animation:m1b var(--P) infinite}
+@keyframes m1b{0%,36%{opacity:0}40%,94%{opacity:1}98%,100%{opacity:0}}
+
+/* ── Мелочи 2: «Фон» — прозрачный → белый → тёмный → размытый оригинал ── */
+.s-tips2{--P:6.8s}
+.m2-ph{left:12px;top:22px;width:150px;height:112px}
+.m2-l{position:absolute;inset:0;opacity:0}
+.m2-w{background:#fff}.m2-d{background:#14100E}
+.m2-b{overflow:hidden}.m2-b .gm-bg{filter:blur(5px);transform:scale(1.18)}
+.m2-lbl{left:176px;top:26px}
+.m2-opts{left:174px;top:38px;width:116px;display:flex;flex-direction:column;gap:4px}
+.m2-o{height:24px;font-size:7px}
+.m2-o0{background:var(--safelight);border-color:var(--safelight);color:#1A1109;font-weight:700}
+.gslide.on .m2-w{animation:m2w var(--P) infinite}
+@keyframes m2w{0%,24%{opacity:0}27%,49%{opacity:1}52%,100%{opacity:0}}
+.gslide.on .m2-d{animation:m2d var(--P) infinite}
+@keyframes m2d{0%,49%{opacity:0}52%,74%{opacity:1}77%,100%{opacity:0}}
+.gslide.on .m2-b{animation:m2b var(--P) infinite}
+@keyframes m2b{0%,74%{opacity:0}77%,97%{opacity:1}100%{opacity:0}}
+.gslide.on .m2-o0{animation:m2o0 var(--P) infinite}
+.gslide.on .m2-o1{animation:m2o1 var(--P) infinite}
+.gslide.on .m2-o2{animation:m2o2 var(--P) infinite}
+.gslide.on .m2-o3{animation:m2o3 var(--P) infinite}
+@keyframes m2o0{0%,24%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}26%,97%{background:#191211;border-color:var(--edge);color:var(--paper)}
+  100%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}}
+@keyframes m2o1{0%,24%{background:#191211;border-color:var(--edge);color:var(--paper)}26%,49%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}
+  51%,100%{background:#191211;border-color:var(--edge);color:var(--paper)}}
+@keyframes m2o2{0%,49%{background:#191211;border-color:var(--edge);color:var(--paper)}51%,74%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}
+  76%,100%{background:#191211;border-color:var(--edge);color:var(--paper)}}
+@keyframes m2o3{0%,74%{background:#191211;border-color:var(--edge);color:var(--paper)}76%,97%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}
+  100%{background:#191211;border-color:var(--edge);color:var(--paper)}}
+
+/* ── Мелочи 3: «Похожесть цвета» и «Размер кисти» ── */
+.s-tips3{--P:6.4s}
+.m3-ph{left:12px;top:22px;width:150px;height:112px}
+.m3-blob{position:absolute;left:10px;top:30px;width:40px;height:34px;border-radius:46% 54% 50% 42%;background:linear-gradient(#A3B6C4,#CFC6AE);z-index:1}
+.m3-sel{position:absolute;left:4px;top:24px;width:52px;height:46px;box-sizing:border-box;border:1.5px dashed var(--safelight);border-radius:50%;opacity:0;z-index:2}
+.m3-str{position:absolute;left:101px;top:14px;width:5px;height:34px;border-radius:3px;background:#A3B6C4;z-index:1}
+.m3-ph .gm-man{z-index:2}
+.m3-cur{position:absolute;left:103px;top:14px;width:26px;height:26px;margin:-13px 0 0 -13px;box-sizing:border-box;border:1.5px solid #fff;border-radius:50%;
+  box-shadow:0 0 0 1px rgba(0,0,0,.55);opacity:0;z-index:4}
+.m3-l1{left:176px;top:30px}.m3-l2{left:176px;top:80px}
+.m3-tr{left:176px;width:108px;height:3px;border-radius:2px;background:#4E3A2E}
+.m3-tr1{top:44px}.m3-tr2{top:94px}
+.m3-th{width:12px;height:12px;border-radius:50%;background:var(--safelight);box-shadow:0 1px 3px rgba(0,0,0,.5)}
+.m3-th1{left:202px;top:39.5px}.m3-th2{left:235px;top:89.5px}
+.m3-row{top:150px}
+.gslide.on .m3-th1{animation:m3a var(--P) cubic-bezier(.4,0,.2,1) infinite}
+@keyframes m3a{0%,4%{transform:none;box-shadow:0 1px 3px rgba(0,0,0,.5)}6%{box-shadow:0 0 0 6px rgba(255,176,32,.28)}
+  26%{transform:translateX(49px);box-shadow:0 0 0 6px rgba(255,176,32,.28)}30%,94%{transform:translateX(49px);box-shadow:0 1px 3px rgba(0,0,0,.5)}100%{transform:none}}
+.gslide.on .m3-sel{animation:m3s var(--P) cubic-bezier(.4,0,.2,1) infinite}
+@keyframes m3s{0%,4%{opacity:0;transform:scale(.45)}8%{opacity:1;transform:scale(.45)}26%,34%{opacity:1;transform:scale(1.05)}40%,100%{opacity:0;transform:scale(1.05)}}
+.gslide.on .m3-blob{animation:m3b var(--P) infinite}
+@keyframes m3b{0%,33%{opacity:1;transform:none;filter:none}36%{opacity:1;transform:scale(1.12);filter:brightness(1.7)}44%,95%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:none}}
+.gslide.on .m3-th2{animation:m3c var(--P) cubic-bezier(.4,0,.2,1) infinite}
+@keyframes m3c{0%,47%{transform:none;box-shadow:0 1px 3px rgba(0,0,0,.5)}49%{box-shadow:0 0 0 6px rgba(255,176,32,.28)}
+  60%{transform:translateX(-49px);box-shadow:0 0 0 6px rgba(255,176,32,.28)}64%,94%{transform:translateX(-49px);box-shadow:0 1px 3px rgba(0,0,0,.5)}100%{transform:none}}
+.gslide.on .m3-cur{animation:m3u var(--P) cubic-bezier(.4,0,.2,1) infinite}
+@keyframes m3u{0%,45%{opacity:0;transform:scale(1)}48%{opacity:1;transform:scale(1)}60%,63%{opacity:1;transform:scale(.38)}
+  86%{opacity:1;transform:translateY(34px) scale(.38)}90%,100%{opacity:0;transform:translateY(34px) scale(.38)}}
+.gslide.on .m3-str{animation:m3e var(--P) linear infinite}
+@keyframes m3e{0%,63%{clip-path:inset(0 0 0 0)}86%,96%{clip-path:inset(100% 0 0 0)}100%{clip-path:inset(0 0 0 0)}}
+.gslide.on .m3-w{animation:m3w var(--P) infinite}
+@keyframes m3w{0%,2%,46%,100%{background:#191211;color:var(--paper);border-color:var(--edge)}4%,44%{background:var(--safelight);color:#1A1109;border-color:var(--safelight)}}
+.gslide.on .m3-e{animation:m3x var(--P) infinite}
+@keyframes m3x{0%,45%,96%,100%{background:#191211;color:var(--paper);border-color:var(--edge)}47%,94%{background:var(--safelight);color:#1A1109;border-color:var(--safelight)}}
+
+/* ── Мелочи 4: тёмный чат — негатив → «Инверсия» → «Цвет» ── */
+.s-tips4{--P:7.2s}
+.m4-pan{left:12px;top:22px;width:170px;height:128px;border-radius:8px;overflow:hidden;background:linear-gradient(160deg,#122131,#0E1621 60%)}
+.m4-pan pre{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;font:8px/1 var(--ui);letter-spacing:0;white-space:pre;color:#E9EEF3}
+.m4-b,.m4-c{opacity:0}
+.m4-c{background:linear-gradient(#C08A60 0 31%,#E8B48C 31% 64%,#E86A42 64% 100%);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+.m4-ok{left:160px;top:14px;opacity:0;z-index:3}
+.m4-chips{left:196px;top:48px;width:94px;display:flex;flex-direction:column;gap:8px}
+.gslide.on .m4-a{animation:m4a var(--P) infinite}
+@keyframes m4a{0%,24%{opacity:1}27%,56%{opacity:0}59%,63%{opacity:1}66%,95%{opacity:0}98%,100%{opacity:1}}
+.gslide.on .m4-b{animation:m4b var(--P) infinite}
+@keyframes m4b{0%,24%{opacity:0}27%,56%{opacity:1}59%,100%{opacity:0}}
+.gslide.on .m4-c{animation:m4c var(--P) infinite}
+@keyframes m4c{0%,63%{opacity:0}66%,95%{opacity:1}98%,100%{opacity:0}}
+.gslide.on .m4-ok{animation:m4o var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m4o{0%,29%{opacity:0;transform:scale(.4)}33%{opacity:1;transform:scale(1.18)}36%,55%{opacity:1;transform:none}58%,100%{opacity:0}}
+.gslide.on .m4-i{animation:m4i var(--P) infinite}
+@keyframes m4i{0%,24%,58%,100%{background:#191211;color:var(--paper);border-color:var(--edge)}26%,56%{background:var(--safelight);color:#1A1109;border-color:var(--safelight)}}
+.gslide.on .m4-k{animation:m4k var(--P) infinite}
+@keyframes m4k{0%,63%,98%,100%{background:#191211;color:var(--paper);border-color:var(--edge)}65%,96%{background:var(--safelight);color:#1A1109;border-color:var(--safelight)}}
+
+/* ── Мелочи 5: «Свой набор…» → XOxo. → рисунок из своих знаков ── */
+.s-tips5{--P:6.4s}
+.m5-l1{left:12px;top:24px}.m5-l2{left:12px;top:72px}
+.m5-sel,.m6-sel,.m8-sel{height:24px;font-size:8px;box-sizing:border-box}
+.m5-sel{left:10px;top:34px;width:140px}
+.m5-sel span,.m6-sel span,.m8-sel span{position:absolute;left:8px;top:8px;right:18px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.m5-sel i,.m6-sel i,.m8-sel i{position:absolute;right:7px;top:7px;font-style:normal;color:var(--muted)}
+.m5-s2,.m6-s2,.m8-s2{opacity:0}
+.m5-in{left:10px;top:82px;width:140px;height:24px;font-size:11px;letter-spacing:.1em}
+.m5-caret{left:8px;top:5px}
+.m5-art{left:164px;top:22px;width:126px;height:126px}
+.m5-art pre{position:absolute}
+.m5-b{opacity:0}
+.m5-l2,.m5-in{opacity:0}
+.gslide.on .m5-s1,.gslide.on .m6-s1,.gslide.on .m8-s1{animation:msa var(--P) infinite}
+@keyframes msa{0%,7%{opacity:1}10%,95%{opacity:0}99%,100%{opacity:1}}
+.gslide.on .m5-s2,.gslide.on .m6-s2,.gslide.on .m8-s2{animation:msb var(--P) infinite}
+@keyframes msb{0%,8%{opacity:0}11%,94%{opacity:1}98%,100%{opacity:0}}
+.gslide.on .m5-sel,.gslide.on .m6-sel,.gslide.on .m8-sel{animation:msh var(--P) infinite}
+@keyframes msh{0%,3%{border-color:var(--edge)}5%,12%{border-color:var(--safelight)}16%,100%{border-color:var(--edge)}}
+.gslide.on .m5-l2,.gslide.on .m5-in{animation:m5i var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m5i{0%,11%{opacity:0;transform:translateY(6px)}16%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+.gslide.on .m5-ty{animation:m5t var(--P) steps(5,end) infinite}
+@keyframes m5t{0%,28%{clip-path:inset(0 100% 0 0)}46%,100%{clip-path:inset(0 0 0 0)}}
+.m5-caret{transform:translateX(5.6ch)}
+.gslide.on .m5-caret{animation:m5c var(--P) steps(5,end) infinite,gblink .9s steps(1) infinite}
+@keyframes m5c{0%,28%{transform:translateX(0)}46%,100%{transform:translateX(5.6ch)}}
+.gslide.on .m5-a{animation:m5a var(--P) infinite}
+@keyframes m5a{0%,47%{opacity:1}51%,95%{opacity:0}99%,100%{opacity:1}}
+.gslide.on .m5-b{animation:m5b var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m5b{0%,48%{opacity:0;transform:scale(.94)}53%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+
+/* ── Мелочи 6: «Текст из блоков» → в чат → камера читает ── */
+.s-tips6{--P:6.8s}
+.m6-l{left:12px;top:24px}
+.m6-sel{left:10px;top:34px;width:130px}
+.m6-txt{left:10px;top:68px;width:130px;height:56px;box-sizing:border-box;padding:6px 0 0;border-radius:3px;background:#fff;overflow:hidden;opacity:0;
+  -webkit-mask:linear-gradient(#000 62%,transparent);mask:linear-gradient(#000 62%,transparent)}
+.m6-txt pre{margin:0;font:8.4px/1 var(--ui);letter-spacing:0;color:#14100E;text-align:center}
+.m6-bar{left:10px;top:138px;width:130px}
+.m6-chat{left:152px;top:18px;width:138px;height:170px}
+.m6-bub{position:absolute;left:14px;top:14px;width:104px;padding:6px 6px 14px;border-radius:11px 11px 3px 11px;background:#2B5278;
+  box-shadow:0 1px 2px rgba(0,0,0,.3);opacity:0;transform-origin:100% 100%}
+.m6-code{display:block;margin-bottom:4px;font:6px/1 var(--ui);color:#9CC1E6}
+.m6-qr{width:92px;height:92px;background:#fff;line-height:0}
+.m6-qr svg{display:block;width:100%;height:100%;color:#14100E}
+.m6-vf{left:14px;top:26px;width:104px;height:104px}
+.m6-ok{left:160px;top:162px;padding:4px 8px;border-radius:9px;background:#2FBF71;color:#fff;font:700 7px/1.2 var(--ui);opacity:0}
+.gslide.on .m6-txt{animation:m6x var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m6x{0%,10%{opacity:0;transform:translateY(6px)}15%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+.gslide.on .m6-bub{animation:m6b var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m6b{0%,22%{opacity:0;transform:scale(.4)}28%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+.gslide.on .m6-qr{animation:m6q var(--P) steps(9,end) infinite}
+@keyframes m6q{0%,26%{clip-path:inset(0 0 100% 0)}42%,100%{clip-path:inset(0 0 0 0)}}
+.gslide.on .m6-vf{animation:msvf var(--P) cubic-bezier(.22,1,.36,1) infinite}
+.gslide.on .m6-ok{animation:msok var(--P) cubic-bezier(.22,1,.36,1) infinite}
+
+/* ── Мелочи 7: «Контакт» → настоящая QR-визитка → телефон предлагает сохранить ── */
+.s-tips7{--P:6.8s}
+.m7-seg{top:20px}
+.m7-seg .gm-b{font-size:7px}
+.m7-l1{left:12px;top:56px}.m7-l2{left:12px;top:98px}
+.m7-i1{left:10px;top:66px;width:132px;height:24px;font-size:10px}
+.m7-i2{left:10px;top:108px;width:132px;height:24px;font-size:10px}
+.m7-qr{left:152px;top:58px;width:80px;height:80px;color:#14100E}
+.m7-ph{left:238px;top:50px;width:54px;height:104px;box-sizing:border-box;border-radius:9px;border:2px solid #6B5A4C;background:#0E0B0A;overflow:hidden}
+.m7-vf{position:absolute;left:9px;top:20px;width:28px;height:28px;box-sizing:border-box;border:1.5px solid rgba(255,255,255,.75);border-radius:4px}
+.m7-card{position:absolute;left:3px;right:3px;top:46px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 2px 4px;
+  border-radius:6px;background:#F4EEE2;color:#14100E;font:5.6px/1.15 var(--ui);opacity:0}
+.m7-card i{width:13px;height:13px;border-radius:50%;background:#2A6FDB;color:#fff;font:700 7px/13px var(--ui);text-align:center;font-style:normal}
+.m7-card b{font-weight:700;font-size:6.5px}
+.m7-card em{font-style:normal;color:#6B5A4C;white-space:nowrap}
+.m7-card u{margin-top:1px;padding:1px 6px;border-radius:5px;background:#2FBF71;color:#fff;font:700 7px/1.1 var(--ui);text-decoration:none}
+.m7-cap{left:0;width:300px;top:170px;text-align:center}
+.gslide.on .m7-c{animation:m7c var(--P) infinite}
+@keyframes m7c{0%,3%{background:#191211;color:var(--paper);border-color:var(--edge)}6%,94%{background:var(--safelight);color:#1A1109;border-color:var(--safelight)}
+  98%,100%{background:#191211;color:var(--paper);border-color:var(--edge)}}
+.gslide.on .m7-l1,.gslide.on .m7-i1,.gslide.on .m7-l2,.gslide.on .m7-i2{animation:m7f var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m7f{0%,5%{opacity:0;transform:translateY(5px)}10%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+.gslide.on .m7-ty1{animation:m7t1 var(--P) steps(4,end) infinite}
+@keyframes m7t1{0%,12%{clip-path:inset(0 100% 0 0)}24%,100%{clip-path:inset(0 0 0 0)}}
+.gslide.on .m7-ty2{animation:m7t2 var(--P) steps(11,end) infinite}
+@keyframes m7t2{0%,27%{clip-path:inset(0 100% 0 0)}45%,100%{clip-path:inset(0 0 0 0)}}
+.gslide.on .m7-qr{animation:m7q var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m7q{0%,46%{opacity:0;transform:scale(.6)}52%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+.gslide.on .m7-ph{animation:q7h var(--P) cubic-bezier(.22,1,.36,1) infinite}
+.gslide.on .m7-card{animation:m7k var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m7k{0%,68%{opacity:0;transform:translateY(8px)}74%,92%{opacity:1;transform:none}98%,100%{opacity:0}}
+.gslide.on .m7-cap{animation:m7p var(--P) infinite}
+@keyframes m7p{0%,70%{opacity:0}76%,94%{opacity:1}99%,100%{opacity:0}}
+
+/* ── Мелочи 8: «Запас прочности» M → H, пятно, а код читается ── */
+.s-tips8{--P:6.6s}
+.m8-l{left:12px;top:24px}
+.m8-sel{left:10px;top:34px;width:128px}
+.m8-box{left:162px;top:26px;width:116px;height:116px}
+.m8-q{position:absolute;inset:0;color:#14100E}
+.m8-h{opacity:0}
+.m8-st{position:absolute;left:58%;top:42%;width:26%;height:24%;border-radius:48% 52% 44% 56%/52% 46% 54% 48%;
+  background:radial-gradient(circle at 42% 40%,#9B6A40,#6B4226 62%,#4A2C17);box-shadow:inset 0 0 0 2px rgba(60,34,18,.6);opacity:0;z-index:2}
+.m8-vf{left:-6px;top:-6px;right:-6px;bottom:-6px}
+.m8-ok{left:268px;top:18px;opacity:0;z-index:3}
+.gslide.on .m8-m{animation:m8m var(--P) infinite}
+@keyframes m8m{0%,11%{opacity:1}15%,96%{opacity:0}100%{opacity:1}}
+.gslide.on .m8-h{animation:m8h var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m8h{0%,11%{opacity:0;transform:scale(.92)}16%,95%{opacity:1;transform:none}99%,100%{opacity:0}}
+.gslide.on .m8-st{animation:m8s var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m8s{0%,28%{opacity:0;transform:translate(46px,40px) rotate(-30deg) scale(.6)}38%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+.gslide.on .m8-vf{animation:msvf var(--P) cubic-bezier(.22,1,.36,1) infinite}
+.gslide.on .m8-ok{animation:msok var(--P) cubic-bezier(.22,1,.36,1) infinite}
+
+/* ── Мелочи 9: «Закрыть и стереть» → «Вернуть код · 10, 9, 8» → код снова тут ── */
+.s-tips9{--P:7s}
+.m9-slot{left:110px;top:22px;width:80px;height:80px;box-sizing:border-box;border:1.5px dashed #5A4334;border-radius:4px;opacity:0}
+.m9-qr{left:110px;top:22px;width:80px;height:80px;opacity:0}
+.m9-st{left:0;width:300px;top:112px;text-align:center;font:7.5px/1.3 var(--ui);color:#A8D99C;opacity:0}
+.m9-undo{left:70px;top:138px;width:160px;height:26px;box-sizing:border-box;border:1px solid var(--safelight);border-radius:13px;opacity:0}
+.m9-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 8px/1 var(--ui);letter-spacing:.05em;
+  text-transform:uppercase;color:var(--safelight);white-space:nowrap;opacity:0}
+.m9-white{left:50px;top:4px;width:200px;height:186px;box-sizing:border-box;padding-top:18px;border-radius:10px;background:#fff;
+  display:flex;flex-direction:column;align-items:center;gap:8px;z-index:5}
+.m9-white b{font:700 8px/1 var(--ui);letter-spacing:.06em;text-transform:uppercase;color:#14100E}
+.m9-big{width:100px;height:100px}
+.m9-close{width:160px;background:#14100E;color:#fff;border-color:#14100E}
+.gslide.on .m9-white{animation:m9w var(--P) cubic-bezier(.4,0,.2,1) infinite}
+@keyframes m9w{0%,9%{opacity:1;transform:none}15%,96%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:none}}
+.gslide.on .m9-slot{animation:m9s var(--P) infinite}
+@keyframes m9s{0%,14%{opacity:0}18%,67%{opacity:1}70%,100%{opacity:0}}
+.gslide.on .m9-w{animation:m9a var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m9a{0%,15%{opacity:0;transform:translateY(5px)}19%,66%{opacity:1;transform:none}69%,100%{opacity:0}}
+.gslide.on .m9-undo{animation:m9u var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m9u{0%,18%{opacity:0;transform:translateY(6px)}22%,64%{opacity:1;transform:none}66%{opacity:1;transform:scale(.94)}69%,100%{opacity:0;transform:none}}
+.gslide.on .m9-n0{animation:m9n0 var(--P) infinite}
+@keyframes m9n0{0%,19%{opacity:0}21%,34%{opacity:1}35%,100%{opacity:0}}
+.gslide.on .m9-n1{animation:m9n1 var(--P) infinite}
+@keyframes m9n1{0%,34%{opacity:0}35%,48%{opacity:1}49%,100%{opacity:0}}
+.gslide.on .m9-n2{animation:m9n2 var(--P) infinite}
+@keyframes m9n2{0%,48%{opacity:0}49%,68%{opacity:1}69%,100%{opacity:0}}
+.gslide.on .m9-qr{animation:m9q var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m9q{0%,67%{opacity:0;transform:scale(.5)}73%{opacity:1;transform:scale(1.06)}76%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+.gslide.on .m9-bk{animation:m9b var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m9b{0%,69%{opacity:0;transform:translateY(5px)}74%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+
+/* ── Мелочи 10: нажал на перевод — скопировано; чипы меняют черту ── */
+.s-tips10{--P:7.2s}
+.m10-l{left:12px;top:22px}
+.m10-out{left:10px;top:34px;width:280px;height:62px;box-sizing:border-box;font-size:10px;line-height:1.5;white-space:normal}
+.m10-sep{position:relative;height:15px}
+.m10-sep b{position:absolute;left:0;top:0;font-weight:400}
+.m10-s1,.m10-s2,.m10-s3{opacity:0}
+.m10-toast{left:0;width:300px;top:106px;text-align:center;font:8px/1 var(--ui);color:#A8D99C;opacity:0}
+.m10-chips{top:140px}
+.m10-c{font-size:9px;text-transform:none}
+.m10-c0{background:var(--safelight);border-color:var(--safelight);color:#1A1109}
+.gslide.on .m10-out{animation:m10o var(--P) infinite}
+@keyframes m10o{0%,6%{box-shadow:0 0 0 0 rgba(255,176,32,0)}8%{box-shadow:0 0 0 3px rgba(255,176,32,.9)}14%,100%{box-shadow:0 0 0 0 rgba(255,176,32,0)}}
+.gslide.on .m10-toast{animation:m10t var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m10t{0%,8%{opacity:0;transform:translateY(5px)}12%,34%{opacity:1;transform:none}38%,100%{opacity:0}}
+.gslide.on .m10-s0{animation:m10a var(--P) infinite}
+@keyframes m10a{0%,43%{opacity:1}44%,97%{opacity:0}98%,100%{opacity:1}}
+.gslide.on .m10-s1{animation:m10b var(--P) infinite}
+@keyframes m10b{0%,43%{opacity:0}44%,61%{opacity:1}62%,100%{opacity:0}}
+.gslide.on .m10-s2{animation:m10d var(--P) infinite}
+@keyframes m10d{0%,61%{opacity:0}62%,78%{opacity:1}79%,100%{opacity:0}}
+.gslide.on .m10-s3{animation:m10e var(--P) infinite}
+@keyframes m10e{0%,78%{opacity:0}79%,96%{opacity:1}97%,100%{opacity:0}}
+.gslide.on .m10-c0{animation:m10c0 var(--P) infinite}
+.gslide.on .m10-c1{animation:m10c1 var(--P) infinite}
+.gslide.on .m10-c2{animation:m10c2 var(--P) infinite}
+.gslide.on .m10-c3{animation:m10c3 var(--P) infinite}
+@keyframes m10c0{0%,43%,98%,100%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}44%,97%{background:#191211;border-color:var(--edge);color:var(--paper)}}
+@keyframes m10c1{0%,43%,62%,100%{background:#191211;border-color:var(--edge);color:var(--paper)}44%,61%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}}
+@keyframes m10c2{0%,61%,79%,100%{background:#191211;border-color:var(--edge);color:var(--paper)}62%,78%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}}
+@keyframes m10c3{0%,78%,97%,100%{background:#191211;border-color:var(--edge);color:var(--paper)}79%,96%{background:var(--safelight);border-color:var(--safelight);color:#1A1109}}
+
+/* ── Мелочи 11: «Субтитры .srt» → файл с временем и переводом ── */
+.s-tips11{--P:6.8s}
+.m11-list{left:10px;top:24px;width:158px}
+.m11-btn{left:10px;top:114px;border-color:var(--safelight);color:var(--safelight);font-weight:700}
+.m11-fly{left:64px;top:110px;width:22px;height:28px;border-radius:3px 8px 3px 3px;background:var(--paper);box-shadow:0 3px 10px rgba(0,0,0,.5);opacity:0;z-index:4}
+.m11-fly b{position:absolute;left:0;right:0;bottom:4px;text-align:center;font:700 5.5px/1 var(--ui);color:var(--oxblood)}
+.m11-file{left:176px;top:22px;width:114px;height:120px;box-sizing:border-box;padding:6px;border-radius:4px;background:var(--paper);
+  box-shadow:0 6px 16px rgba(0,0,0,.45);overflow:hidden;opacity:0}
+.m11-name{display:block;margin-bottom:5px;font:700 7px/1 var(--ui);color:var(--oxblood)}
+.m11-file pre{margin:0;font:5.6px/1.4 var(--ui);color:#14100E;white-space:pre-wrap;word-break:break-word}
+.gslide.on .m11-btn{animation:f6c var(--P) infinite}
+.gslide.on .m11-fly{animation:m11f var(--P) cubic-bezier(.4,0,.2,1) infinite}
+@keyframes m11f{0%,15%{opacity:0;transform:none}18%{opacity:1;transform:scale(1.1)}34%{opacity:1;transform:translate(150px,-60px) scale(.6)}38%,100%{opacity:0;transform:translate(150px,-60px) scale(.4)}}
+.gslide.on .m11-file{animation:m11d var(--P) cubic-bezier(.22,1,.36,1) infinite}
+@keyframes m11d{0%,32%{opacity:0;transform:scale(.7)}40%,94%{opacity:1;transform:none}98%,100%{opacity:0}}
+.gslide.on .m11-file pre{animation:m11p var(--P) steps(8,end) infinite}
+@keyframes m11p{0%,38%{clip-path:inset(0 0 100% 0)}62%,100%{clip-path:inset(0 0 0 0)}}
 
 /* «?» — после обновления светится точка: есть новые шаги */
 .ghelp{position:relative}
@@ -5346,16 +5699,17 @@ el("copy").addEventListener("click",async()=>{
 /* ══════════════════════ инструкция ══════════════════════
    Шторка снизу, как в Telegram: живая мини-сцена, заголовок, пара строк, точки, большая кнопка.
    Сама открывается один раз на каждой вкладке, потом — по кнопке «?». */
-const GT={"ru":{"help":"Инструкция","next":"Дальше","done":"Понятно","back":"Назад","close":"Закрыть","modes":["Символы","Эмодзи","Брайль"],"vk":"ВК","sample":["Привет! Как дела?",["en","Hi! How are you?"],[["de","Hallo! Wie geht's?"],["es","¡Hola! ¿Qué tal?"],["fr","Salut ! Ça va ?"],["pl","Cześć! Jak się masz?"]]],"friend":"Anna","online":"в сети","typing":"печатает…","turnstile":"Турникет","both":"телефон + бумага","cut":[["Пришли фото","Нажми «Галерея» и выбери снимок. На айфоне ещё быстрее: в «Фото» задержи палец на человеке → «Скопировать объект» → здесь «Вставить»."],["Фон уберётся сам","На вопрос «Убрать фон?» нажми «Убрать фон», потом выбери «Человек» или «Предмет». Вместо фона появится прозрачная шахматка."],["Подправь, если надо","«Палочка» убирает кусок фона одним касанием, «Ластик» стирает пальцем, «Вернуть» возвращает стёртое. Ошибся — «Отменить»."],["Сохрани","«Скачать» → «Копировать», «Поделиться» или «Файл PNG» с прозрачным фоном. А «В символы →» превратит вырезанное в рисунок из знаков."],["Стикер для Telegram","Вырежи фон и нажми «Стикер» — будет белая обводка и тень, ровно 512 px. Сохрани PNG, открой @Stickers → /newpack и отправь картинку файлом."],["Чистое фото","В фото бывает спрятано, где и когда оно снято и каким телефоном. «Чистое фото» покажет это и сохранит копию без меток. Фото никуда не уходит."],["Скан документа","Нажми «Скан» и сфоткай лист — углы найдутся сами, их можно подвинуть. Лист выпрямится, как со сканера, а страницы соберутся в один PDF."]],"art":[["Фото станет текстом","После вырезания нажми «В символы →» или выбери снимок через «Галерея». Рисунок из знаков соберётся сам."],["Настрой вид","В «Настройки» — символы, эмодзи-мозаика или Брайль, а ещё детализация, контраст и яркость. Меняется сразу."],["Вставь в чат","В «Куда вставлять текст» выбери Steam, Telegram или ВКонтакте — ширина подстроится сама. Потом «Копировать» и вставь в чат. Или «Скачать» картинкой."]],"qr":[["Впиши ссылку или текст","Настройки откроются сами: впиши в поле «Ссылка или текст» — QR соберётся сразу. Нажми «Готово», потом «Скачать»."],["Скопируй QR с фото","Сфоткай билет и нажми «Прочитать с фото». Найду QR и соберу его заново — ровным и чётким."],["Покажи на весь экран","Нажми «На весь экран» — код откроется крупно на белом. Нужна картинка — «Сохранить в Фото». Закроешь — код сотрётся с телефона."],["Покажи у турникета","Открой код на весь экран, прибавь яркость и поднеси экран к сканеру — загорится зелёный, и проход откроется."],["Бумагу не выбрасывай","На всякий случай держи и телефон, и бумажный билет: сядет батарея или сканер не прочитает экран — выручит бумага."],["Штрих-код тоже можно","В «Тип кода» выбери «Штрих-код». Несколько номеров через пробел — получишь несколько кодов один под другим, как на чеке."],["QR для Wi‑Fi","В «Что в QR» выбери Wi‑Fi, впиши сеть и пароль. Гости наводят камеру — телефон подключается сам. Пароль нигде не хранится."],["Красивый QR","«Вид» → «Красивый»: цвет, точки-круги или ромбы, буква или картинка в центре, подпись под кодом. Что код читается, Проявочная проверит сама."]],"tr":[["Напиши или вставь","Пиши в поле или нажми «Вставить» — возьму текст из буфера. Перевожу сам, кнопку жать не нужно."],["Сразу два перевода","Английский и ещё один — немецкий, испанский, французский или польский, какой удобно. Языки меняются в «Настройки», «Оригинал» добавит твой текст."],["Отправь в мессенджер","Нажми «Копировать», открой любой мессенджер — Telegram, WhatsApp, ВК, — зажми поле, выбери «Вставить» и отправь. Друг ответит так же — сразу на трёх языках."],["Диалог — вся переписка","Включи «Диалог»: свои сообщения пиши как обычно, а ответ друга вставляй — переведу на твой язык. Переписка остаётся на телефоне."],["Вслух и «Показать»","«Вслух» — телефон прочитает перевод. «Показать собеседнику» — положи телефон между вами: верх перевёрнут к нему, там перевод крупно."],["Текст с фото","Нажми «С фото» и сфоткай меню, табличку или инструкцию. Текст распознаётся прямо на телефоне, и каждая строка переведётся рядом."],["Перевод видео","Нажми «Видео» и выбери ролик с субтитрами. Проявочная найдёт надписи, прочитает их и покажет перевод поверх видео. Речь не переводится — только текст в кадре."]]},"en":{"help":"Guide","next":"Next","done":"Got it","back":"Back","close":"Close","modes":["Characters","Emoji","Braille"],"vk":"VK","sample":["Hi! How are you?",["de","Hallo! Wie geht's?"],[["es","¡Hola! ¿Qué tal?"],["fr","Salut ! Ça va ?"],["pl","Cześć! Jak się masz?"],["it","Ciao! Come stai?"]]],"friend":"Anna","online":"online","typing":"typing…","turnstile":"Turnstile","both":"phone + paper","cut":[["Send a photo","Tap “Gallery” and pick a picture. On iPhone it’s even faster: in Photos, hold your finger on the person → “Copy Subject” → here, “Paste”."],["The background goes by itself","When asked “Remove the background?”, tap “Remove it”, then pick “Person” or “Object”. A transparent checkerboard replaces the background."],["Touch up if needed","The “Wand” removes a patch of background in one tap, the “Eraser” wipes by finger, “Restore” brings it back. Slipped — “Undo”."],["Save it","“Download” → “Copy”, “Share” or “Save PNG” with a transparent background. And “To characters →” turns the cut-out into a picture made of text."],["Telegram sticker","Cut out the background and tap “Sticker” — white outline and shadow, exactly 512 px. Save the PNG, open @Stickers → /newpack and send the picture as a file."],["Clean photo","A photo can hide where and when it was taken and on which phone. “Clean photo” shows that and saves a copy without the tags. The photo goes nowhere."],["Document scan","Tap “Scan” and shoot the page — the corners are found by themselves and can be dragged. The page straightens like a scan; pages combine into one PDF."]],"art":[["A photo becomes text","After cutting out, tap “To characters →”, or pick a picture with “Gallery”. The text picture builds itself."],["Choose the look","In “Settings”: characters, emoji mosaic or Braille, plus detail, contrast and brightness. Changes show instantly."],["Paste it into a chat","In “Where the text goes” pick Steam, Telegram or VK — the width adjusts itself. Then “Copy” and paste. Or “Download” it as an image."]],"qr":[["Type a link or text","Settings open by themselves: type into “Link or text” and the QR appears right away. Tap “Done”, then “Download”."],["Copy a QR from a photo","Take a photo of the ticket and tap “Read from photo”. I’ll find the QR and rebuild it clean and sharp."],["Show it full screen","Tap “Full screen” — the code opens big on white. Need a picture — “Save to Photos”. Close it and the code is wiped from the phone."],["Show it at the gate","Open the code full screen, turn up the brightness and hold the screen to the scanner — the light turns green and the gate opens."],["Keep the paper ticket","Just in case, keep both the phone and the paper ticket: if the battery dies or the scanner can’t read the screen, paper saves the day."],["Barcodes too","In “Code type” pick “Barcode”. Several numbers separated by spaces give several codes, one under another, like on a receipt."],["Wi‑Fi QR","In “What's in the QR” pick Wi‑Fi, type the network and password. Guests point their camera — the phone connects. The password is never stored."],["Styled QR","“Style” → “Styled”: color, round dots or diamonds, a letter or picture in the center, a caption below. Darkroom checks by itself that it scans."]],"tr":[["Type or paste","Type in the box or tap “Paste” to take text from the clipboard. It translates by itself — no button needed."],["Two translations at once","German plus one more — Spanish, French, Polish or Italian, whichever suits. Change languages in “Settings”; “Original” adds your text."],["Send it in any messenger","Tap “Copy”, open any messenger — Telegram, WhatsApp, VK — hold the message box, choose “Paste” and send. Your friend replies the same way — in three languages."],["Dialog — the whole chat","Turn on “Dialog”: write your messages as usual and paste your friend’s reply — I translate it into your language. The chat stays on your phone."],["Read aloud and “Show”","“Read aloud” — the phone speaks the translation. “Show to the other person” — lay the phone between you: the top half faces them, translation in big letters."],["Text from a photo","Tap “From photo” and shoot a menu, a sign or instructions. The text is recognized right on the phone, and each line is translated next to it."],["Video translation","Tap “Video” and pick a clip with subtitles. Darkroom finds the captions, reads them and shows the translation over the video. Speech isn't translated — only on-screen text."]]},"pl":{"help":"Instrukcja","next":"Dalej","done":"Jasne","back":"Wstecz","close":"Zamknij","modes":["Znaki","Emoji","Braille"],"vk":"VK","sample":["Cześć! Jak się masz?",["en","Hi! How are you?"],[["de","Hallo! Wie geht's?"],["es","¡Hola! ¿Qué tal?"],["fr","Salut ! Ça va ?"],["it","Ciao! Come stai?"]]],"friend":"Anna","online":"online","typing":"pisze…","turnstile":"Bramka","both":"telefon + papier","cut":[["Wyślij zdjęcie","Stuknij „Galeria” i wybierz zdjęcie. Na iPhonie jeszcze szybciej: w „Zdjęciach” przytrzymaj palec na osobie → „Kopiuj obiekt” → tutaj „Wklej”."],["Tło zniknie samo","Na pytanie „Usunąć tło?” stuknij „Usuń tło”, potem wybierz „Osoba” lub „Przedmiot”. Zamiast tła pojawi się przezroczysta szachownica."],["Popraw, jeśli trzeba","„Różdżka” usuwa kawałek tła jednym stuknięciem, „Gumka” ściera palcem, „Przywróć” oddaje starte. Pomyłka — „Cofnij”."],["Zapisz","„Pobierz” → „Kopiuj”, „Udostępnij” albo „Plik PNG” z przezroczystym tłem. A „Na znaki →” zamieni wycięty obraz w rysunek ze znaków."],["Naklejka do Telegrama","Wytnij tło i stuknij „Naklejka” — biały obrys i cień, dokładnie 512 px. Zapisz PNG, otwórz @Stickers → /newpack i wyślij obrazek jako plik."],["Czyste zdjęcie","W zdjęciu bywa ukryte, gdzie i kiedy je zrobiono i jakim telefonem. „Czyste zdjęcie” to pokaże i zapisze kopię bez znaczników. Zdjęcie nigdzie nie wychodzi."],["Skan dokumentu","Stuknij „Skan” i sfotografuj kartkę — rogi znajdą się same, można je przesunąć. Kartka się wyprostuje jak ze skanera, a strony złożą się w jeden PDF."]],"art":[["Zdjęcie staje się tekstem","Po wycięciu stuknij „Na znaki →” albo wybierz zdjęcie przez „Galeria”. Rysunek ze znaków zbuduje się sam."],["Dobierz wygląd","W „Ustawienia”: znaki, mozaika z emoji albo Braille, do tego szczegółowość, kontrast i jasność. Zmienia się od razu."],["Wklej na czat","W „Gdzie wklejasz tekst” wybierz Steam, Telegram albo VK — szerokość dopasuje się sama. Potem „Kopiuj” i wklej. Albo „Pobierz” jako obrazek."]],"qr":[["Wpisz link lub tekst","Ustawienia otworzą się same: wpisz w pole „Link lub tekst” — kod QR pojawi się od razu. Stuknij „Gotowe”, potem „Pobierz”."],["Skopiuj QR ze zdjęcia","Zrób zdjęcie biletu i stuknij „Odczytaj ze zdjęcia”. Znajdę QR i zbuduję go od nowa — równy i wyraźny."],["Pokaż na cały ekran","Stuknij „Na cały ekran” — kod otworzy się duży na białym. Potrzebny obrazek — „Zapisz w Zdjęciach”. Zamkniesz — kod zniknie z telefonu."],["Pokaż przy bramce","Otwórz kod na cały ekran, podkręć jasność i przyłóż ekran do czytnika — zapali się zielone światło i bramka się otworzy."],["Nie wyrzucaj biletu","Na wszelki wypadek miej i telefon, i papierowy bilet: rozładuje się bateria albo czytnik nie odczyta ekranu — uratuje cię papier."],["Kod kreskowy też","W „Typ kodu” wybierz „Kod kreskowy”. Kilka numerów oddzielonych spacją da kilka kodów, jeden pod drugim, jak na paragonie."],["QR do Wi‑Fi","W „Co w kodzie QR” wybierz Wi‑Fi, wpisz sieć i hasło. Goście celują aparatem — telefon sam się łączy. Hasło nigdzie się nie zapisuje."],["Ozdobny QR","„Wygląd” → „Ozdobny”: kolor, kropki-kółka lub romby, litera albo obrazek w środku, podpis pod kodem. Ciemnia sama sprawdzi, że kod się skanuje."]],"tr":[["Napisz lub wklej","Pisz w polu albo stuknij „Wklej” — wezmę tekst ze schowka. Tłumaczę sam, przycisk nie jest potrzebny."],["Dwa tłumaczenia naraz","Angielski i jeszcze jeden — niemiecki, hiszpański, francuski albo włoski, jak wygodnie. Języki zmienisz w „Ustawienia”, „Oryginał” doda twój tekst."],["Wyślij w komunikatorze","Stuknij „Kopiuj”, otwórz dowolny komunikator — Telegram, WhatsApp, VK — przytrzymaj pole, wybierz „Wklej” i wyślij. Znajomy odpisze tak samo — w trzech językach."],["Dialog — cała rozmowa","Włącz „Dialog”: swoje wiadomości pisz jak zwykle, a odpowiedź znajomego wklej — przetłumaczę ją na twój język. Rozmowa zostaje w telefonie."],["Na głos i „Pokaż”","„Na głos” — telefon przeczyta tłumaczenie. „Pokaż rozmówcy” — połóż telefon między wami: górna połowa jest odwrócona do niego, tłumaczenie dużymi literami."],["Tekst ze zdjęcia","Stuknij „Ze zdjęcia” i sfotografuj menu, tabliczkę albo instrukcję. Tekst rozpoznaje się w telefonie, a każda linia tłumaczy się obok."],["Tłumaczenie wideo","Stuknij „Wideo” i wybierz film z napisami. Ciemnia znajdzie napisy, przeczyta je i pokaże tłumaczenie na wideo. Mowy nie tłumaczy — tylko tekst w kadrze."]]},"de":{"help":"Anleitung","next":"Weiter","done":"Alles klar","back":"Zurück","close":"Schließen","modes":["Zeichen","Emoji","Braille"],"vk":"VK","sample":["Hallo! Wie geht's?",["en","Hi! How are you?"],[["es","¡Hola! ¿Qué tal?"],["fr","Salut ! Ça va ?"],["pl","Cześć! Jak się masz?"],["it","Ciao! Come stai?"]]],"friend":"Anna","online":"online","typing":"schreibt…","turnstile":"Drehkreuz","both":"Handy + Papier","cut":[["Schick ein Foto","Tippe auf „Galerie“ und wähle ein Bild. Auf dem iPhone geht’s noch schneller: in „Fotos“ den Finger auf der Person halten → „Motiv kopieren“ → hier „Einfügen“."],["Der Hintergrund verschwindet","Bei „Hintergrund entfernen?“ auf „Entfernen“ tippen, dann „Person“ oder „Gegenstand“ wählen. Statt des Hintergrunds erscheint ein transparentes Schachbrett."],["Nachbessern, wenn nötig","Der „Zauberstab“ entfernt ein Stück Hintergrund mit einem Tipp, der „Radierer“ wischt mit dem Finger, „Zurückholen“ bringt es zurück. Vertippt — „Rückgängig“."],["Speichern","„Speichern“ → „Kopieren“, „Teilen“ oder „PNG-Datei“ mit transparentem Hintergrund. Und „Zu Zeichen →“ macht aus dem Ausschnitt ein Bild aus Zeichen."],["Telegram-Sticker","Hintergrund entfernen und auf „Sticker“ tippen — weiße Kontur und Schatten, genau 512 px. PNG sichern, @Stickers öffnen → /newpack und das Bild als Datei senden."],["Sauberes Foto","Ein Foto verrät oft, wo und wann es entstand und mit welchem Handy. „Sauberes Foto“ zeigt das und sichert eine Kopie ohne diese Angaben. Das Foto bleibt hier."],["Dokument scannen","Auf „Scan“ tippen und das Blatt fotografieren — die Ecken werden gefunden und lassen sich verschieben. Das Blatt wird gerade wie gescannt; Seiten werden ein PDF."]],"art":[["Aus dem Foto wird Text","Nach dem Freistellen auf „Zu Zeichen →“ tippen oder ein Bild über „Galerie“ wählen. Das Zeichenbild entsteht von selbst."],["Look einstellen","In „Optionen“: Zeichen, Emoji-Mosaik oder Braille, dazu Detail, Kontrast und Helligkeit. Ändert sich sofort."],["In den Chat einfügen","Unter „Wohin kommt der Text“ Steam, Telegram oder VK wählen — die Breite passt sich an. Dann „Kopieren“ und einfügen. Oder als Bild „Speichern“."]],"qr":[["Link oder Text eingeben","Die Optionen öffnen sich von selbst: ins Feld „Link oder Text“ tippen — der QR-Code erscheint sofort. „Fertig“, dann „Speichern“."],["QR aus einem Foto kopieren","Fotografiere das Ticket und tippe auf „Aus Foto lesen“. Ich finde den QR und baue ihn sauber und scharf neu."],["Im Vollbild zeigen","Tippe auf „Vollbild“ — der Code erscheint groß auf Weiß. Brauchst du ein Bild — „In Fotos sichern“. Schließt du ihn, wird er vom Handy gelöscht."],["Am Drehkreuz zeigen","Öffne den Code im Vollbild, dreh die Helligkeit hoch und halte den Bildschirm an den Scanner — grünes Licht, das Drehkreuz öffnet sich."],["Papierticket behalten","Behalte sicherheitshalber Handy und Papierticket: Ist der Akku leer oder liest der Scanner den Bildschirm nicht, rettet dich das Papier."],["Auch Strichcodes","Unter „Code-Typ“ „Strichcode“ wählen. Mehrere Nummern mit Leerzeichen ergeben mehrere Codes untereinander, wie auf einem Beleg."],["WLAN-QR","Unter „Was im QR steckt“ WLAN wählen, Netz und Passwort eingeben. Gäste halten die Kamera drauf — das Handy verbindet sich. Das Passwort wird nirgends gespeichert."],["Gestalteter QR","„Aussehen“ → „Gestaltet“: Farbe, runde Punkte oder Rauten, Buchstabe oder Bild in der Mitte, Text darunter. Ob er lesbar ist, prüft die Dunkelkammer selbst."]],"tr":[["Schreiben oder einfügen","Ins Feld schreiben oder „Einfügen“ tippen — ich nehme den Text aus der Zwischenablage. Übersetzt wird automatisch."],["Zwei Übersetzungen auf einmal","Englisch plus noch eine — Spanisch, Französisch, Polnisch oder Italienisch, wie es passt. Sprachen in „Optionen“, „Original“ fügt deinen Text hinzu."],["Im Messenger senden","„Kopieren“ tippen, einen Messenger öffnen — Telegram, WhatsApp, VK —, das Feld gedrückt halten, „Einfügen“ wählen und senden. Die Antwort kommt genauso — in drei Sprachen."],["Dialog — die ganze Unterhaltung","Schalte „Dialog“ ein: eigene Nachrichten wie gewohnt schreiben, die Antwort einfügen — ich übersetze sie in deine Sprache. Alles bleibt auf dem Handy."],["Vorlesen und „Zeigen“","„Vorlesen“ — das Handy spricht die Übersetzung. „Dem Gegenüber zeigen“ — Handy zwischen euch legen: Die obere Hälfte ist zum Gegenüber gedreht, groß geschrieben."],["Text vom Foto","Auf „Vom Foto“ tippen und Speisekarte, Schild oder Anleitung fotografieren. Der Text wird auf dem Handy erkannt, jede Zeile daneben übersetzt."],["Video übersetzen","Auf „Video“ tippen und einen Clip mit Untertiteln wählen. Die Dunkelkammer findet die Untertitel, liest sie und zeigt die Übersetzung über dem Video. Nur Text im Bild."]]},"fr":{"help":"Guide","next":"Suivant","done":"Compris","back":"Retour","close":"Fermer","modes":["Caractères","Emoji","Braille"],"vk":"VK","sample":["Salut ! Ça va ?",["en","Hi! How are you?"],[["de","Hallo! Wie geht's?"],["es","¡Hola! ¿Qué tal?"],["pl","Cześć! Jak się masz?"],["it","Ciao! Come stai?"]]],"friend":"Anna","online":"en ligne","typing":"écrit…","turnstile":"Portique","both":"téléphone + papier","cut":[["Envoie une photo","Touche « Galerie » et choisis une image. Sur iPhone, c’est encore plus rapide : dans « Photos », garde le doigt sur la personne → « Copier le sujet » → ici, « Coller »."],["Le fond part tout seul","À la question « Retirer le fond ? », touche « Retirer », puis choisis « Personne » ou « Objet ». Un damier transparent remplace le fond."],["Retouche si besoin","La « Baguette » enlève un morceau de fond d’une touche, la « Gomme » efface au doigt, « Restaurer » le remet. Une erreur — « Annuler »."],["Enregistre","« Enregistrer » → « Copier », « Partager » ou « Fichier PNG » à fond transparent. Et « En caractères → » transforme le détourage en dessin de caractères."],["Sticker Telegram","Détoure le fond et touche « Sticker » : contour blanc, ombre, pile 512 px. Enregistre le PNG, ouvre @Stickers → /newpack et envoie l’image en fichier."],["Photo propre","Une photo peut cacher où, quand et avec quel téléphone elle a été prise. « Photo propre » le montre et enregistre une copie sans ces balises. La photo reste ici."],["Scan de document","Touche « Scan » et photographie la feuille — les coins se trouvent seuls, tu peux les déplacer. La feuille se redresse comme au scanner ; les pages font un PDF."]],"art":[["La photo devient texte","Après le détourage, touche « En caractères → » ou choisis une image via « Galerie ». Le dessin en caractères se construit tout seul."],["Choisis le style","Dans « Réglages » : caractères, mosaïque d’emoji ou braille, plus détail, contraste et luminosité. Le résultat change aussitôt."],["Colle-le dans un chat","Dans « Où va le texte », choisis Steam, Telegram ou VK — la largeur s’adapte. Puis « Copier » et colle. Ou « Enregistrer » en image."]],"qr":[["Tape un lien ou un texte","Les réglages s’ouvrent tout seuls : tape dans « Lien ou texte » et le QR apparaît aussitôt. Touche « Terminé », puis « Enregistrer »."],["Copie un QR depuis une photo","Photographie le billet et touche « Lire depuis une photo ». Je trouve le QR et le reconstruis net et propre."],["Montre-le en plein écran","Touche « Plein écran » — le code s’affiche en grand sur fond blanc. Besoin d’une image — « Enregistrer dans Photos ». Ferme-le et il s’efface du téléphone."],["Montre-le au portique","Ouvre le code en plein écran, monte la luminosité et approche l’écran du lecteur — le voyant passe au vert et le portique s’ouvre."],["Garde le billet papier","Par précaution, garde le téléphone et le billet papier : si la batterie lâche ou si le lecteur ne lit pas l’écran, le papier te sauve."],["Les codes-barres aussi","Dans « Type de code », choisis « Code-barres ». Plusieurs numéros séparés par des espaces donnent plusieurs codes, l’un sous l’autre, comme sur un ticket."],["QR Wi‑Fi","Dans « Contenu du QR », choisis Wi‑Fi, saisis le réseau et le mot de passe. Tes invités visent le code et le téléphone se connecte. Le mot de passe n’est pas gardé."],["QR stylisé","« Aspect » → « Stylisé » : couleur, points ronds ou losanges, lettre ou image au centre, légende dessous. Chambre noire vérifie elle-même qu’il se scanne."]],"tr":[["Écris ou colle","Écris dans le champ ou touche « Coller » pour prendre le texte du presse-papiers. La traduction se fait toute seule."],["Deux traductions d’un coup","L’anglais plus une autre — allemand, espagnol, polonais ou italien, comme tu veux. Les langues se changent dans « Réglages », « Original » ajoute ton texte."],["Envoie-le dans ta messagerie","Touche « Copier », ouvre une messagerie — Telegram, WhatsApp, VK —, appuie longuement sur le champ, choisis « Coller » et envoie. La réponse arrive pareil — en trois langues."],["Dialogue — toute la conversation","Active « Dialogue » : écris tes messages comme d’habitude et colle la réponse de ton ami — je la traduis dans ta langue. Tout reste sur ton téléphone."],["À voix haute et « Montrer »","« À voix haute » — le téléphone lit la traduction. « Montrer à l’autre » — pose le téléphone entre vous : le haut est tourné vers l’autre, en gros caractères."],["Texte d’une photo","Touche « Depuis photo » et photographie un menu, un panneau ou une notice. Le texte est reconnu sur le téléphone et chaque ligne est traduite à côté."],["Traduction de vidéo","Touche « Vidéo » et choisis un clip sous-titré. Chambre noire trouve les sous-titres, les lit et affiche la traduction sur la vidéo. Pas la voix, seulement le texte à l’image."]]},"es":{"help":"Guía","next":"Siguiente","done":"Entendido","back":"Atrás","close":"Cerrar","modes":["Caracteres","Emoji","Braille"],"vk":"VK","sample":["¡Hola! ¿Qué tal?",["en","Hi! How are you?"],[["de","Hallo! Wie geht's?"],["fr","Salut ! Ça va ?"],["pl","Cześć! Jak się masz?"],["it","Ciao! Come stai?"]]],"friend":"Anna","online":"en línea","typing":"escribiendo…","turnstile":"Torniquete","both":"móvil + papel","cut":[["Envía una foto","Toca «Galería» y elige una imagen. En iPhone es aún más rápido: en Fotos mantén pulsada la persona → «Copiar sujeto» → aquí, «Pegar»."],["El fondo se va solo","Cuando pregunte «¿Quitar el fondo?», toca «Quitarlo» y elige «Persona» u «Objeto». Un damero transparente sustituye al fondo."],["Retoca si hace falta","La «Varita» quita un trozo de fondo con un toque, el «Borrador» borra con el dedo, «Restaurar» lo devuelve. ¿Te equivocaste? «Deshacer»."],["Guárdalo","«Descargar» → «Copiar», «Compartir» o «Archivo PNG» con fondo transparente. Y «A caracteres →» convierte el recorte en un dibujo de caracteres."],["Sticker para Telegram","Quita el fondo y pulsa «Sticker»: contorno blanco, sombra y justo 512 px. Guarda el PNG, abre @Stickers → /newpack y envía la imagen como archivo."],["Foto limpia","Una foto puede esconder dónde, cuándo y con qué móvil se hizo. «Foto limpia» te lo muestra y guarda una copia sin esas etiquetas. La foto no sale de aquí."],["Escanear documento","Pulsa «Escanear» y fotografía la hoja: las esquinas se encuentran solas y puedes moverlas. La hoja queda recta como de escáner y las páginas forman un PDF."]],"art":[["La foto se vuelve texto","Tras recortar, toca «A caracteres →» o elige una imagen con «Galería». El dibujo de caracteres se arma solo."],["Elige el estilo","En «Ajustes»: caracteres, mosaico de emoji o Braille, además de detalle, contraste y brillo. Cambia al instante."],["Pégalo en un chat","En «Dónde va el texto» elige Steam, Telegram o VK — el ancho se ajusta solo. Luego «Copiar» y pega. O «Descargar» como imagen."]],"qr":[["Escribe un enlace o texto","Los ajustes se abren solos: escribe en «Enlace o texto» y el QR aparece al instante. Toca «Listo» y luego «Descargar»."],["Copia un QR de una foto","Haz una foto al billete y toca «Leer de una foto». Encuentro el QR y lo rehago limpio y nítido."],["Muéstralo a pantalla completa","Pulsa «Pantalla completa»: el código se abre grande sobre blanco. ¿Necesitas una imagen? «Guardar en Fotos». Al cerrarlo, se borra del móvil."],["Muéstralo en el torniquete","Abre el código a pantalla completa, sube el brillo y acerca la pantalla al lector — la luz se pone verde y se abre el paso."],["No tires el billete","Por si acaso, lleva el móvil y el billete de papel: si se acaba la batería o el lector no lee la pantalla, el papel te salva."],["También códigos de barras","En «Tipo de código» elige «Código de barras». Varios números separados por espacios dan varios códigos, uno debajo de otro, como en un recibo."],["QR de Wi‑Fi","En «Qué lleva el QR» elige Wi‑Fi y escribe la red y la contraseña. Los invitados apuntan la cámara y el móvil se conecta. La contraseña no se guarda."],["QR con estilo","«Estilo» → «Con estilo»: color, puntos redondos o rombos, letra o imagen en el centro y texto debajo. Cuarto oscuro comprueba por sí mismo que se lee."]],"tr":[["Escribe o pega","Escribe en el campo o toca «Pegar» para tomar el texto del portapapeles. Traduzco solo, sin pulsar nada."],["Dos traducciones a la vez","Inglés y otro más — alemán, francés, polaco o italiano, el que te venga bien. Los idiomas se cambian en «Ajustes», «Original» añade tu texto."],["Envíalo por mensajería","Toca «Copiar», abre cualquier app de mensajería — Telegram, WhatsApp, VK —, mantén pulsado el campo, elige «Pegar» y envía. Tu amigo responde igual, en tres idiomas."],["Diálogo — toda la conversación","Activa «Diálogo»: escribe tus mensajes como siempre y pega la respuesta de tu amigo — la traduzco a tu idioma. Todo se queda en tu móvil."],["En voz alta y «Mostrar»","«En voz alta»: el móvil lee la traducción. «Mostrar a la otra persona»: deja el móvil entre los dos; la mitad de arriba mira hacia ella, con letra grande."],["Texto de una foto","Pulsa «De foto» y fotografía un menú, un cartel o unas instrucciones. El texto se reconoce en el móvil y cada línea se traduce al lado."],["Traducir vídeo","Pulsa «Vídeo» y elige un clip con subtítulos. Cuarto oscuro encuentra los subtítulos, los lee y muestra la traducción sobre el vídeo. Solo el texto en pantalla, no la voz."]]}};
+const GT={"ru":{"help":"Инструкция","next":"Дальше","done":"Понятно","back":"Назад","close":"Закрыть","modes":["Символы","Эмодзи","Брайль"],"vk":"ВК","sample":["Привет! Как дела?",["en","Hi! How are you?"],[["de","Hallo! Wie geht's?"],["es","¡Hola! ¿Qué tal?"],["fr","Salut ! Ça va ?"],["pl","Cześć! Jak się masz?"]]],"friend":"Anna","online":"в сети","typing":"печатает…","turnstile":"Турникет","both":"телефон + бумага","cut":[["Пришли фото","Нажми «Галерея» и выбери снимок. На айфоне ещё быстрее: в «Фото» задержи палец на человеке → «Скопировать объект» → здесь «Вставить»."],["Фон уберётся сам","На вопрос «Убрать фон?» нажми «Убрать фон», потом выбери «Человек» или «Предмет». Вместо фона появится прозрачная шахматка."],["Подправь, если надо","«Палочка» убирает кусок фона одним касанием, «Ластик» стирает пальцем, «Вернуть» возвращает стёртое. Ошибся — «Отменить»."],["Сохрани","«Скачать» → «Копировать», «Поделиться» или «Файл PNG» с прозрачным фоном. А «В символы →» превратит вырезанное в рисунок из знаков."],["Стикер для Telegram","Вырежи фон и нажми «Стикер» — будет белая обводка и тень, ровно 512 px. Сохрани PNG, открой @Stickers → /newpack и отправь картинку файлом."],["Чистое фото","В фото бывает спрятано, где и когда оно снято и каким телефоном. «Чистое фото» покажет это и сохранит копию без меток. Фото никуда не уходит."],["Скан документа","Нажми «Скан» и сфоткай лист — углы найдутся сами, их можно подвинуть. Лист выпрямится, как со сканера, а страницы соберутся в один PDF."]],"art":[["Фото станет текстом","После вырезания нажми «В символы →» или выбери снимок через «Галерея». Рисунок из знаков соберётся сам."],["Настрой вид","В «Настройки» — символы, эмодзи-мозаика или Брайль, а ещё детализация, контраст и яркость. Меняется сразу."],["Вставь в чат","В «Куда вставлять текст» выбери Steam, Telegram или ВКонтакте — ширина подстроится сама. Потом «Копировать» и вставь в чат. Или «Скачать» картинкой."]],"qr":[["Впиши ссылку или текст","Настройки откроются сами: впиши в поле «Ссылка или текст» — QR соберётся сразу. Нажми «Готово», потом «Скачать»."],["Скопируй QR с фото","Сфоткай билет и нажми «Прочитать с фото». Найду QR и соберу его заново — ровным и чётким."],["Покажи на весь экран","Нажми «На весь экран» — код откроется крупно на белом. Нужна картинка — «Сохранить в Фото». Закроешь — код сотрётся с телефона."],["Покажи у турникета","Открой код на весь экран, прибавь яркость и поднеси экран к сканеру — загорится зелёный, и проход откроется."],["Бумагу не выбрасывай","На всякий случай держи и телефон, и бумажный билет: сядет батарея или сканер не прочитает экран — выручит бумага."],["Штрих-код тоже можно","В «Тип кода» выбери «Штрих-код». Несколько номеров через пробел — получишь несколько кодов один под другим, как на чеке."],["QR для Wi‑Fi","В «Что в QR» выбери Wi‑Fi, впиши сеть и пароль. Гости наводят камеру — телефон подключается сам. Пароль нигде не хранится."],["Красивый QR","«Вид» → «Красивый»: цвет, точки-круги или ромбы, буква или картинка в центре, подпись под кодом. Что код читается, Проявочная проверит сама."]],"tr":[["Напиши или вставь","Пиши в поле или нажми «Вставить» — возьму текст из буфера. Перевожу сам, кнопку жать не нужно."],["Сразу два перевода","Английский и ещё один — немецкий, испанский, французский или польский, какой удобно. Языки меняются в «Настройки», «Оригинал» добавит твой текст."],["Отправь в мессенджер","Нажми «Копировать», открой любой мессенджер — Telegram, WhatsApp, ВК, — зажми поле, выбери «Вставить» и отправь. Друг ответит так же — сразу на трёх языках."],["Диалог — вся переписка","Включи «Диалог»: свои сообщения пиши как обычно, а ответ друга вставляй — переведу на твой язык. Переписка остаётся на телефоне."],["Вслух и «Показать»","«Вслух» — телефон прочитает перевод. «Показать собеседнику» — положи телефон между вами: верх перевёрнут к нему, там перевод крупно."],["Текст с фото","Нажми «С фото» и сфоткай меню, табличку или инструкцию. Текст распознаётся прямо на телефоне, и каждая строка переведётся рядом."],["Перевод видео","Вкладка «Перевод», над полем «Текст», рядом с «С фото» — кнопка «Видео». Выбери ролик с субтитрами: Проявочная найдёт надписи и покажет перевод поверх видео. Речь не переводится."]],"tips":[["Язык приложения","Флажок вверху справа — язык Проявочной: русский, английский, а ещё польский, немецкий, французский и испанский (пока β). Меняется сразу, без перезагрузки."],["Белый или размытый фон","Не нужен прозрачный? «Настройки» → «Фон»: «Белый», «Тёмный» или «Размытый оригинал» — фон остаётся, но мягко размыт, как в портретном режиме."],["Тоньше и точнее","В «Настройки»: «Похожесть цвета» — сколько берёт Палочка за одно касание, «Размер кисти» — толщина Ластика. Для волос и мелких мест сделай кисть тоньше."],["Инверсия и цвет","В тёмной теме чата рисунок похож на негатив — включи «Инверсия» в «Настройки». А «Цвет» раскрасит знаки цветами фото: такой лучше отправлять картинкой."],["Свои символы","«Набор символов» → «Свой набор…» и впиши знаки от тёмного к светлому — например, XOxo. Рисунок соберётся из них. Подойдут буквы, цифры, хоть свой ник."],["QR прямо текстом","«Вид» → «Текст из блоков»: QR соберётся из █ и пробелов. Скопируй и вставь в Telegram блоком кода — это настоящий код, его сканируют прямо с экрана чата."],["QR-визитка","«Что в QR» → «Контакт»: имя, телефон, почта. Наведут камеру — телефон предложит сохранить контакт. Ничего не надо диктовать по буквам."],["Запас прочности","Код повесишь на улице или его помнут? «Настройки» → «Запас прочности» → H. Прочитается, даже если кусок закрыт или стёрт. Точек станет больше — печатай крупнее."],["Закрыл случайно?","После «Закрыть и стереть» 10 секунд горит «Вернуть код» — нажми, и код вернётся. Потом кнопка гаснет, и код стёрт насовсем: в памяти ничего не остаётся."],["Нажми на перевод","Нажми на сам перевод — он скопируется, кнопку искать не надо. Чипы ═══, ═ и — под полем меняют черту между переводами, а «пусто» её убирает."],["Субтитры .srt","После перевода видео нажми «Субтитры .srt» — будет файл с переводом и временем каждой фразы. Его понимают плееры, монтажки и YouTube. Не сохранился — скопирую текстом."]],"tips_lbl":"Фишки"},"en":{"help":"Guide","next":"Next","done":"Got it","back":"Back","close":"Close","modes":["Characters","Emoji","Braille"],"vk":"VK","sample":["Hi! How are you?",["de","Hallo! Wie geht's?"],[["es","¡Hola! ¿Qué tal?"],["fr","Salut ! Ça va ?"],["pl","Cześć! Jak się masz?"],["it","Ciao! Come stai?"]]],"friend":"Anna","online":"online","typing":"typing…","turnstile":"Turnstile","both":"phone + paper","cut":[["Send a photo","Tap “Gallery” and pick a picture. On iPhone it’s even faster: in Photos, hold your finger on the person → “Copy Subject” → here, “Paste”."],["The background goes by itself","When asked “Remove the background?”, tap “Remove it”, then pick “Person” or “Object”. A transparent checkerboard replaces the background."],["Touch up if needed","The “Wand” removes a patch of background in one tap, the “Eraser” wipes by finger, “Restore” brings it back. Slipped — “Undo”."],["Save it","“Download” → “Copy”, “Share” or “Save PNG” with a transparent background. And “To characters →” turns the cut-out into a picture made of text."],["Telegram sticker","Cut out the background and tap “Sticker” — white outline and shadow, exactly 512 px. Save the PNG, open @Stickers → /newpack and send the picture as a file."],["Clean photo","A photo can hide where and when it was taken and on which phone. “Clean photo” shows that and saves a copy without the tags. The photo goes nowhere."],["Document scan","Tap “Scan” and shoot the page — the corners are found by themselves and can be dragged. The page straightens like a scan; pages combine into one PDF."]],"art":[["A photo becomes text","After cutting out, tap “To characters →”, or pick a picture with “Gallery”. The text picture builds itself."],["Choose the look","In “Settings”: characters, emoji mosaic or Braille, plus detail, contrast and brightness. Changes show instantly."],["Paste it into a chat","In “Where the text goes” pick Steam, Telegram or VK — the width adjusts itself. Then “Copy” and paste. Or “Download” it as an image."]],"qr":[["Type a link or text","Settings open by themselves: type into “Link or text” and the QR appears right away. Tap “Done”, then “Download”."],["Copy a QR from a photo","Take a photo of the ticket and tap “Read from photo”. I’ll find the QR and rebuild it clean and sharp."],["Show it full screen","Tap “Full screen” — the code opens big on white. Need a picture — “Save to Photos”. Close it and the code is wiped from the phone."],["Show it at the gate","Open the code full screen, turn up the brightness and hold the screen to the scanner — the light turns green and the gate opens."],["Keep the paper ticket","Just in case, keep both the phone and the paper ticket: if the battery dies or the scanner can’t read the screen, paper saves the day."],["Barcodes too","In “Code type” pick “Barcode”. Several numbers separated by spaces give several codes, one under another, like on a receipt."],["Wi‑Fi QR","In “What's in the QR” pick Wi‑Fi, type the network and password. Guests point their camera — the phone connects. The password is never stored."],["Styled QR","“Style” → “Styled”: color, round dots or diamonds, a letter or picture in the center, a caption below. Darkroom checks by itself that it scans."]],"tr":[["Type or paste","Type in the box or tap “Paste” to take text from the clipboard. It translates by itself — no button needed."],["Two translations at once","German plus one more — Spanish, French, Polish or Italian, whichever suits. Change languages in “Settings”; “Original” adds your text."],["Send it in any messenger","Tap “Copy”, open any messenger — Telegram, WhatsApp, VK — hold the message box, choose “Paste” and send. Your friend replies the same way — in three languages."],["Dialog — the whole chat","Turn on “Dialog”: write your messages as usual and paste your friend’s reply — I translate it into your language. The chat stays on your phone."],["Read aloud and “Show”","“Read aloud” — the phone speaks the translation. “Show to the other person” — lay the phone between you: the top half faces them, translation in big letters."],["Text from a photo","Tap “From photo” and shoot a menu, a sign or instructions. The text is recognized right on the phone, and each line is translated next to it."],["Video translation","“Translate” tab, above the “Text” box, next to “From photo” — the “Video” button. Pick a clip with subtitles: Darkroom finds them and shows the translation over the video. Speech isn't translated."]],"tips":[["App language","The flag at the top right sets Darkroom's language: Russian, English, plus Polish, German, French and Spanish (β for now). It switches right away, no reload."],["White or blurred background","Don't need transparent? “Settings” → “Background”: “White”, “Dark” or “Blurred original” — the background stays, softly blurred, like portrait mode."],["Finer and more precise","In “Settings”: “Color tolerance” is how much the Wand takes in one tap, “Brush size” is the Eraser's width. For hair and small spots, make the brush thinner."],["Invert and color","In a dark chat theme the picture looks like a negative — turn on “Invert” in “Settings”. “Color” paints the characters in the photo's colors: send that one as an image."],["Your own characters","“Character set” → “Custom set…”, then type characters from dark to light — say, XOxo. The picture is built from them. Letters, digits, even your nickname work."],["QR as plain text","“Style” → “Text blocks”: the QR is built from █ and spaces. Copy it and paste into Telegram as a code block — it's a real code, people scan it right off the chat."],["QR business card","“What's in the QR” → “Contact”: name, phone, email. Someone points a camera and their phone offers to save the contact. No spelling things out loud."],["Error tolerance","Hanging the code outdoors, or it may get crumpled? “Settings” → “Error tolerance” → H. It still scans with a piece covered or worn off. More dots — print it bigger."],["Closed it by mistake?","After “Close and wipe”, “Bring it back” stays lit for 10 seconds — tap it and the code returns. Then the button goes out and the code is gone for good."],["Tap the translation","Tap the translation itself to copy it — no need to hunt for the button. The ═══, ═ and — chips under the box change the line between translations; “blank” removes it."],["Subtitles .srt","After translating a video, tap “Subtitles .srt” — a file with the translation and each phrase's timing. Players, editors and YouTube read it. If it won't save, I copy it as text."]],"tips_lbl":"Tips"},"pl":{"help":"Instrukcja","next":"Dalej","done":"Jasne","back":"Wstecz","close":"Zamknij","modes":["Znaki","Emoji","Braille"],"vk":"VK","sample":["Cześć! Jak się masz?",["en","Hi! How are you?"],[["de","Hallo! Wie geht's?"],["es","¡Hola! ¿Qué tal?"],["fr","Salut ! Ça va ?"],["it","Ciao! Come stai?"]]],"friend":"Anna","online":"online","typing":"pisze…","turnstile":"Bramka","both":"telefon + papier","cut":[["Wyślij zdjęcie","Stuknij „Galeria” i wybierz zdjęcie. Na iPhonie jeszcze szybciej: w „Zdjęciach” przytrzymaj palec na osobie → „Kopiuj obiekt” → tutaj „Wklej”."],["Tło zniknie samo","Na pytanie „Usunąć tło?” stuknij „Usuń tło”, potem wybierz „Osoba” lub „Przedmiot”. Zamiast tła pojawi się przezroczysta szachownica."],["Popraw, jeśli trzeba","„Różdżka” usuwa kawałek tła jednym stuknięciem, „Gumka” ściera palcem, „Przywróć” oddaje starte. Pomyłka — „Cofnij”."],["Zapisz","„Pobierz” → „Kopiuj”, „Udostępnij” albo „Plik PNG” z przezroczystym tłem. A „Na znaki →” zamieni wycięty obraz w rysunek ze znaków."],["Naklejka do Telegrama","Wytnij tło i stuknij „Naklejka” — biały obrys i cień, dokładnie 512 px. Zapisz PNG, otwórz @Stickers → /newpack i wyślij obrazek jako plik."],["Czyste zdjęcie","W zdjęciu bywa ukryte, gdzie i kiedy je zrobiono i jakim telefonem. „Czyste zdjęcie” to pokaże i zapisze kopię bez znaczników. Zdjęcie nigdzie nie wychodzi."],["Skan dokumentu","Stuknij „Skan” i sfotografuj kartkę — rogi znajdą się same, można je przesunąć. Kartka się wyprostuje jak ze skanera, a strony złożą się w jeden PDF."]],"art":[["Zdjęcie staje się tekstem","Po wycięciu stuknij „Na znaki →” albo wybierz zdjęcie przez „Galeria”. Rysunek ze znaków zbuduje się sam."],["Dobierz wygląd","W „Ustawienia”: znaki, mozaika z emoji albo Braille, do tego szczegółowość, kontrast i jasność. Zmienia się od razu."],["Wklej na czat","W „Gdzie wklejasz tekst” wybierz Steam, Telegram albo VK — szerokość dopasuje się sama. Potem „Kopiuj” i wklej. Albo „Pobierz” jako obrazek."]],"qr":[["Wpisz link lub tekst","Ustawienia otworzą się same: wpisz w pole „Link lub tekst” — kod QR pojawi się od razu. Stuknij „Gotowe”, potem „Pobierz”."],["Skopiuj QR ze zdjęcia","Zrób zdjęcie biletu i stuknij „Odczytaj ze zdjęcia”. Znajdę QR i zbuduję go od nowa — równy i wyraźny."],["Pokaż na cały ekran","Stuknij „Na cały ekran” — kod otworzy się duży na białym. Potrzebny obrazek — „Zapisz w Zdjęciach”. Zamkniesz — kod zniknie z telefonu."],["Pokaż przy bramce","Otwórz kod na cały ekran, podkręć jasność i przyłóż ekran do czytnika — zapali się zielone światło i bramka się otworzy."],["Nie wyrzucaj biletu","Na wszelki wypadek miej i telefon, i papierowy bilet: rozładuje się bateria albo czytnik nie odczyta ekranu — uratuje cię papier."],["Kod kreskowy też","W „Typ kodu” wybierz „Kod kreskowy”. Kilka numerów oddzielonych spacją da kilka kodów, jeden pod drugim, jak na paragonie."],["QR do Wi‑Fi","W „Co w kodzie QR” wybierz Wi‑Fi, wpisz sieć i hasło. Goście celują aparatem — telefon sam się łączy. Hasło nigdzie się nie zapisuje."],["Ozdobny QR","„Wygląd” → „Ozdobny”: kolor, kropki-kółka lub romby, litera albo obrazek w środku, podpis pod kodem. Ciemnia sama sprawdzi, że kod się skanuje."]],"tr":[["Napisz lub wklej","Pisz w polu albo stuknij „Wklej” — wezmę tekst ze schowka. Tłumaczę sam, przycisk nie jest potrzebny."],["Dwa tłumaczenia naraz","Angielski i jeszcze jeden — niemiecki, hiszpański, francuski albo włoski, jak wygodnie. Języki zmienisz w „Ustawienia”, „Oryginał” doda twój tekst."],["Wyślij w komunikatorze","Stuknij „Kopiuj”, otwórz dowolny komunikator — Telegram, WhatsApp, VK — przytrzymaj pole, wybierz „Wklej” i wyślij. Znajomy odpisze tak samo — w trzech językach."],["Dialog — cała rozmowa","Włącz „Dialog”: swoje wiadomości pisz jak zwykle, a odpowiedź znajomego wklej — przetłumaczę ją na twój język. Rozmowa zostaje w telefonie."],["Na głos i „Pokaż”","„Na głos” — telefon przeczyta tłumaczenie. „Pokaż rozmówcy” — połóż telefon między wami: górna połowa jest odwrócona do niego, tłumaczenie dużymi literami."],["Tekst ze zdjęcia","Stuknij „Ze zdjęcia” i sfotografuj menu, tabliczkę albo instrukcję. Tekst rozpoznaje się w telefonie, a każda linia tłumaczy się obok."],["Tłumaczenie wideo","Karta „Tłumacz”, nad polem „Tekst”, obok „Ze zdjęcia” — przycisk „Wideo”. Wybierz film z napisami: Ciemnia je znajdzie i pokaże tłumaczenie na wideo. Mowy nie tłumaczy."]],"tips":[["Język aplikacji","Flaga w prawym górnym rogu to język Ciemni: rosyjski, angielski, a także polski, niemiecki, francuski i hiszpański (na razie β). Zmienia się od razu, bez przeładowania."],["Białe albo rozmyte tło","Nie chcesz przezroczystego? „Ustawienia” → „Tło”: „Białe”, „Ciemne” albo „Rozmyty oryginał” — tło zostaje, ale miękko rozmyte, jak w trybie portretowym."],["Cieniej i dokładniej","W „Ustawienia”: „Podobieństwo koloru” — ile Różdżka bierze jednym stuknięciem, „Rozmiar pędzla” — grubość Gumki. Przy włosach i drobiazgach zmniejsz pędzel."],["Odwróć i kolor","W ciemnym motywie czatu rysunek wygląda jak negatyw — włącz „Odwróć” w „Ustawienia”. „Kolor” pokoloruje znaki barwami zdjęcia: taki lepiej wysłać jako obrazek."],["Własne znaki","„Zestaw znaków” → „Własny zestaw…” i wpisz znaki od ciemnego do jasnego — np. XOxo. Rysunek zbuduje się z nich. Pasują litery, cyfry, nawet twój nick."],["QR zwykłym tekstem","„Wygląd” → „Tekst z bloków”: QR złoży się z █ i spacji. Skopiuj i wklej w Telegramie jako blok kodu — to prawdziwy kod, skanuje się go prosto z ekranu czatu."],["QR-wizytówka","„Co w kodzie QR” → „Kontakt”: imię, telefon, e-mail. Ktoś wyceluje aparat — telefon zaproponuje zapisanie kontaktu. Nie trzeba niczego literować."],["Odporność na błędy","Kod zawiśnie na dworze albo się pogniecie? „Ustawienia” → „Odporność na błędy” → H. Odczyta się, nawet gdy kawałek jest zasłonięty lub starty. Kropek więcej — drukuj większy."],["Zamknięte przez pomyłkę?","Po „Zamknij i usuń” przez 10 sekund świeci „Przywróć kod” — stuknij, a kod wróci. Potem przycisk gaśnie, a kod znika na dobre: w pamięci nic nie zostaje."],["Stuknij w tłumaczenie","Stuknij samo tłumaczenie — skopiuje się, nie trzeba szukać przycisku. Przyciski ═══, ═ i — pod polem zmieniają kreskę między tłumaczeniami, a „pusto” ją usuwa."],["Napisy .srt","Po tłumaczeniu wideo stuknij „Napisy .srt” — plik z tłumaczeniem i czasem każdej frazy. Czytają go odtwarzacze, montażówki i YouTube. Gdy się nie zapisze, skopiuję tekst."]],"tips_lbl":"Triki"},"de":{"help":"Anleitung","next":"Weiter","done":"Alles klar","back":"Zurück","close":"Schließen","modes":["Zeichen","Emoji","Braille"],"vk":"VK","sample":["Hallo! Wie geht's?",["en","Hi! How are you?"],[["es","¡Hola! ¿Qué tal?"],["fr","Salut ! Ça va ?"],["pl","Cześć! Jak się masz?"],["it","Ciao! Come stai?"]]],"friend":"Anna","online":"online","typing":"schreibt…","turnstile":"Drehkreuz","both":"Handy + Papier","cut":[["Schick ein Foto","Tippe auf „Galerie“ und wähle ein Bild. Auf dem iPhone geht’s noch schneller: in „Fotos“ den Finger auf der Person halten → „Motiv kopieren“ → hier „Einfügen“."],["Der Hintergrund verschwindet","Bei „Hintergrund entfernen?“ auf „Entfernen“ tippen, dann „Person“ oder „Gegenstand“ wählen. Statt des Hintergrunds erscheint ein transparentes Schachbrett."],["Nachbessern, wenn nötig","Der „Zauberstab“ entfernt ein Stück Hintergrund mit einem Tipp, der „Radierer“ wischt mit dem Finger, „Zurückholen“ bringt es zurück. Vertippt — „Rückgängig“."],["Speichern","„Speichern“ → „Kopieren“, „Teilen“ oder „PNG-Datei“ mit transparentem Hintergrund. Und „Zu Zeichen →“ macht aus dem Ausschnitt ein Bild aus Zeichen."],["Telegram-Sticker","Hintergrund entfernen und auf „Sticker“ tippen — weiße Kontur und Schatten, genau 512 px. PNG sichern, @Stickers öffnen → /newpack und das Bild als Datei senden."],["Sauberes Foto","Ein Foto verrät oft, wo und wann es entstand und mit welchem Handy. „Sauberes Foto“ zeigt das und sichert eine Kopie ohne diese Angaben. Das Foto bleibt hier."],["Dokument scannen","Auf „Scan“ tippen und das Blatt fotografieren — die Ecken werden gefunden und lassen sich verschieben. Das Blatt wird gerade wie gescannt; Seiten werden ein PDF."]],"art":[["Aus dem Foto wird Text","Nach dem Freistellen auf „Zu Zeichen →“ tippen oder ein Bild über „Galerie“ wählen. Das Zeichenbild entsteht von selbst."],["Look einstellen","In „Optionen“: Zeichen, Emoji-Mosaik oder Braille, dazu Detail, Kontrast und Helligkeit. Ändert sich sofort."],["In den Chat einfügen","Unter „Wohin kommt der Text“ Steam, Telegram oder VK wählen — die Breite passt sich an. Dann „Kopieren“ und einfügen. Oder als Bild „Speichern“."]],"qr":[["Link oder Text eingeben","Die Optionen öffnen sich von selbst: ins Feld „Link oder Text“ tippen — der QR-Code erscheint sofort. „Fertig“, dann „Speichern“."],["QR aus einem Foto kopieren","Fotografiere das Ticket und tippe auf „Aus Foto lesen“. Ich finde den QR und baue ihn sauber und scharf neu."],["Im Vollbild zeigen","Tippe auf „Vollbild“ — der Code erscheint groß auf Weiß. Brauchst du ein Bild — „In Fotos sichern“. Schließt du ihn, wird er vom Handy gelöscht."],["Am Drehkreuz zeigen","Öffne den Code im Vollbild, dreh die Helligkeit hoch und halte den Bildschirm an den Scanner — grünes Licht, das Drehkreuz öffnet sich."],["Papierticket behalten","Behalte sicherheitshalber Handy und Papierticket: Ist der Akku leer oder liest der Scanner den Bildschirm nicht, rettet dich das Papier."],["Auch Strichcodes","Unter „Code-Typ“ „Strichcode“ wählen. Mehrere Nummern mit Leerzeichen ergeben mehrere Codes untereinander, wie auf einem Beleg."],["WLAN-QR","Unter „Was im QR steckt“ WLAN wählen, Netz und Passwort eingeben. Gäste halten die Kamera drauf — das Handy verbindet sich. Das Passwort wird nirgends gespeichert."],["Gestalteter QR","„Aussehen“ → „Gestaltet“: Farbe, runde Punkte oder Rauten, Buchstabe oder Bild in der Mitte, Text darunter. Ob er lesbar ist, prüft die Dunkelkammer selbst."]],"tr":[["Schreiben oder einfügen","Ins Feld schreiben oder „Einfügen“ tippen — ich nehme den Text aus der Zwischenablage. Übersetzt wird automatisch."],["Zwei Übersetzungen auf einmal","Englisch plus noch eine — Spanisch, Französisch, Polnisch oder Italienisch, wie es passt. Sprachen in „Optionen“, „Original“ fügt deinen Text hinzu."],["Im Messenger senden","„Kopieren“ tippen, einen Messenger öffnen — Telegram, WhatsApp, VK —, das Feld gedrückt halten, „Einfügen“ wählen und senden. Die Antwort kommt genauso — in drei Sprachen."],["Dialog — die ganze Unterhaltung","Schalte „Dialog“ ein: eigene Nachrichten wie gewohnt schreiben, die Antwort einfügen — ich übersetze sie in deine Sprache. Alles bleibt auf dem Handy."],["Vorlesen und „Zeigen“","„Vorlesen“ — das Handy spricht die Übersetzung. „Dem Gegenüber zeigen“ — Handy zwischen euch legen: Die obere Hälfte ist zum Gegenüber gedreht, groß geschrieben."],["Text vom Foto","Auf „Vom Foto“ tippen und Speisekarte, Schild oder Anleitung fotografieren. Der Text wird auf dem Handy erkannt, jede Zeile daneben übersetzt."],["Video übersetzen","Reiter „Übersetzen“, über dem Feld „Text“, neben „Vom Foto“ — die Taste „Video“. Clip mit Untertiteln wählen: Die Dunkelkammer findet sie und zeigt die Übersetzung im Video. Sprache nicht."]],"tips":[["Sprache der App","Die Flagge oben rechts stellt die Sprache der Dunkelkammer ein: Russisch, Englisch, dazu Polnisch, Deutsch, Französisch und Spanisch (noch β). Wechselt sofort, ohne Neuladen."],["Weiß oder unscharf","Kein transparenter Hintergrund nötig? „Optionen“ → „Hintergrund“: „Weiß“, „Dunkel“ oder „Unscharfes Original“ — er bleibt, nur weich verschwommen wie im Porträtmodus."],["Feiner und genauer","In „Optionen“: „Farbähnlichkeit“ — wie viel der Zauberstab mit einem Tipp nimmt, „Pinselgröße“ — wie breit der Radierer ist. Für Haare und Details den Pinsel dünner machen."],["Umkehren und Farbe","Im dunklen Chat-Design wirkt das Bild wie ein Negativ — schalte „Umkehren“ in „Optionen“ ein. „Farbe“ färbt die Zeichen in den Farben des Fotos: das besser als Bild senden."],["Eigene Zeichen","„Zeichensatz“ → „Eigener Satz…“ und Zeichen von dunkel nach hell eintippen — etwa XOxo. Daraus entsteht das Bild. Buchstaben, Ziffern, sogar dein Nickname gehen."],["QR als reiner Text","„Aussehen“ → „Text aus Blöcken“: Der QR besteht aus █ und Leerzeichen. In Telegram als Codeblock einfügen — ein echter Code, direkt vom Chat-Bildschirm scannbar."],["QR-Visitenkarte","„Was im QR steckt“ → „Kontakt“: Name, Telefon, E-Mail. Wer die Kamera draufhält, bekommt den Kontakt zum Speichern angeboten. Nichts mehr buchstabieren."],["Fehlertoleranz","Hängt der Code draußen oder wird er zerknittert? „Optionen“ → „Fehlertoleranz“ → H. Er wird gelesen, auch wenn ein Stück verdeckt oder abgerieben ist. Mehr Punkte — größer drucken."],["Aus Versehen geschlossen?","Nach „Schließen und löschen“ leuchtet 10 Sekunden lang „Code zurückholen“ — tippen, und der Code ist zurück. Danach erlischt die Taste, und der Code ist endgültig weg."],["Auf die Übersetzung tippen","Tippe auf die Übersetzung selbst — schon ist sie kopiert. Die Chips ═══, ═ und — unter dem Feld ändern den Strich zwischen den Übersetzungen, „leer“ entfernt ihn."],["Untertitel .srt","Nach der Videoübersetzung „Untertitel .srt“ tippen — eine Datei mit Übersetzung und Zeit jeder Phrase, für Player, Schnittprogramme und YouTube. Klappt Speichern nicht, kopiere ich sie."]],"tips_lbl":"Tipps"},"fr":{"help":"Guide","next":"Suivant","done":"Compris","back":"Retour","close":"Fermer","modes":["Caractères","Emoji","Braille"],"vk":"VK","sample":["Salut ! Ça va ?",["en","Hi! How are you?"],[["de","Hallo! Wie geht's?"],["es","¡Hola! ¿Qué tal?"],["pl","Cześć! Jak się masz?"],["it","Ciao! Come stai?"]]],"friend":"Anna","online":"en ligne","typing":"écrit…","turnstile":"Portique","both":"téléphone + papier","cut":[["Envoie une photo","Touche « Galerie » et choisis une image. Sur iPhone, c’est encore plus rapide : dans « Photos », garde le doigt sur la personne → « Copier le sujet » → ici, « Coller »."],["Le fond part tout seul","À la question « Retirer le fond ? », touche « Retirer », puis choisis « Personne » ou « Objet ». Un damier transparent remplace le fond."],["Retouche si besoin","La « Baguette » enlève un morceau de fond d’une touche, la « Gomme » efface au doigt, « Restaurer » le remet. Une erreur — « Annuler »."],["Enregistre","« Enregistrer » → « Copier », « Partager » ou « Fichier PNG » à fond transparent. Et « En caractères → » transforme le détourage en dessin de caractères."],["Sticker Telegram","Détoure le fond et touche « Sticker » : contour blanc, ombre, pile 512 px. Enregistre le PNG, ouvre @Stickers → /newpack et envoie l’image en fichier."],["Photo propre","Une photo peut cacher où, quand et avec quel téléphone elle a été prise. « Photo propre » le montre et enregistre une copie sans ces balises. La photo reste ici."],["Scan de document","Touche « Scan » et photographie la feuille — les coins se trouvent seuls, tu peux les déplacer. La feuille se redresse comme au scanner ; les pages font un PDF."]],"art":[["La photo devient texte","Après le détourage, touche « En caractères → » ou choisis une image via « Galerie ». Le dessin en caractères se construit tout seul."],["Choisis le style","Dans « Réglages » : caractères, mosaïque d’emoji ou braille, plus détail, contraste et luminosité. Le résultat change aussitôt."],["Colle-le dans un chat","Dans « Où va le texte », choisis Steam, Telegram ou VK — la largeur s’adapte. Puis « Copier » et colle. Ou « Enregistrer » en image."]],"qr":[["Tape un lien ou un texte","Les réglages s’ouvrent tout seuls : tape dans « Lien ou texte » et le QR apparaît aussitôt. Touche « Terminé », puis « Enregistrer »."],["Copie un QR depuis une photo","Photographie le billet et touche « Lire depuis une photo ». Je trouve le QR et le reconstruis net et propre."],["Montre-le en plein écran","Touche « Plein écran » — le code s’affiche en grand sur fond blanc. Besoin d’une image — « Enregistrer dans Photos ». Ferme-le et il s’efface du téléphone."],["Montre-le au portique","Ouvre le code en plein écran, monte la luminosité et approche l’écran du lecteur — le voyant passe au vert et le portique s’ouvre."],["Garde le billet papier","Par précaution, garde le téléphone et le billet papier : si la batterie lâche ou si le lecteur ne lit pas l’écran, le papier te sauve."],["Les codes-barres aussi","Dans « Type de code », choisis « Code-barres ». Plusieurs numéros séparés par des espaces donnent plusieurs codes, l’un sous l’autre, comme sur un ticket."],["QR Wi‑Fi","Dans « Contenu du QR », choisis Wi‑Fi, saisis le réseau et le mot de passe. Tes invités visent le code et le téléphone se connecte. Le mot de passe n’est pas gardé."],["QR stylisé","« Aspect » → « Stylisé » : couleur, points ronds ou losanges, lettre ou image au centre, légende dessous. Chambre noire vérifie elle-même qu’il se scanne."]],"tr":[["Écris ou colle","Écris dans le champ ou touche « Coller » pour prendre le texte du presse-papiers. La traduction se fait toute seule."],["Deux traductions d’un coup","L’anglais plus une autre — allemand, espagnol, polonais ou italien, comme tu veux. Les langues se changent dans « Réglages », « Original » ajoute ton texte."],["Envoie-le dans ta messagerie","Touche « Copier », ouvre une messagerie — Telegram, WhatsApp, VK —, appuie longuement sur le champ, choisis « Coller » et envoie. La réponse arrive pareil — en trois langues."],["Dialogue — toute la conversation","Active « Dialogue » : écris tes messages comme d’habitude et colle la réponse de ton ami — je la traduis dans ta langue. Tout reste sur ton téléphone."],["À voix haute et « Montrer »","« À voix haute » — le téléphone lit la traduction. « Montrer à l’autre » — pose le téléphone entre vous : le haut est tourné vers l’autre, en gros caractères."],["Texte d’une photo","Touche « Depuis photo » et photographie un menu, un panneau ou une notice. Le texte est reconnu sur le téléphone et chaque ligne est traduite à côté."],["Traduction de vidéo","Onglet « Traduire », au-dessus du champ « Texte », à côté de « Depuis photo » : le bouton « Vidéo ». Choisis un clip sous-titré, la traduction s’affiche sur la vidéo. Pas la voix."]],"tips":[["Langue de l’appli","Le drapeau en haut à droite règle la langue de Chambre noire : russe, anglais, et aussi polonais, allemand, français et espagnol (encore β). Ça change tout de suite, sans recharger."],["Fond blanc ou flouté","Pas besoin de transparence ? « Réglages » → « Fond » : « Blanc », « Sombre » ou « Original flouté » — le fond reste, joliment flou, comme en mode portrait."],["Plus fin, plus précis","Dans « Réglages » : « Similarité des couleurs », c’est ce que la Baguette prend d’une touche ; « Taille du pinceau », la largeur de la Gomme. Pour les cheveux, affine le pinceau."],["Inverser et couleur","En thème sombre, le dessin ressemble à un négatif — active « Inverser » dans « Réglages ». « Couleur » peint les caractères aux couleurs de la photo : envoie-le plutôt en image."],["Tes propres caractères","« Jeu de caractères » → « Jeu personnalisé… », puis tape des signes du sombre au clair — par exemple XOxo. Le dessin se fait avec. Lettres, chiffres, même ton pseudo."],["Le QR en texte","« Aspect » → « Texte en blocs » : le QR est fait de █ et d’espaces. Colle-le dans Telegram en bloc de code — c’est un vrai code, il se scanne depuis l’écran du chat."],["QR carte de visite","« Contenu du QR » → « Contact » : nom, téléphone, e-mail. On vise avec l’appareil photo et le téléphone propose d’enregistrer le contact. Plus besoin d’épeler."],["Tolérance aux erreurs","Le code sera dehors ou risque d’être froissé ? « Réglages » → « Tolérance aux erreurs » → H. Il se lit même si un morceau est caché ou effacé. Plus de points : imprime plus grand."],["Fermé par erreur ?","Après « Fermer et effacer », « Récupérer le code » reste allumé 10 secondes — touche-le et le code revient. Ensuite le bouton s’éteint et le code est effacé pour de bon."],["Touche la traduction","Touche la traduction elle-même : elle est copiée, pas besoin de chercher le bouton. Les puces ═══, ═ et — sous le champ changent le trait entre les traductions, « vide » l’enlève."],["Sous-titres .srt","Après une vidéo traduite, touche « Sous-titres .srt » : un fichier avec la traduction et le temps de chaque phrase, pour lecteurs, montage et YouTube. Sinon, je le copie en texte."]],"tips_lbl":"Astuces"},"es":{"help":"Guía","next":"Siguiente","done":"Entendido","back":"Atrás","close":"Cerrar","modes":["Caracteres","Emoji","Braille"],"vk":"VK","sample":["¡Hola! ¿Qué tal?",["en","Hi! How are you?"],[["de","Hallo! Wie geht's?"],["fr","Salut ! Ça va ?"],["pl","Cześć! Jak się masz?"],["it","Ciao! Come stai?"]]],"friend":"Anna","online":"en línea","typing":"escribiendo…","turnstile":"Torniquete","both":"móvil + papel","cut":[["Envía una foto","Toca «Galería» y elige una imagen. En iPhone es aún más rápido: en Fotos mantén pulsada la persona → «Copiar sujeto» → aquí, «Pegar»."],["El fondo se va solo","Cuando pregunte «¿Quitar el fondo?», toca «Quitarlo» y elige «Persona» u «Objeto». Un damero transparente sustituye al fondo."],["Retoca si hace falta","La «Varita» quita un trozo de fondo con un toque, el «Borrador» borra con el dedo, «Restaurar» lo devuelve. ¿Te equivocaste? «Deshacer»."],["Guárdalo","«Descargar» → «Copiar», «Compartir» o «Archivo PNG» con fondo transparente. Y «A caracteres →» convierte el recorte en un dibujo de caracteres."],["Sticker para Telegram","Quita el fondo y pulsa «Sticker»: contorno blanco, sombra y justo 512 px. Guarda el PNG, abre @Stickers → /newpack y envía la imagen como archivo."],["Foto limpia","Una foto puede esconder dónde, cuándo y con qué móvil se hizo. «Foto limpia» te lo muestra y guarda una copia sin esas etiquetas. La foto no sale de aquí."],["Escanear documento","Pulsa «Escanear» y fotografía la hoja: las esquinas se encuentran solas y puedes moverlas. La hoja queda recta como de escáner y las páginas forman un PDF."]],"art":[["La foto se vuelve texto","Tras recortar, toca «A caracteres →» o elige una imagen con «Galería». El dibujo de caracteres se arma solo."],["Elige el estilo","En «Ajustes»: caracteres, mosaico de emoji o Braille, además de detalle, contraste y brillo. Cambia al instante."],["Pégalo en un chat","En «Dónde va el texto» elige Steam, Telegram o VK — el ancho se ajusta solo. Luego «Copiar» y pega. O «Descargar» como imagen."]],"qr":[["Escribe un enlace o texto","Los ajustes se abren solos: escribe en «Enlace o texto» y el QR aparece al instante. Toca «Listo» y luego «Descargar»."],["Copia un QR de una foto","Haz una foto al billete y toca «Leer de una foto». Encuentro el QR y lo rehago limpio y nítido."],["Muéstralo a pantalla completa","Pulsa «Pantalla completa»: el código se abre grande sobre blanco. ¿Necesitas una imagen? «Guardar en Fotos». Al cerrarlo, se borra del móvil."],["Muéstralo en el torniquete","Abre el código a pantalla completa, sube el brillo y acerca la pantalla al lector — la luz se pone verde y se abre el paso."],["No tires el billete","Por si acaso, lleva el móvil y el billete de papel: si se acaba la batería o el lector no lee la pantalla, el papel te salva."],["También códigos de barras","En «Tipo de código» elige «Código de barras». Varios números separados por espacios dan varios códigos, uno debajo de otro, como en un recibo."],["QR de Wi‑Fi","En «Qué lleva el QR» elige Wi‑Fi y escribe la red y la contraseña. Los invitados apuntan la cámara y el móvil se conecta. La contraseña no se guarda."],["QR con estilo","«Estilo» → «Con estilo»: color, puntos redondos o rombos, letra o imagen en el centro y texto debajo. Cuarto oscuro comprueba por sí mismo que se lee."]],"tr":[["Escribe o pega","Escribe en el campo o toca «Pegar» para tomar el texto del portapapeles. Traduzco solo, sin pulsar nada."],["Dos traducciones a la vez","Inglés y otro más — alemán, francés, polaco o italiano, el que te venga bien. Los idiomas se cambian en «Ajustes», «Original» añade tu texto."],["Envíalo por mensajería","Toca «Copiar», abre cualquier app de mensajería — Telegram, WhatsApp, VK —, mantén pulsado el campo, elige «Pegar» y envía. Tu amigo responde igual, en tres idiomas."],["Diálogo — toda la conversación","Activa «Diálogo»: escribe tus mensajes como siempre y pega la respuesta de tu amigo — la traduzco a tu idioma. Todo se queda en tu móvil."],["En voz alta y «Mostrar»","«En voz alta»: el móvil lee la traducción. «Mostrar a la otra persona»: deja el móvil entre los dos; la mitad de arriba mira hacia ella, con letra grande."],["Texto de una foto","Pulsa «De foto» y fotografía un menú, un cartel o unas instrucciones. El texto se reconoce en el móvil y cada línea se traduce al lado."],["Traducir vídeo","Pestaña «Traducir», sobre el campo «Texto», junto a «De foto»: el botón «Vídeo». Elige un clip con subtítulos y Cuarto oscuro mostrará la traducción sobre el vídeo. La voz no se traduce."]],"tips":[["Idioma de la app","La bandera de arriba a la derecha cambia el idioma de Cuarto oscuro: ruso, inglés y también polaco, alemán, francés y español (aún β). Cambia al momento, sin recargar."],["Fondo blanco o desenfocado","¿No lo quieres transparente? «Ajustes» → «Fondo»: «Blanco», «Oscuro» u «Original desenfocado»: el fondo se queda, pero suavemente borroso, como en modo retrato."],["Más fino y preciso","En «Ajustes»: «Parecido de color» es cuánto coge la Varita de un toque y «Tamaño del pincel», el grosor del Borrador. Para el pelo y los detalles, afina el pincel."],["Invertir y color","Con el tema oscuro del chat, el dibujo parece un negativo: activa «Invertir» en «Ajustes». «Color» pinta los caracteres con los colores de la foto: mejor envíalo como imagen."],["Tus propios caracteres","«Juego de caracteres» → «Juego propio…» y escribe signos de oscuro a claro, por ejemplo XOxo. El dibujo se arma con ellos. Valen letras, números y hasta tu nick."],["El QR como texto","«Estilo» → «Bloques de texto»: el QR se arma con █ y espacios. Pégalo en Telegram como bloque de código: es un código real y se escanea desde la pantalla del chat."],["QR tarjeta de visita","«Qué lleva el QR» → «Contacto»: nombre, teléfono, correo. Al apuntar la cámara, el móvil ofrece guardar el contacto. Nada de deletrear."],["Tolerancia a errores","¿El código irá a la intemperie o puede arrugarse? «Ajustes» → «Tolerancia a errores» → H. Se lee aunque falte un trozo tapado o borrado. Habrá más puntos: imprímelo más grande."],["¿Lo cerraste sin querer?","Tras «Cerrar y borrar», «Recuperar código» se queda encendido 10 segundos: tócalo y el código vuelve. Luego el botón se apaga y el código se borra para siempre."],["Toca la traducción","Toca la propia traducción y se copia: no hace falta buscar el botón. Los chips ═══, ═ y — bajo el campo cambian la línea entre traducciones; «vacío» la quita."],["Subtítulos .srt","Tras traducir un vídeo, toca «Subtítulos .srt»: un archivo con la traducción y el tiempo de cada frase. Lo leen reproductores, editores y YouTube. Si no se guarda, lo copio como texto."]],"tips_lbl":"Trucos"}};
 const GART={"chars":["        ..","     :*%%%%*-","    =%@@@@@@%*","   .%%%%%%%%%%-","   .%++*==**=%-","   .*+=======*:","     -==+++==.","      :====:","    :+**++*#+-.","  :*###########-"," :##############-"," *###############."],"brl":["⠀⠀⠀⠀⠀⠀⠀⠀⢀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀","⠀⠀⠀⠀⠀⣠⣴⣾⣿⣿⣿⣶⣄⠀⠀⠀⠀⠀⠀","⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⣿⣶⠀⠀⠀⠀⠀","⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀","⠀⠀⠀⢐⣿⣿⣾⣿⣾⣾⣿⣿⣾⣿⡇⠀⠀⠀⠀","⠀⠀⠀⠐⢿⣿⣾⣾⣾⣾⣾⣾⣾⡿⠃⠀⠀⠀⠀","⠀⠀⠀⠀⠀⢸⣾⣾⣾⣾⣾⣾⡾⠀⠀⠀⠀⠀⠀","⠀⠀⠀⠀⠀⠀⠘⢺⣾⣾⣾⠚⠀⠀⠀⠀⠀⠀⠀","⠀⠀⠀⠀⣠⣴⣾⣿⣿⣿⣿⣿⣶⣄⠀⠀⠀⠀⠀","⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀","⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀","⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀"],"emo":["⬜⬜⬜⬜🟨🟨⬜⬜⬜⬜","⬜⬜⬜🟧⬛⬛🟧⬜⬜⬜","⬜⬜⬜🟫🟫🟫🟫⬜⬜⬜","⬜⬜⬜🟧🟧🟧🟫⬜⬜⬜","⬜⬜⬜⬜🟧🟧⬜⬜⬜⬜","⬜⬜⬜🟨🟧🟧🟨⬜⬜⬜","⬜⬜🟨🟫⬛⬛⬛🟨⬜⬜","⬜⬜🟫⬛⬛⬛⬛🟫⬜⬜"]};
 const gt=k=>{ const d=GT[L]||GT.en; return (k in d)?d[k]:GT.en[k]; };
-const GUIDE_KEY="proyav.guide", GUIDE_SECS=["cut","art","qr","tr"];
+const GUIDE_KEY="proyav.guide", GUIDE_SECS=["cut","art","qr","tr"], GUIDE_ALL=GUIDE_SECS.concat("tips");   // tips — «Фишки», своей вкладки нет
 const guideSeen=new Set();
-try{ String(localStorage.getItem(GUIDE_KEY)||"").split(",").forEach(s=>{ if(GUIDE_SECS.indexOf(s)>=0) guideSeen.add(s); }); }catch(_){}
+try{ String(localStorage.getItem(GUIDE_KEY)||"").split(",").forEach(s=>{ if(GUIDE_ALL.indexOf(s)>=0) guideSeen.add(s); }); }catch(_){}
+const gSecName=s=>s==="tips"?gt("tips_lbl"):t("tab_"+s);
 function guideMark(s){ guideSeen.add(s); try{ localStorage.setItem(GUIDE_KEY,[...guideSeen].join(",")); }catch(_){} }
 /* после обновления на «?» горит точка: в разделах появились новые шаги — «?» сразу открывает первый из них */
-const GUIDE_VER="2", GUIDE_NEW={cut:4,qr:6,tr:4};
-let guideNew=false; try{ guideNew=localStorage.getItem("proyav.guidev")!==GUIDE_VER; }catch(_){}
+const GUIDE_VER="3", GUIDE_NEW={cut:4,qr:6,tr:4};    // v2 — новые шаги в разделах, v3 — раздел «Фишки»
+let guideNew=false, guidePrev=null; try{ guidePrev=localStorage.getItem("proyav.guidev"); guideNew=guidePrev!==GUIDE_VER; }catch(_){}
 function guideNewMark(){ if(!guideNew) return; guideNew=false; try{ localStorage.setItem("proyav.guidev",GUIDE_VER); }catch(_){}
   const h=document.getElementById("help"); if(h) h.classList.remove("new"); }
 const G={open:false,sec:"cut",i:0,n:0,drag:null,pull:null,timer:0,auto:false,uid:0};
@@ -5575,7 +5929,7 @@ const GMENU={de:["Speisekarte","Kaffee 2,50","Apfelstrudel 4,20","Tagessuppe 5,9
   pl:["Menu","Kawa 2,50","Strudel jabłkowy 4,20","Zupa dnia 5,90"],
   fr:["Menu","Café 2,50","Strudel aux pommes 4,20","Soupe du jour 5,90"],
   es:["Carta","Café 2,50","Strudel de manzana 4,20","Sopa del día 5,90"]};
-const GHI={pl:"Cześć! Jak się masz?",es:"¡Hola! ¿Qué tal?"};
+const GHI={de:"Hallo! Wie geht's?",pl:"Cześć! Jak się masz?",es:"¡Hola! ¿Qué tal?"};   // субтитры в «видео» — немецкие (у немцев — испанские)
 GSCN.cut.push(
   ()=>`${gPhoto("k5-ph",true)}<span class="ga k5-arr">→</span>
     <div class="ga gm-chat k5-chat"><i class="gm-inb"></i><div class="k5-stk">${G_MAN}</div><span class="k5-time">12:00 ✓✓</span></div>
@@ -5626,27 +5980,129 @@ GSCN.tr.push(
     <div class="ga f6-ph"><b>${gesc(a[0])}</b><p class="f6-l f6-l1">${gesc(a[1])}</p><p class="f6-l f6-l2">${gesc(a[2])}</p><p class="f6-l f6-l3">${gesc(a[3])}</p></div>
     <div class="ga f6-tab">${[1,2,3].map(k=>`<div class="f6-r f6-r${k}"><span>${gesc(a[k])}</span><b>${gesc(b[k])}</b></div>`).join("")}</div>
     `; },
-  ()=>{ const SRC=L==="pl"?"es":"pl", s1=GHI[SRC], s2=GDLG[SRC], t1=gt("sample")[0], t2=GDLG[L]||GDLG.en;
+  ()=>{ const SRC=L==="de"?"es":"de", s1=GHI[SRC], s2=GDLG[SRC], t1=gt("sample")[0], t2=GDLG[L]||GDLG.en;
     return `<div class="ga f7-vid"><div class="f7-man">${G_MAN}</div>
       <span class="f7-s f7-s1">${gesc(s1)}</span><span class="f7-s f7-s2">${gesc(s2)}</span><i class="f7-band"></i>
       <span class="f7-tr f7-t1">${gesc(t1)}</span><span class="f7-tr f7-t2">${gesc(t2)}</span>
       <i class="f7-play"></i><i class="f7-prog"><b></b></i></div>
-    ${gX(t("vd_btn"),"ga f7-pill",GICO.vid,0.25)}
+    <div class="ga f7-hd"><b>${gesc(t("vd_title"))}</b><i>×</i></div>
+    <div class="ga f7-a"><div class="f7-seg"><b>${gesc(t("dlg_tab_tr"))}</b><span>${gesc(t("dlg_tab"))}</span></div>
+      <div class="f7-row"><span class="gm-lbl">${gesc(t("tr_src"))}</span>${gX(t("oc_btn"),"",GICO.cam)}${gX(t("vd_btn"),"f7-vb",GICO.vid,0.9)}<i class="f7-x">×</i></div>
+      <div class="gm-in f7-ta">${gesc(t("tr_ph"))}</div></div>
     <div class="ga f7-list"><div class="f7-r f7-r1"><i>0:00</i><span>${gesc(s1)}</span><b>${gesc(t1)}</b></div>
       <div class="f7-r f7-r2"><i>0:03</i><span>${gesc(s2)}</span><b>${gesc(t2)}</b></div></div>
     `; });
+
+/* ── «Фишки»: язык, фон, кисть, инверсия, свои символы, QR текстом, визитка, запас прочности, «Вернуть код», тап по переводу, .srt ── */
+const gWh=(...a)=>`<span class="ga ms-wh">${a.map(gesc).join(" › ")}</span>`;
+const gTl=(c,k)=>{ const d=T[c]; return (d&&k in d)?d[k]:T.en[k]; };
+const GRAMP="@%#*+=-:. ";
+function gArtMap(f){ const r=GART.chars, w=Math.max(...r.map(x=>x.length)); return gesc(r.map(x=>[...x.padEnd(w," ")].map(f).join("")).join("\n")); }
+const gArtInv=()=>gArtMap(c=>{ const i=GRAMP.indexOf(c); return i<0?c:GRAMP[GRAMP.length-1-i]; });
+const GXO={"@":"X","%":"X","#":"O","*":"O","+":"x","=":"o","-":"o",":":".",".":"."," ":" "};
+const gArtXO=()=>gArtMap(c=>GXO[c]||c);
+const gMark=c=>{ const m=gTl(c,"mark"); return gesc(m[0])+"<span>"+gesc(m[1])+"</span>"; };
+function gQrRows(text,lvl,n){                     // первые строки QR «текстом из блоков» — как в приложении: █ ▀ ▄ и пробел
+  let q=null; try{ q=QR.encode(text,lvl); }catch(_){ q=null; }
+  if(!q) return "";
+  const g=q.grid,N=q.size,Z=2,out=[];
+  for(let y=-Z;y<N+Z&&out.length<n;y+=2){ let ln="";
+    for(let x=-Z;x<N+Z;x++){ const a=y>=0&&y<N&&x>=0&&x<N&&g[y][x], b=y+1>=0&&y+1<N&&x>=0&&x<N&&g[y+1][x];
+      ln+=a&&b?"\u2588":a?"\u2580":b?"\u2584":" "; }
+    out.push(ln); }
+  return gesc(out.join("\n"));
+}
+const GVCARD="BEGIN:VCARD\r\nVERSION:3.0\r\nN:;Anna;;;\r\nFN:Anna\r\nTEL;TYPE=CELL:+15550100\r\nEND:VCARD";
+GSCN.tips=[
+  ()=>{ const cur=UI_LANGS.find(r=>r[0]===L)||UI_LANGS[1], nx=L==="ru"?"en":(L==="en"?"de":"en"), nr=UI_LANGS.find(r=>r[0]===nx), ni=UI_LANGS.indexOf(nr);
+    const tabs=c=>GUIDE_SECS.map(s=>`<span>${gesc(gTl(c,"tab_"+s))}</span>`).join(""), bar=c=>["paste","gallery","settings"].map(k=>gB(gTl(c,k))).join("");
+    return `<div class="ga m1-head"><b class="m1-mk m1-ka">${gMark(cur[0])}</b><b class="m1-mk m1-kb">${gMark(nx)}</b><i class="m1-q">?</i>
+      <span class="m1-pill"><span class="m1-c m1-c1">${gFlag(cur[0])}${cur[1]}</span><span class="m1-c m1-c2">${gFlag(nx)}${nr[1]}</span><em>▾</em></span></div>
+    <div class="ga m1-tabs m1-ta">${tabs(cur[0])}</div><div class="ga m1-tabs m1-tb">${tabs(nx)}</div>
+    <span class="ga m1-st m1-sa">${gesc(gTl(cur[0],"ready"))}</span><span class="ga m1-st m1-sb">${gesc(gTl(nx,"ready"))}</span>
+    <div class="ga gm-row m1-bar m1-ba">${bar(cur[0])}</div><div class="ga gm-row m1-bar m1-bb">${bar(nx)}</div>
+    <div class="ga m1-list">${UI_LANGS.map(r=>`<div class="m1-o${r[0]===cur[0]?" m1-cur":""}${r[0]===nx?" m1-nx":""}">${gFlag(r[0])}<span>${gesc(r[2])}</span>${r[3]?"<sup>β</sup>":""}</div>`).join("")}</div>
+    ${gTap(258,24,0.45)}${gTap(228,49+ni*18,2.05)}`; },
+  ()=>`${gWh(t("tab_cut"),t("settings"))}
+    <div class="ga gm-ph m2-ph"><div class="gm-chk"></div><i class="m2-l m2-w"></i><i class="m2-l m2-d"></i><div class="m2-l m2-b"><div class="gm-bg"></div></div>${G_MAN}</div>
+    <span class="ga gm-lbl m2-lbl">${gesc(t("bg"))}</span>
+    <div class="ga m2-opts">${["bg_none","bg_white","bg_dark","bg_blur"].map((k,i)=>`<span class="gm-b m2-o m2-o${i}">${gesc(t(k))}</span>`).join("")}</div>
+    ${gTap(232,78,1.7)}${gTap(232,106,3.4)}${gTap(232,134,5.1)}`,
+  ()=>`${gWh(t("tab_cut"),t("settings"))}
+    <div class="ga gm-ph m3-ph"><div class="gm-chk"></div><i class="m3-blob"></i><i class="m3-sel"></i><i class="m3-str"></i>${G_MAN}<i class="m3-cur"></i></div>
+    <span class="ga gm-lbl m3-l1">${gesc(t("tol"))}</span><i class="ga m3-tr m3-tr1"></i><i class="ga m3-th m3-th1"></i>
+    <span class="ga gm-lbl m3-l2">${gesc(t("brush"))}</span><i class="ga m3-tr m3-tr2"></i><i class="ga m3-th m3-th2"></i>
+    <div class="ga gm-row m3-row">${gB(t("t_wand"),"m3-w")}${gB(t("t_erase"),"m3-e")}</div>
+    ${gTap(208,45,0.2)}${gTap(42,69,2.1)}${gTap(241,95,3.07)}`,
+  ()=>`${gWh(t("tab_art"),t("settings"))}
+    <div class="ga m4-pan"><pre class="m4-a">${gArt("chars")}</pre><pre class="m4-b">${gArtInv()}</pre><pre class="m4-c">${gArt("chars")}</pre></div>
+    <span class="ga gm-ok m4-ok">✓</span>
+    <div class="ga m4-chips">${gB(t("invert"),"m4-i")}${gB(t("color"),"m4-k")}</div>
+    ${gTap(243,61,1.75)}${gTap(243,61,4.1)}${gTap(243,95,4.6)}`,
+  ()=>`${gWh(t("tab_art"),t("settings"))}
+    <span class="ga gm-lbl m5-l1">${gesc(t("charset"))}</span>
+    <div class="ga gm-in m5-sel"><span class="m5-s1">${gesc(t("s_punct"))}</span><span class="m5-s2">${gesc(t("s_custom"))}</span><i>▾</i></div>
+    <span class="ga gm-lbl m5-l2">${gesc(t("darklight"))}</span>
+    <div class="ga gm-in m5-in"><span class="gm-ty m5-ty" style="--n:5">XOxo.</span><i class="gm-caret m5-caret"></i></div>
+    <div class="ga gm-art m5-art"><pre class="m5-a">${gArt("chars")}</pre><pre class="m5-b">${gArtXO()}</pre></div>
+    ${gTap(80,46,0.3)}${gTap(80,94,1.6)}`,
+  ()=>`${gWh(t("tab_qr"),t("settings"))}
+    <span class="ga gm-lbl m6-l">${gesc(t("qr_style"))}</span>
+    <div class="ga gm-in m6-sel"><span class="m6-s1">${gesc(t("qr_img"))}</span><span class="m6-s2">${gesc(t("qr_blocks"))}</span><i>▾</i></div>
+    <div class="ga m6-txt"><pre>${gQrRows("t.me/ProstoAyli","L",5)}</pre></div>
+    <div class="ga gm-row m6-bar">${gB(t("copy"),"amb")}</div>
+    <div class="ga gm-chat m6-chat"><div class="m6-bub"><span class="m6-code">&lt;/&gt;</span><div class="m6-qr">${gQrOf("t.me/ProstoAyli","L","sq")}</div><span class="gm-time">12:00 ✓✓</span></div>
+      <i class="m6-vf"><b></b><b></b><b></b><b></b></i></div>
+    <span class="ga m6-ok">✓ t.me/ProstoAyli</span>
+    ${gTap(75,46,0.3)}${gTap(75,151,1.35)}`,
+  ()=>`${gWh(t("tab_qr"),t("qw_what"))}
+    <div class="ga gm-row m7-seg">${gB(t("qw_text"))}${gB(t("qw_wifi"))}${gB(t("qw_contact"),"m7-c")}</div>
+    <span class="ga gm-lbl m7-l1">${gesc(t("ct_name"))}</span>
+    <div class="ga gm-in m7-i1"><span class="gm-ty m7-ty1" style="--n:4">Anna</span></div>
+    <span class="ga gm-lbl m7-l2">${gesc(t("ct_tel"))}</span>
+    <div class="ga gm-in m7-i2"><span class="gm-ty m7-ty2" style="--n:11">+1 555 0100</span></div>
+    <div class="ga gm-qr m7-qr">${gQrOf(GVCARD,"M","sq")}</div>
+    <div class="ga m7-ph"><i class="m7-vf"></i><span class="m7-card"><i>A</i><b>Anna</b><em>+1 555 0100</em><u>+</u></span></div>
+    <span class="ga gm-lbl m7-cap">${gesc(t("ct_card"))}</span>${gTap(240,35,0.25)}`,
+  ()=>`${gWh(t("tab_qr"),t("settings"))}
+    <span class="ga gm-lbl m8-l">${gesc(t("qr_lvl"))}</span>
+    <div class="ga gm-in m8-sel"><span class="m8-s1">${gesc(t("qr_m"))}</span><span class="m8-s2">${gesc(t("qr_h"))}</span><i>▾</i></div>
+    <div class="ga m8-box"><div class="gm-qr m8-q m8-m">${gQrOf("t.me/ProstoAyli","M","sq")}</div><div class="gm-qr m8-q m8-h">${gQrOf("t.me/ProstoAyli","H","sq")}</div>
+      <i class="m8-st"></i><i class="m8-vf"><b></b><b></b><b></b><b></b></i></div>
+    <span class="ga gm-ok m8-ok">✓</span>
+    ${gTap(74,46,0.3)}`,
+  ()=>`${gWh(t("tab_qr"),t("tk_full_btn"))}
+    <i class="ga m9-slot"></i><div class="ga gm-qr m9-qr">${gQr()}</div>
+    <span class="ga m9-st m9-w">✓ ${gesc(t("tk_wiped"))}</span><span class="ga m9-st m9-bk">✓ ${gesc(t("tk_back"))}</span>
+    <div class="ga m9-undo">${[10,9,8].map((n,k)=>`<span class="m9-n m9-n${k}">${gesc(tf("tk_undo",n))}</span>`).join("")}</div>
+    <div class="ga m9-white"><b>${gesc(t("tk_show_title"))}</b><div class="gm-qr m9-big">${gQr()}</div><span class="gm-b m9-close">${gesc(t("tk_close"))}</span></div>
+    ${gTap(150,159,0.55)}${gTap(150,151,4.55)}`,
+  ()=>{ const s=gt("sample"), o2=s[2][0], sep=["═══","═","—",""];
+    return `${gWh(t("tab_tr"))}<span class="ga gm-lbl m10-l">${gesc(t("tr_res"))}</span>
+    <div class="ga gm-paper m10-out"><div>${gFlag(s[1][0])} ${gesc(s[1][1])}</div><div class="m10-sep">${sep.map((x,k)=>`<b class="m10-s${k}">${gesc(x)}</b>`).join("")}</div><div>${gFlag(o2[0])} ${gesc(o2[1])}</div></div>
+    <span class="ga m10-toast">${gesc(t("tr_copied"))}</span>
+    <div class="ga gm-row m10-chips">${sep.map((x,k)=>gB(x||t("tr_sep_blank"),"m10-c m10-c"+k)).join("")}</div>
+    ${gTap(150,65,0.5)}${gTap(114,153,3.2)}${gTap(186,153,4.45)}${gTap(257,153,5.7)}`; },
+  ()=>{ const SRC=L==="de"?"es":"de", s1=GHI[SRC], s2=GDLG[SRC], t1=gt("sample")[0], t2=GDLG[L]||GDLG.en;
+    const srt=`1\n00:00:00,000 --> 00:00:03,000\n${t1}\n\n2\n00:00:03,000 --> 00:00:06,000\n${t2}`;
+    return `${gWh(t("tab_tr"),t("vd_btn"))}
+    <div class="ga f7-list m11-list"><div class="f7-r"><i>0:00</i><span>${gesc(s1)}</span><b>${gesc(t1)}</b></div>
+      <div class="f7-r"><i>0:03</i><span>${gesc(s2)}</span><b>${gesc(t2)}</b></div></div>
+    ${gX(t("vd_srt"),"ga m11-btn","",0.95)}
+    <span class="ga m11-fly"><b>SRT</b></span>
+    <div class="ga m11-file"><span class="m11-name">clip.srt</span><pre>${gesc(srt)}</pre></div>`; }];
 
 /* ── шторка ── */
 function renderGuide(swap){
   const steps=gt(G.sec)||[];
   G.n=steps.length; if(G.i>=G.n) G.i=0; G.uid=0;
-  el("gSecs").innerHTML=GUIDE_SECS.map((s,k)=>
-    `<button type="button" role="tab" data-gs="${s}" aria-selected="${s===G.sec}"><b>${k+1}</b>${gesc(t("tab_"+s))}</button>`).join("");
+  el("gSecs").innerHTML=GUIDE_ALL.map((s,k)=>
+    `<button type="button" role="tab" data-gs="${s}" aria-selected="${s===G.sec}"${s==="tips"&&!guideSeen.has(s)?' class="new"':""}><b>${k+1}</b>${gesc(gSecName(s))}</button>`).join("");
   el("gTrack").innerHTML=steps.map((st,k)=>
     `<section class="gslide" aria-label="${k+1} / ${steps.length}"><div class="gsc" aria-hidden="true"><div class="gin s-${G.sec}${k+1}">${GSCN[G.sec][k]()}</div></div>`+
     `<h2 class="gtt">${gesc(st[0])}</h2><p class="gtx">${gesc(st[1])}</p></section>`).join("");
   el("gDots").innerHTML=steps.map((_,k)=>`<i data-gd="${k}"></i>`).join("");
-  el("guide").setAttribute("aria-label",gt("help")+" · "+t("tab_"+G.sec));
+  el("guide").setAttribute("aria-label",gt("help")+" · "+gSecName(G.sec));
   el("gClose").setAttribute("aria-label",gt("close"));
   el("gBack").setAttribute("aria-label",gt("back"));
   const v=el("gView"); v.classList.remove("swap"); if(swap){ void v.offsetWidth; v.classList.add("swap"); }
@@ -5676,8 +6132,11 @@ function guideGo(i,instant){
 function guideIsOpen(){ return G.open; }
 function openGuide(sec,auto){
   clearTimeout(G.timer);
-  G.sec=GUIDE_SECS.indexOf(sec)>=0?sec:"cut"; G.auto=!!auto;
-  G.i=(!auto&&guideNew&&guideSeen.has(G.sec)&&G.sec in GUIDE_NEW)?GUIDE_NEW[G.sec]:0;
+  G.sec=GUIDE_ALL.indexOf(sec)>=0?sec:"cut"; G.auto=!!auto; G.i=0;
+  if(!auto&&guideNew&&guideSeen.size){             // после обновления «?» ведёт к новому
+    if(guidePrev==="2"&&!guideSeen.has("tips")) G.sec="tips";
+    else if(guideSeen.has(G.sec)&&G.sec in GUIDE_NEW) G.i=GUIDE_NEW[G.sec];
+  }
   guideMark(G.sec); guideNewMark();
   const g=el("guide");
   G.open=true; g.hidden=false; el("gCard").style.transform="";
@@ -7019,7 +7478,7 @@ async function ocRun(){
     OC.lines=lines; ocDraw(); ocTable(); ocBar(null);
     if(!lines.length){ OC.busy=false; ocState("oc_none",null,"bad"); return; }
     ocState("oc_tr");
-    const out=await trOne(lines.map(l=>l.text).join("\n"),OC.code,S.tr.to1);
+    const out=await trOne(lines.map(l=>l.text).join("\n"),OC.code,myLang());
     if(my!==OC.seq) return;
     const parts=String(out||"").split(/\n/).map(s=>s.trim());
     OC.tr=parts.length===lines.length?parts:[String(out||"").trim()];
@@ -7060,6 +7519,7 @@ addEventListener("resize",()=>{ if(!el("ocView").hidden) ocDraw(); });
    3) склеиваем одинаковые подряд в фразы со временем, переводим разом;
    4) смотрим с переводом поверх, правим, сохраняем .srt или новое видео (холст + звук → MediaRecorder).
    Видео никуда не отправляется — в сеть уходит только текст фраз. */
+/* текст с фото и субтитры переводим на свой язык (myLang), а не на «первый перевод» — тот для собеседника */
 const VD={url:"",dur:0,w:0,h:0,band:null,method:"wfill",segs:[],run:0,state:"",rec:null,name:"video"};
 const VD_STEP=0.5, VD_MAX=300;
 const VD_SAVE=false;          // «Сохранить видео» (новый файл) — готово, но выключено: Илья выбрал «смотреть с переводом»
@@ -7267,11 +7727,11 @@ async function vdRead(){
   if(!VD.segs.length){ vdBar(null); vdMode("setup"); vdState("vd_none",null,"bad"); return; }
   vdState("vd_tr"); vdBar(0.95);
   try{
-    const out=await trOne(VD.segs.map(g=>g.text).join("\n"),OC.code,S.tr.to1);
+    const out=await trOne(VD.segs.map(g=>g.text).join("\n"),OC.code,myLang());
     let parts=String(out||"").split(/\n/).map(x=>x.trim());
     if(parts.length!==VD.segs.length){
       parts=[];
-      for(const g of VD.segs){ if(vdCancelled(my)) return; try{ parts.push(String(await trOne(g.text,OC.code,S.tr.to1)).trim()); }catch(_){ parts.push(""); } }
+      for(const g of VD.segs){ if(vdCancelled(my)) return; try{ parts.push(String(await trOne(g.text,OC.code,myLang())).trim()); }catch(_){ parts.push(""); } }
     }
     VD.segs.forEach((g,i)=>{ g.tr=parts[i]||""; });
   }catch(e){ if(vdCancelled(my)) return; vdBar(null); vdList(); vdMode("ready"); vdState("tr_fail",null,"bad"); return; }
@@ -7313,7 +7773,7 @@ function vdSrtText(){
   return VD.segs.filter(g=>g.tr).map((g,i)=>(i+1)+"\n"+ts(g.s)+" --> "+ts(g.e)+"\n"+g.tr+"\n").join("\n");
 }
 el("vdSrt").addEventListener("click",async()=>{
-  const txt=vdSrtText(), name=VD.name+"-"+S.tr.to1+".srt", blob=new Blob([txt],{type:"text/plain"});
+  const txt=vdSrtText(), name=VD.name+"-"+myLang()+".srt", blob=new Blob([txt],{type:"text/plain"});
   const how=await f2GiveFile(blob,name);
   if(how==="blocked"){ try{ await navigator.clipboard.writeText(txt); }catch(_){} vdState("vd_srt_copy",null,"good"); }
   fbuzz("light");
@@ -7394,7 +7854,7 @@ el("vdSave").addEventListener("click",async()=>{
   const blob=new Blob(chunks,{type:mime.split(";")[0]});
   vdBar(null); vdMode("ready"); vdState("vd_ok",(blob.size/1048576).toFixed(1),"good");
   VD.lastBlob=blob;
-  const how=await f2GiveFile(blob,VD.name+"-"+S.tr.to1+(mime.indexOf("mp4")>=0?".mp4":".webm"));
+  const how=await f2GiveFile(blob,VD.name+"-"+myLang()+(mime.indexOf("mp4")>=0?".mp4":".webm"));
   if(how==="blocked") vdState("vd_nosave",null,"bad");
   fbuzz("medium");
 });
