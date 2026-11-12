@@ -1677,6 +1677,9 @@ select,input[type=text]{width:100%;min-height:48px;background:#191211;color:var(
   font:700 16px/1.22 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;overflow-wrap:anywhere;
   text-shadow:0 0 2px #000,1px 1px 0 #000,-1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000,0 2px 6px rgba(0,0,0,.7)}
 .vd-cover[hidden],.vd-sub[hidden]{display:none}
+.vd-sub span{padding:.1em .38em;border-radius:4px;background:rgba(14,10,8,.92);-webkit-box-decoration-break:clone;box-decoration-break:clone;
+  line-height:1.5;text-shadow:none}
+.vd-cover{border-radius:8px}
 .vd-hrow{display:flex;flex-direction:column;gap:4px;flex:0 0 auto}
 .vd-hrow[hidden]{display:none}
 .vd-list{display:flex;flex-direction:column;border:1px solid var(--edge);border-radius:3px;overflow:hidden;flex:0 0 auto}
@@ -7562,13 +7565,40 @@ function vdGrab(maxW){                                  // текущий кад
 }
 /* подготовка картинки для распознавания:
    wfill — белые буквы с тёмной обводкой (как в TikTok/Reels): берём самое светлое рядом с тёмной каймой;
-   kfill — тёмные буквы на светлой плашке; gray / inv — просто серый (или наоборот) с растяжкой контраста */
+   kfill — тёмные буквы на светлой плашке; gray / inv — просто серый (или наоборот) с растяжкой контраста;
+   tophat — тонкие светлые штрихи ярче всего вокруг (белые буквы без обводки даже на белой футболке) */
+function vdMinMax(a,W,H,k,isMax){                      // квадратный min/max-фильтр k×k: по строкам, потом по столбцам
+  const r=k>>1, t=new Uint8ClampedArray(a.length), o=new Uint8ClampedArray(a.length);
+  for(let y=0;y<H;y++){ const b=y*W; for(let x=0;x<W;x++){ let v=isMax?0:255; const x0=Math.max(0,x-r), x1=Math.min(W-1,x+r);
+    for(let j=x0;j<=x1;j++){ const q=a[b+j]; if(isMax?q>v:q<v) v=q; } t[b+x]=v; } }
+  for(let x=0;x<W;x++) for(let y=0;y<H;y++){ let v=isMax?0:255; const y0=Math.max(0,y-r), y1=Math.min(H-1,y+r);
+    for(let j=y0;j<=y1;j++){ const q=t[j*W+x]; if(isMax?q>v:q<v) v=q; } o[y*W+x]=v; }
+  return o;
+}
+function vdOtsu(h,from){ let n=0,s=0; for(let i=from;i<256;i++){ n+=h[i]; s+=i*h[i]; } if(!n) return 0;
+  let w=0,m=0,best=0,T=from; for(let i=from;i<256;i++){ w+=h[i]; m+=i*h[i]; const w2=n-w; if(!w||!w2) continue;
+    const d=m/w-(s-m)/w2, v=w*w2*d*d; if(v>best){ best=v; T=i; } } return T; }
+function vdSpeck(m,W,H){                              // мелкий мусор (меньше 6 точек) — прочь
+  const n=W*H, lab=new Uint8Array(n), st=[];
+  for(let i=0;i<n;i++){ if(!m[i]||lab[i]) continue; const comp=[]; st.push(i); lab[i]=1;
+    while(st.length){ const j=st.pop(); comp.push(j); const x=j%W;
+      if(x>0&&m[j-1]&&!lab[j-1]){ lab[j-1]=1; st.push(j-1); } if(x<W-1&&m[j+1]&&!lab[j+1]){ lab[j+1]=1; st.push(j+1); }
+      if(j>=W&&m[j-W]&&!lab[j-W]){ lab[j-W]=1; st.push(j-W); } if(j<n-W&&m[j+W]&&!lab[j+W]){ lab[j+W]=1; st.push(j+W); } }
+    if(comp.length<6) comp.forEach(j=>{ m[j]=0; }); }
+}
 function vdPrep(src,method,scale){
   const W=src.width, H=src.height, d=src.getContext("2d",{willReadFrequently:true}).getImageData(0,0,W,H).data, n=W*H;
   const L=new Uint8ClampedArray(n), MN=new Uint8ClampedArray(n), MX=new Uint8ClampedArray(n);
   for(let i=0,p=0;i<n;i++,p+=4){ const r=d[p],g=d[p+1],b=d[p+2]; L[i]=0.299*r+0.587*g+0.114*b; MN[i]=Math.min(r,g,b); MX[i]=Math.max(r,g,b); }
   const out=new Uint8ClampedArray(n);
-  if(method==="gray"||method==="inv"){
+  if(method==="tophat"){
+    const k=Math.max(7,Math.round(W*0.02))|1, op=vdMinMax(vdMinMax(L,W,H,k,false),W,H,k,true), th=new Uint8ClampedArray(n), hist=new Uint32Array(256);
+    for(let i=0;i<n;i++){ th[i]=Math.max(0,L[i]-op[i]); hist[th[i]]++; }
+    const T=Math.max(30,vdOtsu(hist,9)), m=new Uint8Array(n);
+    for(let i=0;i<n;i++) m[i]=th[i]>T&&L[i]>140?1:0;
+    vdSpeck(m,W,H);
+    for(let i=0;i<n;i++) out[i]=m[i]?0:255;
+  }else if(method==="gray"||method==="inv"){
     const hist=new Uint32Array(256); for(let i=0;i<n;i++) hist[L[i]]++;
     let lo=0,hi=255,a=0; for(let i=0;i<256;i++){ a+=hist[i]; if(a>n*0.01){ lo=i; break; } }
     a=0; for(let i=255;i>=0;i--){ a+=hist[i]; if(a>n*0.01){ hi=i; break; } }
@@ -7589,12 +7619,7 @@ function vdPrep(src,method,scale){
       else{ for(let v=0;v<256;v++){ a+=hist[v]; if(a>cnt*0.02){ T=v; break; } } T=Math.min(110,T+9); } }
     const m=new Uint8Array(n);
     for(let i=0;i<n;i++) m[i]=near[i]&&(white?MN[i]>=T&&!seed[i]:MX[i]<=T&&!seed[i])?1:0;
-    const lab=new Int32Array(n), st=[];                                  // мелкий мусор (меньше 12 точек) — прочь
-    for(let i=0;i<n;i++){ if(!m[i]||lab[i]) continue; const comp=[]; st.push(i); lab[i]=1;
-      while(st.length){ const j=st.pop(); comp.push(j); const x=j%W;
-        if(x>0&&m[j-1]&&!lab[j-1]){ lab[j-1]=1; st.push(j-1); } if(x<W-1&&m[j+1]&&!lab[j+1]){ lab[j+1]=1; st.push(j+1); }
-        if(j>=W&&m[j-W]&&!lab[j-W]){ lab[j-W]=1; st.push(j-W); } if(j<n-W&&m[j+W]&&!lab[j+W]){ lab[j+W]=1; st.push(j+W); } }
-      if(comp.length<6) comp.forEach(j=>{ m[j]=0; }); }
+    vdSpeck(m,W,H);
     for(let i=0;i<n;i++) out[i]=m[i]?0:255;
   }
   const s=scale||1, c=document.createElement("canvas"); c.width=Math.round(W*s); c.height=Math.round(H*s);
@@ -7610,9 +7635,15 @@ async function vdOcr(canvas){                            // строки: тек
   const w=await ocWorker(OC.code);
   const r=await w.recognize(canvas,{},{blocks:true,text:true}), lines=[];
   (r.data.blocks||[]).forEach(bk=>(bk.paragraphs||[]).forEach(pa=>(pa.lines||[]).forEach(l=>{
-    const tx=String(l.text||"").replace(/[|_~«»]+/g," ").replace(/\s+/g," ").trim();
-    const letters=(tx.match(/\p{L}/gu)||[]).length;
-    if(letters>=2&&(l.confidence||0)>=45&&letters>=tx.replace(/\s/g,"").length*0.5) lines.push({text:tx,conf:l.confidence,bbox:l.bbox});
+    /* по словам: без букв («|», «*», «:») и совсем неуверенные — мусор от рук и складок одежды */
+    const ws=(l.words&&l.words.length?l.words:[{text:l.text,confidence:l.confidence,bbox:l.bbox}])
+      .map(x=>({t:String(x.text||"").replace(/[|_~«»]+/g,"").trim(),c:x.confidence||0,b:x.bbox}))
+      .filter(x=>x.t&&/\p{L}/u.test(x.t)&&x.c>=40);
+    if(!ws.length) return;
+    const tx=ws.map(x=>x.t).join(" "), letters=(tx.match(/\p{L}/gu)||[]).length;
+    const conf=ws.reduce((a,x)=>a+x.c*x.t.length,0)/ws.reduce((a,x)=>a+x.t.length,0);
+    const bbox={x0:Math.min(...ws.map(x=>x.b.x0)),y0:Math.min(...ws.map(x=>x.b.y0)),x1:Math.max(...ws.map(x=>x.b.x1)),y1:Math.max(...ws.map(x=>x.b.y1))};
+    if(letters>=2&&conf>=50&&letters>=tx.replace(/\s/g,"").length*0.5) lines.push({text:tx,conf,bbox,words:ws.map(x=>({t:x.t,c:x.c}))});
   })));
   return lines;
 }
@@ -7625,7 +7656,7 @@ async function vdDetect(){
     for(let i=0;i<N;i++){
       const tt=(i+0.5)*span/N; await vdSeek(tt); if(vdCancelled(my)) return;
       const fr=vdGrab(720); frames.push({t:tt,fr});
-      for(const m of ["wfill","gray"]){
+      for(const m of ["tophat","wfill","gray"]){
         const pc=vdPrep(fr,m,1), ls=await vdOcr(pc); pc.width=1; if(vdCancelled(my)) return;
         ls.forEach(l=>{ if(l.conf>=55) hits.push({i,m,text:l.text,conf:l.conf,y0:l.bbox.y0/fr.height,y1:l.bbox.y1/fr.height}); });
       }
@@ -7651,7 +7682,7 @@ async function vdDetect(){
   }
   VD.band=band||[0.62,0.8];
   /* какой способ подготовки лучше читает эти субтитры */
-  const score={wfill:0,kfill:0,gray:0,inv:0};
+  const score={tophat:0,wfill:0,kfill:0,gray:0,inv:0};
   const withText=[...new Set(good.map(h=>h.i))].slice(0,4);
   try{
     for(const i of withText){
@@ -7663,7 +7694,7 @@ async function vdDetect(){
       crop.width=1;
     }
   }catch(_){}
-  VD.method=Object.keys(score).reduce((a,b)=>score[b]>score[a]?b:a,"wfill");
+  VD.method=Object.keys(score).reduce((a,b)=>score[b]>score[a]?b:a,"tophat");
   frames.forEach(f=>{ f.fr.width=1; });
   const show=good.length?good[0].i:0;
   await vdSeek((show+0.5)*span/N);
@@ -7705,7 +7736,7 @@ async function vdRead(){
           const k=fr.k*sc, box={x0:1e9,y0:1e9,x1:-1,y1:-1};
           ls.forEach(l=>{ box.x0=Math.min(box.x0,l.bbox.x0/k); box.x1=Math.max(box.x1,l.bbox.x1/k);
             box.y0=Math.min(box.y0,(l.bbox.y0/sc+crop.y0)/fr.k); box.y1=Math.max(box.y1,(l.bbox.y1/sc+crop.y0)/fr.k); });
-          res={text:ls.map(l=>l.text).join(" "),conf:ls.reduce((a,l)=>a+l.conf,0)/ls.length,box};
+          res={text:ls.map(l=>l.text).join(" "),conf:ls.reduce((a,l)=>a+l.conf,0)/ls.length,box,words:[].concat(...ls.map(l=>l.words||[]))};
         }
       }
       samples.push({t:tt,...res,re:res===prev}); prev=res; prevSig=sig; fr.width=1; crop.width=1;
@@ -7714,16 +7745,7 @@ async function vdRead(){
   }catch(e){ if(!vdCancelled(my)){ vdBar(null); vdMode("setup"); vdState("oc_fail",null,"bad"); } return; }
   VD.samples=samples;
   /* фразы: одинаковое подряд — одна фраза, лучший вариант по уверенности */
-  const segs=[]; let cur=null;
-  const close=()=>{ if(cur) segs.push(cur); cur=null; };
-  samples.forEach(s=>{
-    if(!s.text){ if(cur&&++cur.gap>1) close(); return; }        // один «пустой» кадр посреди фразы — не разрыв
-    if(cur&&vdSim(cur.text,s.text)>=0.6){ cur.gap=0; cur.e=s.t+VD_STEP/2; cur.n++; if(s.conf>cur.conf){ cur.text=s.text; cur.conf=s.conf; }
-      if(s.box){ cur.box.x0=Math.min(cur.box.x0,s.box.x0); cur.box.y0=Math.min(cur.box.y0,s.box.y0); cur.box.x1=Math.max(cur.box.x1,s.box.x1); cur.box.y1=Math.max(cur.box.y1,s.box.y1); } }
-    else{ close(); cur={s:Math.max(0,s.t-VD_STEP/2),e:s.t+VD_STEP/2,text:s.text,conf:s.conf,n:1,gap:0,box:{...s.box}}; }
-  });
-  close();
-  VD.segs=segs.filter(g=>g.n>1||g.conf>=55).map(g=>({...g,e:Math.min(g.e,VD.dur),tr:""}));
+  VD.segs=vdSegs(samples).map(g=>({...g,e:Math.min(g.e,VD.dur),tr:""}));
   if(!VD.segs.length){ vdBar(null); vdMode("setup"); vdState("vd_none",null,"bad"); return; }
   vdState("vd_tr"); vdBar(0.95);
   try{
@@ -7739,6 +7761,55 @@ async function vdRead(){
   vdBar(null); vdList(); vdMode("ready"); vdState("vd_done",VD.segs.length,"good");
   await vdSeek(VD.segs[0].s+0.05); vdShowSub();
   fbuzz("medium");
+}
+/* кадры → фразы. Субтитры часто проявляются и гаснут, их перекрывают руки — читаются кусками.
+   Похожие подряд (или один — кусок другого) — одна фраза; текст и рамка берутся из лучшего кадра. */
+const vdLet=s=>(String(s).match(/\p{L}/gu)||[]).length;
+const vdScore=g=>g.conf*Math.sqrt(vdLet(g.text));
+function vdSame(a,b){
+  if(vdSim(a,b)>=0.6) return true;
+  const A=vdNorm(a), B=vdNorm(b); if(A.length<4||B.length<4) return false;
+  if(A.includes(B)||B.includes(A)) return true;
+  const wa=a.toLowerCase().split(/\s+/).map(vdNorm).filter(x=>x.length>1), wb=b.toLowerCase().split(/\s+/).map(vdNorm).filter(x=>x.length>1);
+  const sm=wa.length<=wb.length?wa:wb, lg=sm===wa?wb:wa;
+  if(sm.length<2) return sm.length===1&&sm[0].length>=5&&lg.some(x=>x===sm[0]||vdSim(x,sm[0])>=0.8);   /* обрывок из одного длинного слова */
+  return sm.filter(w=>lg.some(x=>x===w||vdSim(x,w)>=0.75)).length>=sm.length*0.6;
+}
+/* лучший вариант фразы из нескольких прочтений:
+   R — сколько слов из остальных прочтений в нём есть (руки закрывают часть слов — полный вариант объясняет обрывки);
+   P — его слова либо встречаются в других прочтениях, либо распознаны уверенно (мусор от складок — неуверенный и одиночный) */
+function vdBest(all){
+  if(all.length<2) return all[0];
+  const ws=all.map(x=>(x.words||[]).map(w=>({n:vdNorm(w.t),c:w.c})).filter(w=>w.n.length>1)), tot=all.reduce((z,o)=>z+o.conf,0)||1;
+  let best=all[0], bs=-1;
+  all.forEach((a,i)=>{
+    const wa=ws[i]; if(!wa.length) return;
+    let R=0; all.forEach((o,j)=>{ const wo=ws[j]; if(!wo.length) return;
+      const L=wo.reduce((z,w)=>z+w.n.length,0);   /* по буквам: точное совпадение слова — 1, похожее — ½ */
+      R+=wo.reduce((z,w)=>z+w.n.length*(wa.some(x=>x.n===w.n)?1:wa.some(x=>vdSim(x.n,w.n)>=0.75)?0.5:0),0)/L*o.conf; });
+    const P=wa.reduce((z,w)=>{ const sup=all.filter((o,j)=>j!==i&&ws[j].some(x=>x.n===w.n)).length/(all.length-1);
+      return z+Math.max(Math.min(1,sup*2),Math.max(0,Math.min(1,(w.c-50)/35))); },0)/wa.length;
+    const sc=2*R/tot+P+a.conf/1000;   /* полнота важнее: обрывок всегда «чище» полной фразы */ if(sc>bs){ bs=sc; best=a; } });
+  return best;
+}
+function vdSegs(samples){
+  let segs=[], cur=null;
+  const close=()=>{ if(cur) segs.push(cur); cur=null; };
+  const fin=g=>{ const b=vdBest(g.all); g.text=b.text; g.conf=b.conf; g.box=b.box?{...b.box}:null; return g; };
+  samples.forEach(s=>{
+    if(!s.text||vdLet(s.text)<3){ if(cur&&++cur.gap>1) close(); return; }   // один «пустой» кадр посреди фразы — не разрыв
+    if(cur&&vdSame(fin(cur).text,s.text)){ cur.gap=0; cur.e=s.t+VD_STEP/2; cur.n++; cur.all.push(s); }
+    else{ close(); cur={s:Math.max(0,s.t-VD_STEP/2),e:s.t+VD_STEP/2,n:1,gap:0,all:[s]}; }
+  });
+  close(); segs.forEach(fin);
+  /* одиночный сомнительный кадр (проявление, рука) — не фраза */
+  segs=segs.filter(g=>g.n>1?g.conf>=80:g.conf>=88);
+  /* куски одной фразы, разорванные мусорным кадром, — склеиваем */
+  const out=[];
+  segs.forEach(g=>{ const p=out[out.length-1];
+    if(p&&g.s-p.e<=1.01&&vdSame(p.text,g.text)){ p.e=g.e; p.n+=g.n; p.all=p.all.concat(g.all); fin(p); } else out.push(g); });
+  out.forEach(g=>{ delete g.all; delete g.gap; });
+  return out;
 }
 const vdTime=s=>{ const m=Math.floor(s/60), x=s-m*60; return m+":"+(x<10?"0":"")+x.toFixed(1); };
 function vdList(){
@@ -7758,12 +7829,13 @@ function vdShowSub(){
   if(VD.state!=="ready") return;
   const g=vdAt(vdV().currentTime), sub=el("vdSub"), cov=el("vdCover");
   if(!g||!g.tr){ sub.textContent=""; sub.style.visibility="hidden"; cov.style.visibility="hidden"; return; }
-  sub.textContent=g.tr; sub.style.visibility="visible";
+  if(sub.textContent!==g.tr){ sub.textContent=""; const sp=document.createElement("span"); sp.textContent=g.tr; sub.appendChild(sp); }  // своя тёмная подложка под каждой строкой
+  sub.style.visibility="visible";
   const b=g.box, cy=b&&b.y1>0?(b.y0+b.y1)/2/VD.h:(VD.band[0]+VD.band[1])/2;
   sub.style.top=(cy*100)+"%";
   if(b&&b.x1>0){ cov.style.visibility="visible";
-    cov.style.left=Math.max(0,(b.x0/VD.w-0.03)*100)+"%"; cov.style.width=Math.min(100,((b.x1-b.x0)/VD.w+0.06)*100)+"%";
-    cov.style.top=Math.max(0,(b.y0/VD.h-0.015)*100)+"%"; cov.style.height=((b.y1-b.y0)/VD.h+0.03)*100+"%"; }
+    const x0=Math.max(0,b.x0/VD.w-0.05), x1=Math.min(1,b.x1/VD.w+0.05), y0=Math.max(0,b.y0/VD.h-0.025), y1=Math.min(1,b.y1/VD.h+0.025);
+    cov.style.left=x0*100+"%"; cov.style.width=(x1-x0)*100+"%"; cov.style.top=y0*100+"%"; cov.style.height=(y1-y0)*100+"%"; }
   else cov.style.visibility="hidden";
 }
 /* .srt */
